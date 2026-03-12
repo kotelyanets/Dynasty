@@ -26,7 +26,7 @@ export function TrackRow({
   onToggleLike,
 }: TrackRowProps) {
   const { state, playTrack, togglePlay, formatTime } = usePlayer();
-  const isActive = state.currentTrack?.id === track.id;
+  const isActive  = state.currentTrack?.id === track.id;
   const isPlaying = isActive && state.isPlaying;
   const [showMenu, setShowMenu] = useState(false);
 
@@ -41,42 +41,46 @@ export function TrackRow({
   return (
     <button
       onClick={handleClick}
-      className="relative w-full flex items-center gap-3 px-4 py-2.5 rounded-lg group text-left touch-row"
+      className="relative w-full flex items-center gap-3 px-4 py-2.5 rounded-[10px] group text-left touch-row"
     >
-      {/* Track number or cover */}
+      {/* Track number or animated bars */}
       {showTrackNumber && (
         <div className="w-7 flex-shrink-0 text-center">
           {isActive ? (
             isPlaying ? (
               <div className="flex items-end justify-center gap-[2px] h-4">
-                <div className="w-[3px] bg-rose-500 rounded-full animate-[bar1_0.8s_ease-in-out_infinite]" style={{height: '60%'}} />
-                <div className="w-[3px] bg-rose-500 rounded-full animate-[bar2_0.6s_ease-in-out_infinite]" style={{height: '100%'}} />
-                <div className="w-[3px] bg-rose-500 rounded-full animate-[bar3_0.7s_ease-in-out_infinite]" style={{height: '40%'}} />
+                <div className="w-[3px] bg-[#fc3c44] rounded-full animate-[bar1_0.8s_ease-in-out_infinite]" style={{ height: '60%' }} />
+                <div className="w-[3px] bg-[#fc3c44] rounded-full animate-[bar2_0.6s_ease-in-out_infinite]" style={{ height: '100%' }} />
+                <div className="w-[3px] bg-[#fc3c44] rounded-full animate-[bar3_0.7s_ease-in-out_infinite]" style={{ height: '40%' }} />
               </div>
             ) : (
-              <Pause size={14} className="text-rose-500 mx-auto" />
+              <Pause size={14} className="text-[#fc3c44] mx-auto" />
             )
           ) : (
-            <span className="text-sm text-white/40 tabular-nums">{track.trackNumber}</span>
+            <span className="text-[13px] text-white/40 tabular-nums">{track.trackNumber}</span>
           )}
         </div>
       )}
 
+      {/* Cover art */}
       {showCover && (
-        <div className="w-11 h-11 rounded-md overflow-hidden flex-shrink-0 relative group">
+        <div className="w-11 h-11 rounded-[8px] overflow-hidden flex-shrink-0 relative group shadow-sm">
           <img src={track.coverUrl} alt={track.album} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-active:opacity-100 transition-opacity">
-            {isPlaying ? <Pause size={16} fill="white" /> : <Play size={16} fill="white" className="ml-0.5" />}
+          <div className="absolute inset-0 bg-black/35 flex items-center justify-center opacity-0 group-active:opacity-100 transition-opacity">
+            {isPlaying
+              ? <Pause size={16} fill="white" strokeWidth={0} />
+              : <Play  size={16} fill="white" strokeWidth={0} className="ml-0.5" />
+            }
           </div>
         </div>
       )}
 
       {/* Track info */}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium truncate ${isActive ? 'text-rose-500' : 'text-white'}`}>
+        <p className={`text-[15px] font-medium truncate ${isActive ? 'text-[#fc3c44]' : 'text-white'}`}>
           {track.title}
         </p>
-        <p className="text-xs text-white/50 truncate">
+        <p className="text-[13px] text-white/50 truncate">
           {showArtist && track.artist}
           {showArtist && showAlbum && ' · '}
           {showAlbum && track.album}
@@ -84,21 +88,26 @@ export function TrackRow({
       </div>
 
       {/* Duration */}
-      <span className="text-xs text-white/40 tabular-nums flex-shrink-0">
+      <span className="text-[13px] text-white/35 tabular-nums flex-shrink-0">
         {formatTime(track.duration)}
       </span>
 
-      {/* Like button (optional) */}
+      {/* Like button */}
       {onToggleLike && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onToggleLike(track.id);
           }}
-          className="text-white/30 active:text-rose-400 flex-shrink-0 p-1 active:scale-90 transition-all"
+          className="text-white/25 active:text-[#fc3c44] flex-shrink-0 p-1 active:scale-90 transition-all"
           aria-label={isLiked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
         >
-          <Heart size={16} fill={isLiked ? '#fb7185' : 'none'} className={isLiked ? 'text-rose-400' : 'text-white/30'} />
+          <Heart
+            size={16}
+            strokeWidth={1.75}
+            fill={isLiked ? '#fc3c44' : 'none'}
+            className={isLiked ? 'text-[#fc3c44]' : 'text-white/25'}
+          />
         </button>
       )}
 
@@ -108,15 +117,17 @@ export function TrackRow({
           e.stopPropagation();
           setShowMenu((v) => !v);
         }}
-        className="text-white/30 active:text-white/60 flex-shrink-0 p-1 active:scale-90 transition-all"
+        className="text-white/25 active:text-white/60 flex-shrink-0 p-1 active:scale-90 transition-all"
         aria-label="More options"
       >
         <MoreHorizontal size={16} />
       </button>
 
+      {/* Context menu */}
       {showMenu && (
         <div
-          className="absolute right-3 top-full mt-1 z-30 rounded-xl bg-black/90 border border-white/10 shadow-xl py-1 min-w-[140px]"
+          className="absolute right-3 top-full mt-1 z-30 rounded-[14px] overflow-hidden shadow-2xl py-1 min-w-[160px]"
+          style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {onToggleLike && (
@@ -125,13 +136,13 @@ export function TrackRow({
                 onToggleLike(track.id);
                 setShowMenu(false);
               }}
-              className="w-full px-3 py-2 text-left text-xs text-white/80 active:bg-white/10"
+              className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] border-b border-white/[0.06]"
             >
-              {isLiked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
+              {isLiked ? 'Remove from Liked' : 'Add to Liked'}
             </button>
           )}
           {!onToggleLike && (
-            <div className="px-3 py-2 text-[11px] text-white/40">
+            <div className="px-4 py-2.5 text-[13px] text-white/40">
               More actions coming soon
             </div>
           )}

@@ -1,17 +1,5 @@
 /**
- * NowPlaying.tsx  (upgraded)
- * ─────────────────────────────────────────────────────────────
- * Full-screen now-playing modal.
- *
- * New vs original:
- *   ✓ Buffering spinner overlay on album art (loading / stalled)
- *   ✓ Dual-layer scrubber:  grey = buffered  /  white = played
- *   ✓ Draggable scrubber thumb (touch + mouse, no 3rd-party dep)
- *   ✓ Volume slider (hidden on mobile by default, visible on iPad+)
- *   ✓ Mute toggle
- *   ✓ Error banner
- *   ✓ "Playing From" context label
- *   ✓ Animated equalizer bars when buffering
+ * NowPlaying.tsx — Apple Music–style full-screen player
  */
 
 import { useRef, useState, useEffect } from 'react';
@@ -20,7 +8,7 @@ import { useLikedTracks } from '@/hooks/useLikedTracks';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
-  ListMusic, Ellipsis, Volume1, VolumeX,
+  ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart,
 } from 'lucide-react';
 
@@ -43,21 +31,20 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     errorMessage,
   } = state;
 
-  // ── Scrubber drag state ──────────────────────────────────
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [seekTime, setSeekTime] = useState(0);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
+  // ── Scrubber drag state ─────────────────────────────────
+  const [isSeeking, setIsSeeking]   = useState(false);
+  const [seekTime, setSeekTime]     = useState(0);
+  const progressRef                 = useRef<HTMLDivElement>(null);
+  const isDragging                  = useRef(false);
 
-  // ── Volume drag state ────────────────────────────────────
+  // ── Volume drag state ───────────────────────────────────
   const [isVolumeDragging, setIsVolumeDragging] = useState(false);
   const volumeRef = useRef<HTMLDivElement>(null);
 
-  // ── UI overlays ───────────────────────────────────────────
+  // ── UI overlay state ────────────────────────────────────
   const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [showQueue, setShowQueue] = useState(false);
+  const [showQueue, setShowQueue]       = useState(false);
 
-  // Reset seek state when track changes
   useEffect(() => {
     setIsSeeking(false);
     isDragging.current = false;
@@ -66,22 +53,19 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   if (!currentTrack || !visible) return null;
 
   const displayTime = isSeeking ? seekTime : currentTime;
-  const playedPct = duration > 0 ? (displayTime / duration) * 100 : 0;
+  const playedPct   = duration > 0 ? (displayTime / duration) * 100 : 0;
   const bufferedPct = buffered * 100;
+  const isStalled   = bufferingState === 'buffering' || bufferingState === 'loading';
 
-  const isStalled = bufferingState === 'buffering' || bufferingState === 'loading';
+  // ── Scrubber helpers ────────────────────────────────────
 
-  // ── Scrubber interaction ─────────────────────────────────
-
-  const getSeekTimeFromEvent = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent): number => {
+  const getSeekTimeFromEvent = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
     if (!progressRef.current) return 0;
     const rect = progressRef.current.getBoundingClientRect();
-    const clientX =
-      'touches' in e
-        ? (e as TouchEvent).touches[0]?.clientX ?? (e as TouchEvent).changedTouches[0]?.clientX ?? 0
-        : (e as MouseEvent).clientX;
-    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    return ratio * duration;
+    const clientX = 'touches' in e
+      ? (e as TouchEvent).touches[0]?.clientX ?? (e as TouchEvent).changedTouches[0]?.clientX ?? 0
+      : (e as MouseEvent).clientX;
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * duration;
   };
 
   const handleScrubStart = (e: React.TouchEvent | React.MouseEvent) => {
@@ -90,12 +74,10 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     setIsSeeking(true);
     setSeekTime(getSeekTimeFromEvent(e));
   };
-
   const handleScrubMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!isDragging.current) return;
     setSeekTime(getSeekTimeFromEvent(e));
   };
-
   const handleScrubEnd = () => {
     if (isDragging.current) {
       isDragging.current = false;
@@ -104,77 +86,63 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     }
   };
 
-  // ── Volume interaction ───────────────────────────────────
+  // ── Volume helpers ──────────────────────────────────────
 
   const getVolumeFromEvent = (e: React.TouchEvent | React.MouseEvent): number => {
     if (!volumeRef.current) return volume;
-    const rect = volumeRef.current.getBoundingClientRect();
-    const clientX =
-      'touches' in e
-        ? e.touches[0]?.clientX ?? 0
-        : e.clientX;
+    const rect    = volumeRef.current.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
     return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
   };
-
   const handleVolumeStart = (e: React.TouchEvent | React.MouseEvent) => {
     e.preventDefault();
     setIsVolumeDragging(true);
     setVolume(getVolumeFromEvent(e));
   };
-
   const handleVolumeMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!isVolumeDragging) return;
     setVolume(getVolumeFromEvent(e));
   };
-
   const handleVolumeEnd = () => setIsVolumeDragging(false);
 
   const currentVolume = isMuted ? 0 : volume;
+  const liked = isLiked(currentTrack.id);
 
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
       style={{ animation: 'slideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' }}
     >
-      {/* ── Blurred background ── */}
+      {/* ── Ambient background (vivid album art bleed) ── */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Deep base layer — very blurred, low opacity */}
         <img
           src={currentTrack.coverUrl}
-          className="absolute inset-0 w-full h-full object-cover scale-150 blur-3xl opacity-60 saturate-150"
+          className="absolute inset-0 w-full h-full object-cover scale-150 blur-3xl opacity-90 saturate-[2]"
           alt=""
           aria-hidden="true"
         />
-        {/* Sharper mid layer for colour richness */}
-        <img
-          src={currentTrack.coverUrl}
-          className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-20 saturate-200"
-          alt=""
-          aria-hidden="true"
-        />
-        {/* Dark gradient overlay for legibility */}
-        <div className="absolute inset-0 bg-black/60" />
-        {/* Bottom fade so controls stay readable */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black/80 to-transparent" />
+        {/* Dark gradient layered on top for legibility */}
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/75 to-transparent" />
       </div>
 
-      {/* ── Content ── */}
+      {/* ── Scrollable content ── */}
       <div
-        className="relative flex flex-col h-full px-6 pt-14 max-w-lg mx-auto w-full"
-        style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 28px)' }}
+        className="relative flex flex-col h-full px-6 pt-12 max-w-lg mx-auto w-full"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 24px)' }}
       >
-
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        {/* ── Dismiss handle / Header ── */}
+        <div className="flex items-center justify-between mb-5">
           <button
             onClick={() => showNowPlaying(false)}
-            className="p-1 text-white/70 active:opacity-40 active:scale-90 transition-transform"
+            className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform -ml-2"
             aria-label="Dismiss player"
           >
-            <ChevronDown size={28} />
+            <ChevronDown size={30} strokeWidth={2.5} />
           </button>
+
           <div className="text-center flex flex-col items-center">
-            <p className="text-[10px] font-semibold text-white/50 uppercase tracking-widest">
+            <p className="text-[11px] font-semibold text-white/50 uppercase tracking-widest">
               Playing From
             </p>
             <button
@@ -182,26 +150,29 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 showNowPlaying(false);
                 if (currentTrack.albumId) onNavigate('album', currentTrack.albumId);
               }}
-              className="text-[13px] font-semibold text-white truncate max-w-[180px] hover:underline active:opacity-60 transition-opacity"
+              className="text-[13px] font-semibold text-white truncate max-w-[180px] active:opacity-60 transition-opacity"
             >
               {currentTrack.album}
             </button>
           </div>
+
           <button
             onClick={() => setShowMoreMenu((v) => !v)}
-            className="p-1 text-white/70 active:opacity-40 active:scale-90 transition-transform"
+            className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform -mr-2"
             aria-label="More options"
           >
             <Ellipsis size={24} />
           </button>
         </div>
 
-        {/* Album art */}
-        <div className="flex-1 flex items-center justify-center mb-6">
+        {/* ── Album art ── */}
+        <div className="flex-1 flex items-center justify-center mb-7">
           <div className="relative w-full max-w-[320px] aspect-square">
             <div
-              className={`w-full h-full rounded-2xl overflow-hidden shadow-2xl transition-transform duration-500 ${
-                isPlaying && !isStalled ? 'scale-100' : 'scale-[0.88]'
+              className={`w-full h-full rounded-[18px] overflow-hidden transition-transform duration-500 ease-out ${
+                isPlaying && !isStalled
+                  ? 'scale-100 shadow-[0_24px_80px_rgba(0,0,0,0.7)]'
+                  : 'scale-[0.875] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
               }`}
             >
               <img
@@ -211,19 +182,18 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
               />
             </div>
 
-            {/* Buffering overlay */}
             {isStalled && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/40">
-                <Loader2 size={40} className="text-white animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center rounded-[18px] bg-black/40">
+                <Loader2 size={44} className="text-white/80 animate-spin" />
               </div>
             )}
           </div>
         </div>
 
-        {/* Track info + queue button */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="flex-1 min-w-0 flex flex-col items-start">
-            <h2 className="text-[22px] font-bold text-white truncate leading-tight w-full text-left">
+        {/* ── Track info row ── */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-[24px] font-bold text-white truncate leading-tight">
               {currentTrack.title}
             </h2>
             <button
@@ -231,32 +201,27 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 showNowPlaying(false);
                 if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
               }}
-              className="text-base text-rose-400 font-medium truncate mt-0.5 hover:underline active:opacity-60 transition-opacity text-left max-w-full"
+              className="text-[17px] font-medium text-[#fc3c44] truncate active:opacity-60 transition-opacity text-left max-w-full"
             >
               {currentTrack.artist}
             </button>
           </div>
+
           <button
             onClick={() => toggleLike(currentTrack.id)}
-            className="p-1 text-white/60 active:text-rose-400 active:scale-90 transition-transform"
-            aria-label={isLiked(currentTrack.id) ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
+            className="pt-1 active:scale-90 transition-transform flex-shrink-0"
+            aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
           >
             <Heart
-              size={22}
-              fill={isLiked(currentTrack.id) ? '#fb7185' : 'none'}
-              className={isLiked(currentTrack.id) ? 'text-rose-400' : 'text-white/40'}
+              size={26}
+              strokeWidth={1.75}
+              fill={liked ? '#fc3c44' : 'none'}
+              className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
             />
-          </button>
-          <button
-            onClick={() => setShowQueue(true)}
-            className="flex-shrink-0 p-1 text-white/40 active:opacity-40 active:scale-90 transition-transform"
-            aria-label="View queue"
-          >
-            <ListMusic size={22} />
           </button>
         </div>
 
-        {/* Error banner */}
+        {/* ── Error banner ── */}
         {errorMessage && (
           <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-red-500/20 border border-red-500/40 rounded-xl">
             <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
@@ -264,11 +229,11 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
         )}
 
-        {/* Scrubber */}
+        {/* ── Scrubber ── */}
         <div className="mb-5">
           <div
             ref={progressRef}
-            className="relative h-8 flex items-center cursor-pointer touch-none select-none"
+            className="relative h-10 flex items-center cursor-pointer touch-none select-none"
             onMouseDown={handleScrubStart}
             onMouseMove={handleScrubMove}
             onMouseUp={handleScrubEnd}
@@ -276,37 +241,33 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             onTouchStart={handleScrubStart}
             onTouchMove={handleScrubMove}
             onTouchEnd={handleScrubEnd}
-            aria-label="Seek"
             role="slider"
+            aria-label="Seek"
             aria-valuemin={0}
             aria-valuemax={duration}
             aria-valuenow={displayTime}
           >
-            {/* Track background */}
-            <div className="absolute w-full h-[4px] bg-white/15 rounded-full overflow-hidden">
-              {/* Buffered layer */}
+            {/* Track */}
+            <div className="absolute w-full h-[4px] bg-white/20 rounded-full overflow-hidden">
               <div
                 className="absolute h-full bg-white/30 rounded-full transition-[width] duration-500"
                 style={{ width: `${bufferedPct}%` }}
               />
-              {/* Played layer */}
               <div
                 className="absolute h-full bg-white rounded-full"
                 style={{ width: `${playedPct}%` }}
               />
             </div>
-
             {/* Thumb */}
             <div
-              className={`absolute w-4 h-4 bg-white rounded-full shadow-lg transition-transform ${
-                isSeeking ? 'scale-125' : 'scale-100'
+              className={`absolute bg-white rounded-full shadow-md transition-[width,height,margin] duration-150 ${
+                isSeeking ? 'w-5 h-5 -mt-[1px]' : 'w-[14px] h-[14px]'
               }`}
-              style={{ left: `calc(${playedPct}% - 8px)` }}
+              style={{ left: `calc(${playedPct}% - ${isSeeking ? 10 : 7}px)` }}
             />
           </div>
 
-          {/* Time labels */}
-          <div className="flex justify-between mt-1">
+          <div className="flex justify-between -mt-1">
             <span className="text-[11px] text-white/50 font-medium tabular-nums">
               {formatTime(displayTime)}
             </span>
@@ -316,16 +277,16 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
         </div>
 
-        {/* Transport controls + Favorite */}
-        <div className="flex items-center justify-between mb-3">
+        {/* ── Transport controls ── */}
+        <div className="flex items-center justify-between mb-6">
           <button
             onClick={toggleShuffle}
             className={`p-2 transition-all active:scale-90 ${
-              shuffle ? 'text-rose-400' : 'text-white/40'
+              shuffle ? 'text-[#fc3c44]' : 'text-white/40'
             }`}
             aria-label={shuffle ? 'Shuffle on' : 'Shuffle off'}
           >
-            <Shuffle size={20} />
+            <Shuffle size={22} />
           </button>
 
           <button
@@ -333,22 +294,22 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             className="p-2 text-white active:scale-90 transition-transform"
             aria-label="Previous"
           >
-            <SkipBack size={34} fill="white" />
+            <SkipBack size={38} fill="white" strokeWidth={0} />
           </button>
 
           <button
             onClick={togglePlay}
-            className={`w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center
-              shadow-xl active:scale-95 transition-transform
-              ${isStalled ? 'opacity-60' : 'opacity-100'}`}
+            className={`w-[72px] h-[72px] bg-white rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform ${
+              isStalled ? 'opacity-60' : 'opacity-100'
+            }`}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isStalled ? (
-              <Loader2 size={28} className="text-black animate-spin" />
+              <Loader2 size={30} className="text-black animate-spin" />
             ) : isPlaying ? (
-              <Pause size={30} fill="black" className="text-black" />
+              <Pause size={32} fill="black" strokeWidth={0} />
             ) : (
-              <Play size={30} fill="black" className="text-black ml-1" />
+              <Play size={32} fill="black" strokeWidth={0} className="ml-1" />
             )}
           </button>
 
@@ -357,48 +318,31 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             className="p-2 text-white active:scale-90 transition-transform"
             aria-label="Next"
           >
-            <SkipForward size={34} fill="white" />
+            <SkipForward size={38} fill="white" strokeWidth={0} />
           </button>
 
           <button
             onClick={toggleRepeat}
             className={`p-2 transition-all active:scale-90 ${
-              repeat !== 'off' ? 'text-rose-400' : 'text-white/40'
+              repeat !== 'off' ? 'text-[#fc3c44]' : 'text-white/40'
             }`}
             aria-label={`Repeat: ${repeat}`}
           >
-            {repeat === 'one' ? <Repeat1 size={20} /> : <Repeat size={20} />}
+            {repeat === 'one' ? <Repeat1 size={22} /> : <Repeat size={22} />}
           </button>
         </div>
 
-        {/* Favorite button - prominent position */}
-        <div className="flex justify-center mb-6">
-          <button
-            onClick={() => toggleLike(currentTrack.id)}
-            className={`p-3 transition-all active:scale-90 ${
-              isLiked(currentTrack.id) ? 'text-rose-400' : 'text-white/60'
-            }`}
-            aria-label={isLiked(currentTrack.id) ? 'Remove from Favorites' : 'Add to Favorites'}
-          >
-            <Heart
-              size={32}
-              fill={isLiked(currentTrack.id) ? '#fb7185' : 'none'}
-              className={isLiked(currentTrack.id) ? 'text-rose-400' : 'text-white/60'}
-            />
-          </button>
-        </div>
-
-        {/* Volume slider — hidden on mobile (iOS ignores HTML5 volume) */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* ── Volume ── */}
+        <div className="flex items-center gap-3 mb-6">
           <button
             onClick={toggleMute}
-            className="text-white/40 active:opacity-50"
+            className="text-white/40 active:opacity-50 flex-shrink-0"
             aria-label={isMuted ? 'Unmute' : 'Mute'}
           >
             {isMuted || volume === 0 ? (
-              <VolumeX size={18} />
+              <VolumeX size={16} />
             ) : (
-              <Volume1 size={18} />
+              <Volume1 size={16} />
             )}
           </button>
 
@@ -412,37 +356,60 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             onTouchStart={handleVolumeStart}
             onTouchMove={handleVolumeMove}
             onTouchEnd={handleVolumeEnd}
-            aria-label="Volume"
             role="slider"
+            aria-label="Volume"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={Math.round(currentVolume * 100)}
           >
-            <div className="absolute w-full h-[3px] bg-white/20 rounded-full">
+            <div className="absolute w-full h-[4px] bg-white/20 rounded-full overflow-hidden">
               <div
-                className="h-full bg-white/60 rounded-full"
+                className="h-full bg-white/70 rounded-full"
                 style={{ width: `${currentVolume * 100}%` }}
               />
             </div>
             <div
-              className="absolute w-3 h-3 bg-white/80 rounded-full shadow"
+              className="absolute w-3 h-3 bg-white rounded-full shadow"
               style={{ left: `calc(${currentVolume * 100}% - 6px)` }}
             />
           </div>
+
+          <button
+            onClick={() => setVolume(1)}
+            className="text-white/40 active:opacity-50 flex-shrink-0"
+            aria-label="Max volume"
+          >
+            <Volume2 size={16} />
+          </button>
         </div>
 
-        {/* More options popover */}
+        {/* ── Bottom action row ── */}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setShowQueue(true)}
+            className="flex-shrink-0 p-2 text-white/40 active:opacity-40 active:scale-90 transition-transform"
+            aria-label="View queue"
+          >
+            <ListMusic size={22} />
+          </button>
+          {/* Spacer */}
+          <div />
+        </div>
+
+        {/* ── More options popover ── */}
         {showMoreMenu && (
-          <div className="absolute right-6 top-16 z-50 w-44 rounded-xl bg-black/90 border border-white/10 shadow-2xl py-1">
+          <div className="absolute right-6 top-16 z-50 w-48 rounded-2xl overflow-hidden shadow-2xl"
+            style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
+          >
             <button
               onClick={() => {
                 setShowMoreMenu(false);
                 showNowPlaying(false);
                 if (currentTrack.albumId) onNavigate('album', currentTrack.albumId);
               }}
-              className="w-full px-3 py-2 text-left text-sm text-white/80 active:bg-white/10"
+              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10 border-b border-white/[0.08]"
             >
-              Go to album
+              Go to Album
             </button>
             <button
               onClick={() => {
@@ -450,47 +417,57 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 showNowPlaying(false);
                 if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
               }}
-              className="w-full px-3 py-2 text-left text-sm text-white/80 active:bg-white/10"
+              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10"
             >
-              Go to artist
+              Go to Artist
             </button>
           </div>
         )}
 
-        {/* Simple queue viewer */}
+        {/* ── Queue panel ── */}
         {showQueue && (
-          <div className="absolute left-0 right-0 bottom-0 z-40 max-h-[50vh] bg-black/90 border-t border-white/10 rounded-t-2xl">
-            <div className="flex items-center justify-between px-5 pt-3 pb-2">
-              <p className="text-sm font-semibold text-white">Up Next</p>
+          <div
+            className="absolute left-0 right-0 bottom-0 z-40 max-h-[55vh] rounded-t-[28px] overflow-hidden"
+            style={{ background: 'rgba(22,22,24,0.97)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
+          >
+            {/* Pill handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-white/25" />
+            </div>
+            <div className="flex items-center justify-between px-5 pt-1 pb-3">
+              <p className="text-base font-bold text-white">Up Next</p>
               <button
                 onClick={() => setShowQueue(false)}
-                className="text-xs text-white/50 active:text-white/80"
+                className="text-sm text-[#fc3c44] font-medium active:opacity-60"
               >
-                Close
+                Done
               </button>
             </div>
-            <div className="px-3 pb-4 space-y-1 overflow-y-auto max-h-[40vh] scrollbar-hide">
+
+            <div className="px-3 pb-8 overflow-y-auto max-h-[42vh] scrollbar-hide">
               {state.queue.map((track, index) => (
                 <div
                   key={`${track.id}-${index}`}
-                  className={`w-full flex items-center gap-3 px-2 py-2 rounded-lg ${
-                    index === state.queueIndex ? 'bg-white/15' : 'bg-transparent'
+                  className={`flex items-center gap-3 px-2 py-2.5 rounded-xl ${
+                    index === state.queueIndex ? 'bg-white/[0.09]' : ''
                   }`}
                 >
                   <img
                     src={track.coverUrl}
                     alt={track.album}
-                    className="w-9 h-9 rounded-md object-cover flex-shrink-0"
+                    className="w-10 h-10 rounded-[8px] object-cover flex-shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-white truncate">{track.title}</p>
-                    <p className="text-[11px] text-white/50 truncate">{track.artist}</p>
+                    <p className={`text-sm font-medium truncate ${
+                      index === state.queueIndex ? 'text-[#fc3c44]' : 'text-white'
+                    }`}>{track.title}</p>
+                    <p className="text-[12px] text-white/50 truncate">{track.artist}</p>
                   </div>
                 </div>
               ))}
               {state.queue.length === 0 && (
-                <p className="px-2 py-2 text-xs text-white/40">
-                  Queue is empty. Start playing something to see it here.
+                <p className="px-2 py-4 text-sm text-white/40 text-center">
+                  Queue is empty
                 </p>
               )}
             </div>

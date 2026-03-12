@@ -92,8 +92,8 @@ function AppContent() {
         <div
           style={{
             paddingBottom: hasTrack
-              ? 'calc(132px + env(safe-area-inset-bottom, 0px))'
-              : 'calc(84px + env(safe-area-inset-bottom, 0px))',
+              ? 'calc(148px + env(safe-area-inset-bottom, 0px))'
+              : 'calc(64px + env(safe-area-inset-bottom, 0px))',
           }}
         >
           {nav.view === 'home' && <Home onNavigate={navigate} />}
@@ -117,36 +117,42 @@ function AppContent() {
         </div>
       </main>
 
-      {/* ── Fixed bottom bar: glass bg + mini-player + tabs ── */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-40 bg-black/70 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/10"
-        style={{ WebkitBackdropFilter: 'blur(40px) saturate(180%)', backdropFilter: 'blur(40px) saturate(180%)' }}
-      >
+      {/* ── Fixed bottom: floating mini player + tab bar ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40">
+        {/* Floating glass mini player card */}
         {hasTrack && <MiniPlayer />}
 
-        <nav
-          className="flex items-center justify-around px-6 pt-1"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
-          aria-label="Main navigation"
+        {/* Tab bar */}
+        <div
+          className="bg-black/80 backdrop-blur-3xl border-t border-white/[0.08]"
+          style={{ WebkitBackdropFilter: 'blur(40px)', backdropFilter: 'blur(40px)' }}
         >
-          {tabs.map(({ id, label, icon: Icon }) => {
-            const isActive = activeTab === id;
-            return (
-              <button
-                key={id}
-                onClick={() => switchTab(id)}
-                className={`flex flex-col items-center gap-0.5 py-1.5 px-4 transition-all duration-200 active:scale-90 ${
-                  isActive ? 'text-rose-500' : 'text-white/40'
-                }`}
-                aria-label={label}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
-                <span className="text-[10px] font-medium">{label}</span>
-              </button>
-            );
-          })}
-        </nav>
+          <nav
+            className="flex items-center justify-around px-2 pt-2"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
+            aria-label="Main navigation"
+          >
+            {tabs.map(({ id, label, icon: Icon }) => {
+              const isActive = activeTab === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => switchTab(id)}
+                  className={`flex flex-col items-center gap-0.5 py-1 px-5 transition-all duration-200 active:scale-90 ${
+                    isActive ? 'text-[#fc3c44]' : 'text-[#8e8e93]'
+                  }`}
+                  aria-label={label}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
+                  <span className={`text-[10px] font-medium ${isActive ? 'text-[#fc3c44]' : 'text-[#8e8e93]'}`}>
+                    {label}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
       </div>
 
       {/* ── Full-screen Now Playing overlay ── */}

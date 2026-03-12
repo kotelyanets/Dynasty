@@ -47,7 +47,9 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
 
   // Load playlists on mount
   useEffect(() => {
-    api.getPlaylists().then(setPlaylists).catch(console.error);
+    api.getPlaylists()
+      .then(setPlaylists)
+      .catch((e) => setPlaylistsError(e instanceof Error ? e.message : 'Failed to load playlists'));
   }, []);
 
   // Apply initial tab / genre when provided by the parent.
@@ -97,29 +99,31 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
 
   const handleCreatePlaylist = async () => {
     if (!newPlaylistName.trim()) return;
+    setPlaylistActionError(null);
     try {
       const pl = await api.createPlaylist(newPlaylistName.trim());
       setPlaylists((prev) => [...prev, pl]);
       setNewPlaylistName('');
       setShowCreate(false);
     } catch (e) {
-      console.error(e);
+      setPlaylistActionError(e instanceof Error ? e.message : 'Failed to create playlist');
     }
   };
 
   const handleDeletePlaylist = async (id: string) => {
+    setPlaylistActionError(null);
     try {
       await api.deletePlaylist(id);
       setPlaylists((prev) => prev.filter((p) => p.id !== id));
     } catch (e) {
-      console.error(e);
+      setPlaylistActionError(e instanceof Error ? e.message : 'Failed to delete playlist');
     }
   };
 
   return (
     <div className="pb-4">
       <div className="px-5 pt-14 pb-2">
-        <h1 className="text-3xl font-bold text-white mb-4">Library</h1>
+        <h1 className="text-[34px] font-bold text-white mb-4">Library</h1>
 
         {/* Tab pills */}
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -127,10 +131,10 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[14px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
                 activeTab === id
-                  ? 'bg-rose-500 text-white'
-                  : 'bg-white/10 text-white/60 active:bg-white/15'
+                  ? 'bg-[#fc3c44] text-white shadow-lg'
+                  : 'bg-white/[0.1] text-white/60 active:bg-white/[0.15]'
               }`}
             >
               <Icon size={14} />
@@ -140,53 +144,45 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
         </div>
       </div>
 
-      {/* ── Songs Tab ────────────────────────────────────── */}
+      {/* ── Songs Tab ─────────────────────────────────────── */}
       {activeTab === 'songs' && (
         <div className="mt-2">
           {tracksLoading && (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#fc3c44]" />
             </div>
           )}
           {tracksError && (
             <div className="px-5 py-10 text-center">
-              <p className="text-red-400 font-medium">Failed to load tracks</p>
-              <p className="text-white/40 text-sm mt-1">{tracksError.message}</p>
+              <p className="text-red-400 font-semibold">Failed to load tracks</p>
+              <p className="text-white/40 text-[13px] mt-1">{tracksError.message}</p>
             </div>
           )}
           {!tracksLoading && !tracksError && (
             <>
               <div className="px-5 py-2 flex items-center justify-between">
-                <p className="text-sm text-white/40">
-                  {tracks.length} songs
-                </p>
-            {/* Sort control */}
-            <div className="flex gap-1.5">
-              {(['default', 'az', 'duration'] as SongSort[]).map((s) => {
-                const labels: Record<SongSort, string> = {
-                  default: 'Recent', az: 'A–Z', duration: 'Length',
-                };
-                return (
-                  <button
-                    key={s}
-                    onClick={() => setSongSort(s)}
-                    className={`text-[11px] px-2.5 py-1 rounded-full font-medium transition-colors ${
-                      songSort === s
-                        ? 'bg-white/15 text-white'
-                        : 'text-white/30 active:text-white/60'
-                    }`}
-                  >
-                    {labels[s]}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/*
-            VirtualTrackList handles the DOM virtualization.
-            Only ~12-15 rows are mounted at any given time.
-          */}
+                <p className="text-[13px] text-white/40">{tracks.length} songs</p>
+                <div className="flex gap-1.5">
+                  {(['default', 'az', 'duration'] as SongSort[]).map((s) => {
+                    const labels: Record<SongSort, string> = {
+                      default: 'Recent', az: 'A–Z', duration: 'Length',
+                    };
+                    return (
+                      <button
+                        key={s}
+                        onClick={() => setSongSort(s)}
+                        className={`text-[12px] px-3 py-1 rounded-full font-medium transition-colors ${
+                          songSort === s
+                            ? 'bg-white/[0.14] text-white'
+                            : 'text-white/35 active:text-white/60'
+                        }`}
+                      >
+                        {labels[s]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="px-1">
                 <VirtualTrackList
                   tracks={sortedTracks}
@@ -200,122 +196,114 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
         </div>
       )}
 
-      {/* ── Albums Tab ───────────────────────────────────── */}
+      {/* ── Albums Tab ────────────────────────────────────── */}
       {activeTab === 'albums' && (
         <div className="px-5 mt-4">
           {albumsLoading && (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#fc3c44]" />
             </div>
           )}
           {albumsError && (
             <div className="py-10 text-center">
-              <p className="text-red-400 font-medium">Failed to load albums</p>
-              <p className="text-white/40 text-sm mt-1">{albumsError.message}</p>
+              <p className="text-red-400 font-semibold">Failed to load albums</p>
+              <p className="text-white/40 text-[13px] mt-1">{albumsError.message}</p>
             </div>
           )}
           {!albumsLoading && !albumsError && (
             <>
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-sm text-white/40">
-                  {visibleAlbums.length} albums
-                  {genreFilter ? ` · ${genreFilter}` : ''}
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-[13px] text-white/40">
+                  {visibleAlbums.length} albums{genreFilter ? ` · ${genreFilter}` : ''}
                 </p>
                 {genreFilter && (
                   <button
                     onClick={() => setGenreFilter(null)}
-                    className="text-xs text-white/50 active:text-white/80 underline-offset-2"
+                    className="text-[13px] text-[#fc3c44] font-medium active:opacity-60"
                   >
                     Clear filter
                   </button>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-6">
                 {visibleAlbums.map((album) => (
-              <button
-                key={album.id}
-                onClick={() => onNavigate('album', album.id)}
-                className="text-left group active:opacity-70 transition-opacity"
-              >
-                <div className="aspect-square rounded-xl overflow-hidden mb-2 shadow-lg">
-                  <img
-                    src={album.coverUrl}
-                    alt={album.title}
-                    className="w-full h-full object-cover group-active:scale-95 transition-transform duration-200"
-                    loading="lazy"
-                  />
-                </div>
-                <p className="text-[13px] font-semibold text-white truncate">{album.title}</p>
-                <p className="text-[12px] text-white/50 truncate">
-                  {album.artist} · {album.year}
-                </p>
-              </button>
-            ))}
+                  <button
+                    key={album.id}
+                    onClick={() => onNavigate('album', album.id)}
+                    className="text-left group active:scale-[0.97] transition-transform duration-150"
+                  >
+                    <div className="aspect-square rounded-[14px] overflow-hidden mb-2 shadow-xl">
+                      <img
+                        src={album.coverUrl}
+                        alt={album.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <p className="text-[13px] font-semibold text-white truncate">{album.title}</p>
+                    <p className="text-[12px] text-white/45 truncate">{album.artist} · {album.year}</p>
+                  </button>
+                ))}
               </div>
             </>
           )}
         </div>
       )}
 
-      {/* ── Artists Tab ──────────────────────────────────── */}
+      {/* ── Artists Tab ───────────────────────────────────── */}
       {activeTab === 'artists' && (
         <div className="mt-2">
           {artistsLoading && (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#fc3c44]" />
             </div>
           )}
           {artistsError && (
             <div className="px-5 py-10 text-center">
-              <p className="text-red-400 font-medium">Failed to load artists</p>
-              <p className="text-white/40 text-sm mt-1">{artistsError.message}</p>
+              <p className="text-red-400 font-semibold">Failed to load artists</p>
+              <p className="text-white/40 text-[13px] mt-1">{artistsError.message}</p>
             </div>
           )}
           {!artistsLoading && !artistsError && (
             <>
-              <div className="px-5">
-                <p className="text-sm text-white/40 mb-3">{artists.length} artists</p>
+              <div className="px-5 mb-1">
+                <p className="text-[13px] text-white/40">{artists.length} artists</p>
               </div>
               {artists.map((artist) => (
-            <button
-              key={artist.id}
-              onClick={() => onNavigate('artist', artist.id)}
-              className="w-full flex items-center gap-4 px-5 py-3 active:bg-white/8 transition-colors"
-            >
-              <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg flex-shrink-0">
-                <img
-                  src={artist.imageUrl}
-                  alt={artist.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="text-left flex-1 min-w-0">
-                <p className="text-base font-semibold text-white truncate">{artist.name}</p>
-                <p className="text-sm text-white/50">
-                  {artist.albumCount} album{artist.albumCount > 1 ? 's' : ''} · {artist.trackCount} songs
-                </p>
-              </div>
-              <ChevronRight size={16} className="text-white/20 flex-shrink-0" />
-            </button>
-          ))}
+                <button
+                  key={artist.id}
+                  onClick={() => onNavigate('artist', artist.id)}
+                  className="w-full flex items-center gap-4 px-5 py-3 active:bg-white/[0.05] transition-colors"
+                >
+                  <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg flex-shrink-0 ring-[0.5px] ring-white/10">
+                    <img src={artist.imageUrl} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
+                  </div>
+                  <div className="text-left flex-1 min-w-0">
+                    <p className="text-[15px] font-semibold text-white truncate">{artist.name}</p>
+                    <p className="text-[13px] text-white/45">
+                      {artist.albumCount} album{artist.albumCount > 1 ? 's' : ''} · {artist.trackCount} songs
+                    </p>
+                  </div>
+                  <ChevronRight size={16} className="text-white/20 flex-shrink-0" />
+                </button>
+              ))}
             </>
           )}
         </div>
       )}
 
-      {/* ── Playlists Tab ────────────────────────────────── */}
+      {/* ── Playlists Tab ─────────────────────────────────── */}
       {activeTab === 'playlists' && (
         <div className="mt-4 px-5">
           {/* Create button */}
           <button
             onClick={() => setShowCreate((v) => !v)}
-            className="w-full flex items-center gap-3 py-3 text-rose-400 active:opacity-60 transition-opacity mb-2"
+            className="w-full flex items-center gap-3 py-3 text-[#fc3c44] active:opacity-60 transition-opacity mb-2"
           >
-            <div className="w-12 h-12 rounded-xl bg-white/8 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-[12px] bg-white/[0.07] flex items-center justify-center">
               <Plus size={22} />
             </div>
-            <span className="text-base font-semibold">New Playlist</span>
+            <span className="text-[17px] font-semibold">New Playlist</span>
           </button>
 
           {/* Inline create form */}
@@ -328,25 +316,33 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
                 onKeyDown={(e) => e.key === 'Enter' && handleCreatePlaylist()}
                 placeholder="Playlist name…"
                 autoFocus
-                className="flex-1 bg-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:bg-white/15 transition-colors"
+                className="flex-1 bg-white/[0.1] rounded-[12px] px-4 py-2.5 text-[15px] text-white placeholder:text-white/30 outline-none focus:bg-white/[0.14] transition-colors"
               />
               <button
                 onClick={handleCreatePlaylist}
-                className="px-4 py-2.5 bg-rose-500 rounded-xl text-sm font-semibold text-white active:scale-95 transition-transform"
+                className="px-4 py-2.5 bg-[#fc3c44] rounded-[12px] text-[15px] font-semibold text-white active:scale-95 transition-transform"
               >
                 Create
               </button>
             </div>
           )}
 
-          {/* Playlist list */}
+          {/* Error feedback */}
+          {playlistActionError && (
+            <p className="text-[13px] text-red-400 mb-3 px-1">{playlistActionError}</p>
+          )}
+          {playlistsError && (
+            <p className="text-[13px] text-red-400 mb-3 px-1">{playlistsError}</p>
+          )}
+
+          {/* Empty state */}
           {playlists.length === 0 && !showCreate && (
-            <div className="text-center mt-8">
-              <ListMusic size={48} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/50 font-medium">No Playlists Yet</p>
-              <p className="text-white/30 text-sm mt-1">
-                Tap "New Playlist" to organize your music
-              </p>
+            <div className="text-center mt-10">
+              <div className="w-16 h-16 rounded-2xl bg-white/[0.07] flex items-center justify-center mx-auto mb-4">
+                <ListMusic size={28} className="text-white/25" />
+              </div>
+              <p className="text-white/60 text-[17px] font-semibold">No Playlists Yet</p>
+              <p className="text-white/35 text-[14px] mt-1.5">Tap "New Playlist" to get started</p>
             </div>
           )}
 
@@ -354,17 +350,17 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
             <div
               key={pl.id}
               onClick={() => onNavigate('playlist', pl.id)}
-              className="flex items-center gap-3 py-3 border-b border-white/5 last:border-0 cursor-pointer active:bg-white/5 transition-colors"
+              className="flex items-center gap-3.5 py-3 border-b border-white/[0.06] last:border-0 cursor-pointer active:bg-white/[0.04] transition-colors -mx-1 px-1 rounded-xl"
             >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/40 to-rose-900/60 flex items-center justify-center flex-shrink-0">
-                <ListMusic size={20} className="text-white/70" />
+              <div className="w-[52px] h-[52px] rounded-[12px] bg-gradient-to-br from-[#fc3c44]/50 to-[#a00016]/70 flex items-center justify-center flex-shrink-0 shadow-md">
+                <ListMusic size={22} className="text-white/80" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-base font-semibold text-white truncate">{pl.name}</p>
+                <p className="text-[15px] font-semibold text-white truncate">{pl.name}</p>
                 {pl.description && (
-                  <p className="text-sm text-white/40 truncate">{pl.description}</p>
+                  <p className="text-[13px] text-white/40 truncate">{pl.description}</p>
                 )}
-                <p className="text-xs text-white/30">
+                <p className="text-[12px] text-white/30">
                   {pl.trackIds.length} song{pl.trackIds.length !== 1 ? 's' : ''}
                 </p>
               </div>
