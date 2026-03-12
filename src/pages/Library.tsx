@@ -9,12 +9,12 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { VirtualTrackList } from '@/components/VirtualTrackList';
-import { api } from '@/services/api';
+import { api, getOrCreateLikedPlaylist, getStoredLikedPlaylistId } from '@/services/api';
 import type { Playlist } from '@/types/music';
 import { useTracks } from '@/hooks/useTracks';
 import { useAlbums } from '@/hooks/useAlbums';
 import { useArtists } from '@/hooks/useArtists';
-import { Music, Disc3, Mic2, ListMusic, Plus, Trash2, ChevronRight, Loader2 } from 'lucide-react';
+import { Music, Disc3, Mic2, ListMusic, Plus, Trash2, ChevronRight, Loader2, Heart } from 'lucide-react';
 
 interface LibraryProps {
   onNavigate: (view: string, id?: string) => void;
@@ -35,6 +35,7 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const [songSort, setSongSort] = useState<SongSort>('default');
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [likedPlaylistId, setLikedPlaylistId] = useState<string | null>(getStoredLikedPlaylistId());
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [playlistsError, setPlaylistsError] = useState<string | null>(null);
@@ -45,12 +46,13 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const { data: albums, loading: albumsLoading, error: albumsError } = useAlbums();
   const { data: artists, loading: artistsLoading, error: artistsError } = useArtists();
 
-  // Load playlists on mount
+  // Load playlists whenever the Playlists tab is active
   useEffect(() => {
+    if (activeTab !== 'playlists') return;
     api.getPlaylists()
       .then(setPlaylists)
       .catch((e) => setPlaylistsError(e instanceof Error ? e.message : 'Failed to load playlists'));
-  }, []);
+  }, [activeTab]);
 
   // Apply initial tab / genre when provided by the parent.
   useEffect(() => {
@@ -88,6 +90,13 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const visibleAlbums = useMemo(
     () => (genreFilter ? uniqueAlbums.filter((a) => a.genre === genreFilter) : uniqueAlbums),
     [uniqueAlbums, genreFilter],
+  );
+
+  const userPlaylists = useMemo(
+    () => playlists.filter(
+      (pl) => pl.id !== likedPlaylistId && pl.name.toLowerCase() !== 'liked tracks',
+    ),
+    [playlists, likedPlaylistId],
   );
 
   const tabs: { id: Tab; label: string; icon: typeof Music }[] = [
@@ -295,6 +304,44 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
       {/* ── Playlists Tab ─────────────────────────────────── */}
       {activeTab === 'playlists' && (
         <div className="mt-4 px-5">
+          {/* ── Liked Tracks (pinned) ── */}
+          {(() => {
+            const likedPl = playlists.find(
+              (p) => p.id === likedPlaylistId || p.name.toLowerCase() === 'liked tracks',
+            );
+            const songCount = likedPl?.trackIds.length ?? 0;
+            const handleOpenLiked = async () => {
+              if (likedPl) {
+                onNavigate('playlist', likedPl.id);
+              } else {
+                const pl = await getOrCreateLikedPlaylist();
+                setLikedPlaylistId(pl.id);
+                setPlaylists((prev) => {
+                  if (prev.find((p) => p.id === pl.id)) return prev;
+                  return [pl, ...prev];
+                });
+                onNavigate('playlist', pl.id);
+              }
+            };
+            return (
+              <div
+                onClick={() => void handleOpenLiked()}
+                className="flex items-center gap-3.5 py-3 border-b border-white/[0.06] cursor-pointer active:bg-white/[0.04] transition-colors -mx-1 px-1 rounded-xl mb-1"
+              >
+                <div className="w-[52px] h-[52px] rounded-[12px] bg-gradient-to-br from-[#fc3c44]/60 to-[#7a001a]/80 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <Heart size={22} className="text-white" fill="white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[15px] font-semibold text-white truncate">Liked Tracks</p>
+                  <p className="text-[12px] text-white/30">
+                    {songCount} song{songCount !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <ChevronRight size={16} className="text-white/20 flex-shrink-0" />
+              </div>
+            );
+          })()}
+
           {/* Create button */}
           <button
             onClick={() => setShowCreate((v) => !v)}
@@ -335,47 +382,44 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
             <p className="text-[13px] text-red-400 mb-3 px-1">{playlistsError}</p>
           )}
 
-          {/* Empty state */}
-          {playlists.length === 0 && !showCreate && (
-            <div className="text-center mt-10">
-              <div className="w-16 h-16 rounded-2xl bg-white/[0.07] flex items-center justify-center mx-auto mb-4">
-                <ListMusic size={28} className="text-white/25" />
+          {/* User playlists (excluding Liked Tracks) */}
+          {userPlaylists.map((pl) => (
+              <div
+                key={pl.id}
+                onClick={() => onNavigate('playlist', pl.id)}
+                className="flex items-center gap-3.5 py-3 border-b border-white/[0.06] last:border-0 cursor-pointer active:bg-white/[0.04] transition-colors -mx-1 px-1 rounded-xl"
+              >
+                <div className="w-[52px] h-[52px] rounded-[12px] bg-gradient-to-br from-[#fc3c44]/50 to-[#a00016]/70 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <ListMusic size={22} className="text-white/80" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[15px] font-semibold text-white truncate">{pl.name}</p>
+                  {pl.description && (
+                    <p className="text-[13px] text-white/40 truncate">{pl.description}</p>
+                  )}
+                  <p className="text-[12px] text-white/30">
+                    {pl.trackIds.length} song{pl.trackIds.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void handleDeletePlaylist(pl.id);
+                  }}
+                  className="p-2 text-white/20 active:text-red-400 transition-colors"
+                  aria-label={`Delete ${pl.name}`}
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-              <p className="text-white/60 text-[17px] font-semibold">No Playlists Yet</p>
-              <p className="text-white/35 text-[14px] mt-1.5">Tap "New Playlist" to get started</p>
+            ))}
+
+          {/* Empty state for user playlists */}
+          {userPlaylists.length === 0 && !showCreate && (
+            <div className="text-center mt-6">
+              <p className="text-white/35 text-[14px]">Tap "New Playlist" to create a playlist</p>
             </div>
           )}
-
-          {playlists.map((pl) => (
-            <div
-              key={pl.id}
-              onClick={() => onNavigate('playlist', pl.id)}
-              className="flex items-center gap-3.5 py-3 border-b border-white/[0.06] last:border-0 cursor-pointer active:bg-white/[0.04] transition-colors -mx-1 px-1 rounded-xl"
-            >
-              <div className="w-[52px] h-[52px] rounded-[12px] bg-gradient-to-br from-[#fc3c44]/50 to-[#a00016]/70 flex items-center justify-center flex-shrink-0 shadow-md">
-                <ListMusic size={22} className="text-white/80" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-semibold text-white truncate">{pl.name}</p>
-                {pl.description && (
-                  <p className="text-[13px] text-white/40 truncate">{pl.description}</p>
-                )}
-                <p className="text-[12px] text-white/30">
-                  {pl.trackIds.length} song{pl.trackIds.length !== 1 ? 's' : ''}
-                </p>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  void handleDeletePlaylist(pl.id);
-                }}
-                className="p-2 text-white/20 active:text-red-400 transition-colors"
-                aria-label={`Delete ${pl.name}`}
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ))}
         </div>
       )}
     </div>
