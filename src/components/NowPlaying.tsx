@@ -71,12 +71,12 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
     haptic();
-    const oldIndex = state.queue.findIndex((_: Track, i: number) => `queue-${i}` === active.id);
-    const newIndex = state.queue.findIndex((_: Track, i: number) => `queue-${i}` === over.id);
-    if (oldIndex !== -1 && newIndex !== -1) {
+    const oldIndex = parseInt(String(active.id).split('-')[1], 10);
+    const newIndex = parseInt(String(over.id).split('-')[1], 10);
+    if (!isNaN(oldIndex) && !isNaN(newIndex) && oldIndex >= 0 && newIndex >= 0) {
       reorderQueue(oldIndex, newIndex);
     }
-  }, [state.queue, reorderQueue]);
+  }, [reorderQueue]);
 
   if (!currentTrack || !visible) return null;
 

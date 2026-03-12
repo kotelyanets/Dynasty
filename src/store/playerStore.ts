@@ -230,6 +230,8 @@ export const usePlayerStore = create<PlayerStore>()(
     reorderQueue: (fromIndex, toIndex) => {
       const { queue, queueIndex } = get();
       if (fromIndex === toIndex) return;
+      if (fromIndex < 0 || fromIndex >= queue.length) return;
+      if (toIndex < 0 || toIndex >= queue.length) return;
       const newQueue = [...queue];
       const [moved] = newQueue.splice(fromIndex, 1);
       newQueue.splice(toIndex, 0, moved);

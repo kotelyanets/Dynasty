@@ -41,14 +41,21 @@ export function BottomSheet({ open, onClose, children, title }: BottomSheetProps
   // Lock body scroll when open
   useEffect(() => {
     if (!open) return;
-    const handler = (e: TouchEvent) => {
+    const handleTouchMove = (e: TouchEvent) => {
       // Allow scrolling inside the sheet itself
       if (sheetRef.current?.contains(e.target as Node)) return;
       e.preventDefault();
     };
-    document.addEventListener('touchmove', handler, { passive: false });
-    return () => document.removeEventListener('touchmove', handler);
-  }, [open]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
 
   return (
     <AnimatePresence>
