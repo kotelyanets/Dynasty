@@ -87,9 +87,13 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
 
       // Secondary dedup: same title + same cover URL ≈ same album
       // (catches duplicates created by inconsistent artist metadata)
-      const key = `${album.title.trim().toLowerCase()}::${album.coverUrl}`;
-      if (seenTitleCover.has(key)) return false;
-      seenTitleCover.add(key);
+      // Only apply when coverUrl is present to avoid incorrectly
+      // grouping all cover-less albums together.
+      if (album.coverUrl) {
+        const key = `${album.title.trim().toLowerCase()}::${album.coverUrl}`;
+        if (seenTitleCover.has(key)) return false;
+        seenTitleCover.add(key);
+      }
 
       return true;
     });
