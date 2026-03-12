@@ -37,6 +37,8 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [showCreate, setShowCreate] = useState(false);
+  const [playlistsError, setPlaylistsError] = useState<string | null>(null);
+  const [playlistActionError, setPlaylistActionError] = useState<string | null>(null);
 
   // ── Fetch real data from the backend ──────────────────────
   const { data: tracks, loading: tracksLoading, error: tracksError } = useTracks();

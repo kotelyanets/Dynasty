@@ -6,3 +6,4 @@ dist/
 Music/
 *.db
 *.log
+build-personal-music-pwa*/

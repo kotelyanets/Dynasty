@@ -18,10 +18,10 @@ Dynasty is a state-of-the-art music application that combines sleek design with 
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React, TypeScript, Vite
-- **Backend**: Node.js, Express, Prisma
-- **Styling**: Vanilla CSS with modern tokens
-- **Database**: SQLite (local dev)
+- **Frontend**: React 19, TypeScript, Vite
+- **Backend**: Node.js, Fastify, Prisma
+- **Styling**: Tailwind CSS 4
+- **Database**: SQLite (file-based, zero infrastructure)
 
 ## 📦 Getting Started
 
