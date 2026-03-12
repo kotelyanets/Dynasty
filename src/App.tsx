@@ -108,18 +108,19 @@ function AppContent() {
           SAFE-AREA GUARANTEE
           ────────────────────────────────────────────────────────────
           The fixed bottom zone height is:
-            • With track:    MiniPlayer(~84px) + TabBar(~60px) = ~144px
-            • Without track: TabBar(~60px)
-          We add env(safe-area-inset-bottom, 0px) on top of each so
-          that the iPhone home indicator never clips the last list item.
+            • Tab bar ≈ 1px border + 6px pt + ~40px buttons + max(safe-area, 6px) pb
+            • MiniPlayer ≈ 84px (when a track is active)
+          The content padding must mirror the tab bar's
+          max(env(safe-area-inset-bottom), 6px) so the last list item
+          is never clipped on notched or non-notched devices.
           `viewport-fit=cover` in index.html is required for env() to
           return a non-zero value on notched iPhones.
         */}
         <div
           style={{
             paddingBottom: hasTrack
-              ? 'calc(148px + env(safe-area-inset-bottom, 0px))'
-              : 'calc(80px + env(safe-area-inset-bottom, 0px))',
+              ? 'calc(136px + max(env(safe-area-inset-bottom, 0px), 6px))'
+              : 'calc(52px + max(env(safe-area-inset-bottom, 0px), 6px))',
           }}
         >
           {nav.view === 'home' && <Home onNavigate={navigate} />}
@@ -149,16 +150,16 @@ function AppContent() {
         {hasTrack && <MiniPlayer />}
 
         {/* Tab bar
-            SAFE-AREA GUARANTEE: paddingBottom uses max(env(safe-area-inset-bottom, 0px), 8px)
+            SAFE-AREA GUARANTEE: paddingBottom uses max(env(safe-area-inset-bottom, 0px), 6px)
             so the iPhone home-indicator swipe area is always cleared.
-            The fallback of 8px ensures minimum padding on non-notched devices. */}
+            The fallback of 6px ensures minimum padding on non-notched devices. */}
         <div
           className="bg-black/80 backdrop-blur-3xl border-t border-white/[0.08]"
           style={{ WebkitBackdropFilter: 'blur(40px)', backdropFilter: 'blur(40px)' }}
         >
           <nav
-            className="flex items-center justify-around px-2 pt-2"
-            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
+            className="flex items-center justify-around px-2 pt-1.5"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)' }}
             aria-label="Main navigation"
           >
             {tabs.map(({ id, label, icon: Icon }) => {
@@ -167,7 +168,7 @@ function AppContent() {
                 <button
                   key={id}
                   onClick={() => switchTab(id)}
-                  className={`flex flex-col items-center gap-0.5 py-1 px-5 transition-all duration-200 active:scale-90 ${
+                  className={`flex flex-col items-center gap-0.5 py-0.5 px-5 transition-all duration-200 active:scale-90 ${
                     isActive ? 'text-[#fc3c44]' : 'text-[#8e8e93]'
                   }`}
                   aria-label={label}
