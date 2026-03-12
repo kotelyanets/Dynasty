@@ -56,7 +56,7 @@ export interface ScanResult {
 //  Constants
 // ─────────────────────────────────────────────────────────────
 
-const SUPPORTED_EXTENSIONS = new Set([
+export const SUPPORTED_EXTENSIONS = new Set([
   '.mp3', '.flac', '.m4a', '.aac',
   '.ogg', '.opus', '.wav', '.wma', '.alac',
 ]);
@@ -131,7 +131,7 @@ async function getExistingPaths(): Promise<Set<string>> {
  * Ensures the covers output directory exists.
  * Called once at the start of a scan.
  */
-async function ensureCoversDir(): Promise<void> {
+export async function ensureCoversDir(): Promise<void> {
   await fs.promises.mkdir(config.coversDir, { recursive: true });
 }
 
@@ -244,7 +244,7 @@ function resolveAlbumTitle(meta: IAudioMetadata): string {
  * Process a single audio file:
  *   parse → extract art → upsert Artist/Album/Track
  */
-async function processFile(filePath: string): Promise<void> {
+export async function processFile(filePath: string): Promise<void> {
   // ── Parse metadata ────────────────────────────────────────
   // `skipCovers: false` is important — we want the embedded art.
   // `duration: true` forces a full file read for accurate duration

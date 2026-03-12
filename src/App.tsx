@@ -92,9 +92,9 @@ function AppContent() {
   }, []);
 
   const tabs = [
-    { id: 'home',    label: 'Home',    icon: HomeIcon },
-    { id: 'search',  label: 'Search',  icon: SearchIcon },
-    { id: 'library', label: 'Library', icon: LibraryIcon },
+    { id: 'home',    label: 'Listen Now', icon: HomeIcon },
+    { id: 'search',  label: 'Search',     icon: SearchIcon },
+    { id: 'library', label: 'Library',    icon: LibraryIcon },
   ];
 
   // Determine which root tab is "active" (follows breadcrumb history)
@@ -128,7 +128,7 @@ function AppContent() {
           {nav.view === 'library' && (
             <Library
               onNavigate={navigate}
-              initialTab={nav.id ? 'albums' : 'songs'}
+              initialTab={nav.id ? 'albums' : undefined}
               initialGenre={nav.id ?? null}
             />
           )}
@@ -174,7 +174,7 @@ function AppContent() {
                   aria-label={label}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
+                  <Icon size={22} strokeWidth={1.5} fill={isActive ? 'currentColor' : 'none'} />
                   <span className={`text-[10px] font-medium ${isActive ? 'text-[#fc3c44]' : 'text-[#8e8e93]'}`}>
                     {label}
                   </span>

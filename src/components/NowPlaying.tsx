@@ -280,45 +280,48 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         {/* ── Transport controls ── */}
         <div className="flex items-center justify-between mb-6">
           <button
+            onClick={prev}
+            className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
+            aria-label="Previous"
+          >
+            <SkipBack size={36} fill="white" strokeWidth={0} />
+          </button>
+
+          <button
+            onClick={togglePlay}
+            className={`w-[68px] h-[68px] flex items-center justify-center active:scale-90 active:opacity-70 transition-all ${
+              isStalled ? 'opacity-60' : 'opacity-100'
+            }`}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isStalled ? (
+              <Loader2 size={44} className="text-white animate-spin" />
+            ) : isPlaying ? (
+              <Pause size={46} fill="white" strokeWidth={0} />
+            ) : (
+              <Play size={46} fill="white" strokeWidth={0} className="ml-1" />
+            )}
+          </button>
+
+          <button
+            onClick={next}
+            className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
+            aria-label="Next"
+          >
+            <SkipForward size={36} fill="white" strokeWidth={0} />
+          </button>
+        </div>
+
+        {/* ── Shuffle / Repeat row ── */}
+        <div className="flex items-center justify-between px-2 mb-6">
+          <button
             onClick={toggleShuffle}
             className={`p-2 transition-all active:scale-90 ${
               shuffle ? 'text-[#fc3c44]' : 'text-white/40'
             }`}
             aria-label={shuffle ? 'Shuffle on' : 'Shuffle off'}
           >
-            <Shuffle size={22} />
-          </button>
-
-          <button
-            onClick={prev}
-            className="p-2 text-white active:scale-90 transition-transform"
-            aria-label="Previous"
-          >
-            <SkipBack size={38} fill="white" strokeWidth={0} />
-          </button>
-
-          <button
-            onClick={togglePlay}
-            className={`w-[72px] h-[72px] bg-white rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform ${
-              isStalled ? 'opacity-60' : 'opacity-100'
-            }`}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isStalled ? (
-              <Loader2 size={30} className="text-black animate-spin" />
-            ) : isPlaying ? (
-              <Pause size={32} fill="black" strokeWidth={0} />
-            ) : (
-              <Play size={32} fill="black" strokeWidth={0} className="ml-1" />
-            )}
-          </button>
-
-          <button
-            onClick={next}
-            className="p-2 text-white active:scale-90 transition-transform"
-            aria-label="Next"
-          >
-            <SkipForward size={38} fill="white" strokeWidth={0} />
+            <Shuffle size={20} />
           </button>
 
           <button
@@ -328,7 +331,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             }`}
             aria-label={`Repeat: ${repeat}`}
           >
-            {repeat === 'one' ? <Repeat1 size={22} /> : <Repeat size={22} />}
+            {repeat === 'one' ? <Repeat1 size={20} /> : <Repeat size={20} />}
           </button>
         </div>
 
