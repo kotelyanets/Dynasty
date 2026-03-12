@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* ─── Base ──────────────────────────────────────────── */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  box-sizing: border-box;
+}
+
+html {
+  /* Ensure the app extends into the safe area zones */
+  height: 100%;
+  background: #000;
+}
+
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Prevent iOS rubber-banding on the body itself */
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Hide scrollbars but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth momentum scrolling for iOS */
+main {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ─── Touch feedback utility ───────────────────────── */
+/* Apply to any tappable row / card for native iOS feel */
+.touch-row {
+  transition: transform 200ms ease-out, background-color 150ms ease;
+}
+.touch-row:active {
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Animations ────────────────────────────────────── */
+
+@keyframes bar1 {
+  0%, 100% { height: 40%; }
+  50% { height: 90%; }
+}
+
+@keyframes bar2 {
+  0%, 100% { height: 80%; }
+  50% { height: 30%; }
+}
+
+@keyframes bar3 {
+  0%, 100% { height: 50%; }
+  50% { height: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(244, 63, 94, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(244, 63, 94, 0.4); }
+}
+
+/* ─── Custom Utilities ──────────────────────────────── */
+
+/* Safe area padding for iOS */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Glass morphism effect — Apple Music style */
+.glass {
+  background: rgba(20, 20, 20, 0.72);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Input styling */
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.3);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(244, 63, 94, 0.4);
+  color: white;
+}
+
+/* Retina image rendering */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}

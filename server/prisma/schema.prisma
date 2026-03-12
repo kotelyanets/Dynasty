@@ -1,0 +1,160 @@
+// ─────────────────────────────────────────────────────────────
+//  Vault Music — Prisma Schema
+//  Database: SQLite (file-based, zero infrastructure required)
+//  ORM:      Prisma 5.x
+//
+//  Run after changes:
+//    cd server && npx prisma migrate dev --name <description>
+//    cd server && npx prisma generate
+// ─────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  // Output to a local path so the client is self-contained inside
+  // the server directory and not mixed with the Vite frontend.
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  // Controlled via the DATABASE_URL env-var. Default: file:./dev.db
+  // (relative to the prisma/ directory, so the file lands at server/prisma/dev.db)
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Artist
+//  One artist → many albums, many tracks.
+//  `name` is the unique business key (scanner upserts on it).
+// ─────────────────────────────────────────────────────────────
+model Artist {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  // Resolved from the album cover of their first album when no
+  // dedicated artist image is available.
+  imageUrl  String?
+
+  albums    Album[]
+  tracks    Track[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Album
+//  Unique per (title + artist) so a compilation "Greatest Hits"
+//  by two different artists does not collide.
+// ─────────────────────────────────────────────────────────────
+model Album {
+  id          String   @id @default(cuid())
+  title       String
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id])
+
+  year        Int?
+  genre       String?
+  // Relative public URL: /covers/<sha1-hash>.jpg
+  // Stored as-is; the server prepends the base URL when building responses.
+  coverPath   String?
+  // Total track count as reported in ID3 tags (may differ from actual
+  // tracks scanned if files are missing).
+  totalTracks Int?
+
+  tracks      Track[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Composite unique: same title is valid for different artists.
+  @@unique([title, artistId])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Track
+//  Unique by absolute `filePath` on the host filesystem.
+//  All nullable fields handle the real-world case where MP3/FLAC
+//  files have partial or no ID3 tags at all.
+// ─────────────────────────────────────────────────────────────
+model Track {
+  id          String   @id @default(cuid())
+  title       String
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id])
+  albumId     String?
+  album       Album?   @relation(fields: [albumId], references: [id])
+
+  // Absolute path on the server host. Must remain stable or re-scan.
+  filePath    String   @unique
+
+  // Audio metadata (all optional — graceful degradation)
+  duration    Float?   // seconds (Float for sub-second precision)
+  trackNumber Int?
+  diskNumber  Int?
+  genre       String?
+
+  // Technical metadata (useful for display in the UI "info" panel)
+  bitrate     Int?     // kbps (e.g. 320 for a good MP3, 1411 for FLAC CD)
+  sampleRate  Int?     // Hz  (e.g. 44100, 48000, 96000)
+  codec       String?  // e.g. "MPEG 1 Layer 3", "FLAC"
+
+  // Int is sufficient: audio files rarely exceed 2 GB in practice.
+  // A 1-hour 24-bit/96kHz FLAC is ~1.7 GB — near the edge but fine.
+  fileSize    Int?
+
+  // Stored so the streaming endpoint doesn't have to re-detect it
+  // from the file extension on every request.
+  mimeType    String?
+
+  // Playback analytics (optional — used for "Recently Played" smart lists)
+  playCount   Int      @default(0)
+  lastPlayed  DateTime?
+
+  playlistTracks PlaylistTrack[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Fast lookups for the most common query patterns
+  @@index([artistId])
+  @@index([albumId])
+  @@index([title])
+  @@index([lastPlayed])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Playlist
+//  User-created ordered collections of tracks.
+// ─────────────────────────────────────────────────────────────
+model Playlist {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  description String?
+  coverPath   String?
+
+  tracks      PlaylistTrack[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+//  PlaylistTrack (Junction table)
+//  Explicit ordering via `position` so drag-to-reorder works.
+//  onDelete: Cascade ensures removing a Track or Playlist
+//  automatically cleans up the join rows.
+// ─────────────────────────────────────────────────────────────
+model PlaylistTrack {
+  id         String   @id @default(cuid())
+  playlistId String
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  trackId    String
+  track      Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  position   Int
+  addedAt    DateTime @default(now())
+
+  // A track can only appear once per playlist.
+  @@unique([playlistId, trackId])
+  // Ordered fetch: SELECT * FROM PlaylistTrack WHERE playlistId=? ORDER BY position
+  @@index([playlistId, position])
+}

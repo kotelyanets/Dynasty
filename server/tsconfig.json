@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    // Target Node.js 18 LTS — enables native fs.promises.readdir with
+    // { recursive: true }, structured clone, etc.
+    "target": "ES2022",
+
+    // CommonJS is required for:
+    //   • music-metadata@7 (last CJS-compatible build)
+    //   • Prisma generated client
+    //   • ts-node without --esm flag
+    "module": "CommonJS",
+    "moduleResolution": "node",
+
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./",
+
+    // Type safety
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Interop
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": true,
+
+    // Path aliases within server code
+    "paths": {
+      "@server/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/generated"
+  ],
+  "ts-node": {
+    // Use CommonJS without requiring --transpile-only flag explicitly
+    "transpileOnly": true,
+    "files": true
+  }
+}
