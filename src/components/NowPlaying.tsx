@@ -2,15 +2,27 @@
  * NowPlaying.tsx — Apple Music–style full-screen player
  */
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { motion } from 'framer-motion';
+import {
+  DndContext, closestCenter, PointerSensor, TouchSensor,
+  useSensor, useSensors, type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext, verticalListSortingStrategy, useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
-  Loader2, AlertCircle, Heart,
+  Loader2, AlertCircle, Heart, GripVertical,
 } from 'lucide-react';
+import { BottomSheet } from '@/components/BottomSheet';
+import { haptic } from '@/utils/haptics';
+import type { Track } from '@/types/music';
 
 interface NowPlayingProps {
   onNavigate: (view: string, id?: string) => void;
@@ -20,7 +32,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const {
     state, togglePlay, next, prev, seek,
     toggleShuffle, toggleRepeat, showNowPlaying,
-    formatTime, setVolume, toggleMute,
+    formatTime, setVolume, toggleMute, reorderQueue,
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
 
@@ -49,6 +61,22 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     setIsSeeking(false);
     isDragging.current = false;
   }, [currentTrack?.id]);
+
+  // ── dnd-kit sensors for queue drag & drop ───────────────
+  const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 5 } });
+  const touchSensor   = useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } });
+  const sensors       = useSensors(pointerSensor, touchSensor);
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    haptic();
+    const oldIndex = state.queue.findIndex((_: Track, i: number) => `queue-${i}` === active.id);
+    const newIndex = state.queue.findIndex((_: Track, i: number) => `queue-${i}` === over.id);
+    if (oldIndex !== -1 && newIndex !== -1) {
+      reorderQueue(oldIndex, newIndex);
+    }
+  }, [state.queue, reorderQueue]);
 
   if (!currentTrack || !visible) return null;
 
@@ -134,7 +162,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         {/* ── Dismiss handle / Header ── */}
         <div className="flex items-center justify-between mb-5">
           <button
-            onClick={() => showNowPlaying(false)}
+            onClick={() => { haptic(); showNowPlaying(false); }}
             className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform -ml-2"
             aria-label="Dismiss player"
           >
@@ -165,22 +193,24 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
         </div>
 
-        {/* ── Album art ── */}
+        {/* ── Album art — shared element via layoutId ── */}
         <div className="flex-1 flex items-center justify-center mb-7">
           <div className="relative w-full max-w-[320px] aspect-square">
-            <div
+            <motion.div
+              layoutId="player-album-art"
               className={`w-full h-full rounded-[18px] overflow-hidden transition-transform duration-500 ease-out ${
                 isPlaying && !isStalled
                   ? 'scale-100 shadow-[0_24px_80px_rgba(0,0,0,0.7)]'
                   : 'scale-[0.875] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
               }`}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
             >
               <img
                 src={currentTrack.coverUrl}
                 alt={`${currentTrack.album} cover art`}
                 className="w-full h-full object-cover"
               />
-            </div>
+            </motion.div>
 
             {isStalled && (
               <div className="absolute inset-0 flex items-center justify-center rounded-[18px] bg-black/40">
@@ -208,7 +238,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
 
           <button
-            onClick={() => toggleLike(currentTrack.id)}
+            onClick={() => { haptic(); toggleLike(currentTrack.id); }}
             className="pt-1 active:scale-90 transition-transform flex-shrink-0"
             aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
           >
@@ -280,7 +310,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         {/* ── Transport controls ── */}
         <div className="flex items-center justify-between mb-6">
           <button
-            onClick={toggleShuffle}
+            onClick={() => { haptic(); toggleShuffle(); }}
             className={`p-2 transition-all active:scale-90 ${
               shuffle ? 'text-[#fc3c44]' : 'text-white/40'
             }`}
@@ -290,7 +320,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
 
           <button
-            onClick={prev}
+            onClick={() => { haptic(); prev(); }}
             className="p-2 text-white active:scale-90 transition-transform"
             aria-label="Previous"
           >
@@ -298,7 +328,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
 
           <button
-            onClick={togglePlay}
+            onClick={() => { haptic(); togglePlay(); }}
             className={`w-[72px] h-[72px] bg-white rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform ${
               isStalled ? 'opacity-60' : 'opacity-100'
             }`}
@@ -314,7 +344,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
 
           <button
-            onClick={next}
+            onClick={() => { haptic(); next(); }}
             className="p-2 text-white active:scale-90 transition-transform"
             aria-label="Next"
           >
@@ -322,7 +352,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
 
           <button
-            onClick={toggleRepeat}
+            onClick={() => { haptic(); toggleRepeat(); }}
             className={`p-2 transition-all active:scale-90 ${
               repeat !== 'off' ? 'text-[#fc3c44]' : 'text-white/40'
             }`}
@@ -396,84 +426,113 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           <div />
         </div>
 
-        {/* ── More options popover ── */}
-        {showMoreMenu && (
-          <div className="absolute right-6 top-16 z-50 w-48 rounded-2xl overflow-hidden shadow-2xl"
-            style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
-          >
+        {/* ── More options bottom sheet ── */}
+        <BottomSheet open={showMoreMenu} onClose={() => setShowMoreMenu(false)} title="Options">
+          <div className="px-2 pb-4">
             <button
               onClick={() => {
                 setShowMoreMenu(false);
                 showNowPlaying(false);
                 if (currentTrack.albumId) onNavigate('album', currentTrack.albumId);
               }}
-              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10 border-b border-white/[0.08]"
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-left text-[15px] text-white/90 active:bg-white/10 rounded-xl"
             >
               Go to Album
             </button>
+            <div className="mx-4 border-b border-white/[0.08]" />
             <button
               onClick={() => {
                 setShowMoreMenu(false);
                 showNowPlaying(false);
                 if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
               }}
-              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10"
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-left text-[15px] text-white/90 active:bg-white/10 rounded-xl"
             >
               Go to Artist
             </button>
           </div>
-        )}
+        </BottomSheet>
 
-        {/* ── Queue panel ── */}
-        {showQueue && (
-          <div
-            className="absolute left-0 right-0 bottom-0 z-40 max-h-[55vh] rounded-t-[28px] overflow-hidden"
-            style={{ background: 'rgba(22,22,24,0.97)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
-          >
-            {/* Pill handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-white/25" />
-            </div>
-            <div className="flex items-center justify-between px-5 pt-1 pb-3">
-              <p className="text-base font-bold text-white">Up Next</p>
-              <button
-                onClick={() => setShowQueue(false)}
-                className="text-sm text-[#fc3c44] font-medium active:opacity-60"
+        {/* ── Queue bottom sheet with drag & drop ── */}
+        <BottomSheet open={showQueue} onClose={() => setShowQueue(false)} title="Up Next">
+          <div className="px-3 pb-4">
+            {state.queue.length === 0 ? (
+              <p className="px-2 py-4 text-sm text-white/40 text-center">
+                Queue is empty
+              </p>
+            ) : (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                Done
-              </button>
-            </div>
-
-            <div className="px-3 pb-8 overflow-y-auto max-h-[42vh] scrollbar-hide">
-              {state.queue.map((track, index) => (
-                <div
-                  key={`${track.id}-${index}`}
-                  className={`flex items-center gap-3 px-2 py-2.5 rounded-xl ${
-                    index === state.queueIndex ? 'bg-white/[0.09]' : ''
-                  }`}
+                <SortableContext
+                  items={state.queue.map((_: Track, i: number) => `queue-${i}`)}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <img
-                    src={track.coverUrl}
-                    alt={track.album}
-                    className="w-10 h-10 rounded-[8px] object-cover flex-shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium truncate ${
-                      index === state.queueIndex ? 'text-[#fc3c44]' : 'text-white'
-                    }`}>{track.title}</p>
-                    <p className="text-[12px] text-white/50 truncate">{track.artist}</p>
-                  </div>
-                </div>
-              ))}
-              {state.queue.length === 0 && (
-                <p className="px-2 py-4 text-sm text-white/40 text-center">
-                  Queue is empty
-                </p>
-              )}
-            </div>
+                  {state.queue.map((track: Track, index: number) => (
+                    <SortableQueueItem
+                      key={`${track.id}-${index}`}
+                      id={`queue-${index}`}
+                      track={track}
+                      isActive={index === state.queueIndex}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            )}
           </div>
-        )}
+        </BottomSheet>
       </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Sortable queue item — used by dnd-kit inside the queue panel
+// ─────────────────────────────────────────────────────────────
+
+function SortableQueueItem({ id, track, isActive }: { id: string; track: Track; isActive: boolean }) {
+  const {
+    attributes, listeners, setNodeRef, transform, transition, isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    zIndex: isDragging ? 10 : 0,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-3 px-2 py-2.5 rounded-xl ${
+        isActive ? 'bg-white/[0.09]' : ''
+      }`}
+    >
+      <img
+        src={track.coverUrl}
+        alt={track.album}
+        className="w-10 h-10 rounded-[8px] object-cover flex-shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <p className={`text-sm font-medium truncate ${
+          isActive ? 'text-[#fc3c44]' : 'text-white'
+        }`}>{track.title}</p>
+        <p className="text-[12px] text-white/50 truncate">{track.artist}</p>
+      </div>
+
+      {/* Drag handle */}
+      <button
+        {...attributes}
+        {...listeners}
+        className="p-1 text-white/30 active:text-white/60 touch-none flex-shrink-0"
+        aria-label="Reorder track"
+      >
+        <GripVertical size={18} />
+      </button>
     </div>
   );
 }

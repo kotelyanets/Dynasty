@@ -111,6 +111,7 @@ export interface PlayerStoreActions {
   playQueueIndex: (index: number) => void;
   addToQueue: (tracks: Track[]) => void;
   clearQueue: () => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
 
   // ── transport ──────────────────────────────────────────────
   play: () => void;
