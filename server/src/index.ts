@@ -25,6 +25,7 @@ import artistRoutes   from './routes/artists';
 import albumRoutes    from './routes/albums';
 import trackRoutes    from './routes/tracks';
 import playlistRoutes from './routes/playlists';
+import lyricsRoutes   from './routes/lyrics';
 
 // ─────────────────────────────────────────────────────────────
 //  Build the Fastify instance
@@ -96,6 +97,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(albumRoutes,    { prefix: '/api' });
   await server.register(trackRoutes,    { prefix: '/api' });
   await server.register(playlistRoutes, { prefix: '/api' });
+  await server.register(lyricsRoutes,   { prefix: '/api' });
 
   // ── Frontend static assets (Vite build) ───────────────────
   //

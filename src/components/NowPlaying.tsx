@@ -1,20 +1,69 @@
 /**
  * NowPlaying.tsx — Apple Music–style full-screen player
+ *
+ * Features:
+ *   • Animated mesh-gradient background (colors extracted from album art)
+ *   • Audio quality badges (Lossless / Hi-Res)
+ *   • Synced lyrics (karaoke mode) toggle
+ *   • Pull-to-dismiss gesture (swipe down to close)
  */
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { extractDominantColors } from '@/utils/extractColors';
+import { SyncedLyrics } from '@/components/SyncedLyrics';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
-  Loader2, AlertCircle, Heart,
+  Loader2, AlertCircle, Heart, Mic2,
 } from 'lucide-react';
 
 interface NowPlayingProps {
   onNavigate: (view: string, id?: string) => void;
 }
+
+// ─────────────────────────────────────────────────────────────
+//  Audio quality badge helpers
+// ─────────────────────────────────────────────────────────────
+
+const LOSSLESS_CODECS = new Set(['FLAC', 'ALAC', 'WAV', 'AIFF', 'PCM']);
+
+function isLossless(codec?: string): boolean {
+  if (!codec) return false;
+  return LOSSLESS_CODECS.has(codec.toUpperCase()) ||
+    codec.toUpperCase().includes('FLAC') ||
+    codec.toUpperCase().includes('ALAC');
+}
+
+function isHiRes(sampleRate?: number, codec?: string): boolean {
+  if (!sampleRate || !isLossless(codec)) return false;
+  // Hi-Res is generally > 44.1 kHz / 48 kHz (i.e. ≥ 88.2 kHz or > 48 kHz)
+  return sampleRate > 48000;
+}
+
+function getQualityBadges(track: { codec?: string; sampleRate?: number; bitrate?: number }) {
+  const badges: Array<{ label: string; detail?: string }> = [];
+
+  if (isHiRes(track.sampleRate, track.codec)) {
+    badges.push({
+      label: 'Hi-Res',
+      detail: track.sampleRate ? `${(track.sampleRate / 1000).toFixed(1)} kHz` : undefined,
+    });
+  } else if (isLossless(track.codec)) {
+    badges.push({
+      label: 'Lossless',
+      detail: track.sampleRate ? `${(track.sampleRate / 1000).toFixed(1)} kHz` : undefined,
+    });
+  }
+
+  return badges;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Component
+// ─────────────────────────────────────────────────────────────
 
 export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const {
@@ -44,11 +93,82 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   // ── UI overlay state ────────────────────────────────────
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showQueue, setShowQueue]       = useState(false);
+  const [showLyrics, setShowLyrics]     = useState(false);
+
+  // ── Mesh gradient state ─────────────────────────────────
+  const [gradientColors, setGradientColors] = useState<string[]>([
+    'rgb(30, 30, 40)', 'rgb(60, 30, 80)', 'rgb(20, 50, 80)', 'rgb(50, 20, 60)',
+  ]);
+
+  // ── Pull-to-dismiss state ───────────────────────────────
+  const [dragY, setDragY]       = useState(0);
+  const [isDismissing, setIsDismissing] = useState(false);
+  const touchStartY             = useRef(0);
+  const touchStartX             = useRef(0);
+  const isPullDragging          = useRef(false);
+  const containerRef            = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsSeeking(false);
     isDragging.current = false;
   }, [currentTrack?.id]);
+
+  // Extract dominant colors from album art for mesh gradient
+  useEffect(() => {
+    if (!currentTrack?.coverUrl) return;
+    let cancelled = false;
+    extractDominantColors(currentTrack.coverUrl, 4).then((colors) => {
+      if (!cancelled) setGradientColors(colors);
+    });
+    return () => { cancelled = true; };
+  }, [currentTrack?.coverUrl]);
+
+  // ── Pull-to-dismiss handlers ────────────────────────────
+
+  const handlePullStart = useCallback((e: React.TouchEvent) => {
+    // Only start pull if not interacting with controls
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('[role="slider"]')) return;
+
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
+    isPullDragging.current = false;
+  }, []);
+
+  const handlePullMove = useCallback((e: React.TouchEvent) => {
+    const dy = e.touches[0].clientY - touchStartY.current;
+    const dx = Math.abs(e.touches[0].clientX - touchStartX.current);
+
+    // Only engage pull-down if vertical movement is dominant and downward
+    if (!isPullDragging.current) {
+      if (dy > 10 && dy > dx * 1.5) {
+        isPullDragging.current = true;
+      } else {
+        return;
+      }
+    }
+
+    if (dy > 0) {
+      setDragY(dy);
+    }
+  }, []);
+
+  const handlePullEnd = useCallback(() => {
+    if (!isPullDragging.current) return;
+    isPullDragging.current = false;
+
+    if (dragY > 120) {
+      // Dismiss threshold reached
+      setIsDismissing(true);
+      setTimeout(() => {
+        showNowPlaying(false);
+        setDragY(0);
+        setIsDismissing(false);
+      }, 300);
+    } else {
+      setDragY(0);
+    }
+  }, [dragY, showNowPlaying]);
 
   if (!currentTrack || !visible) return null;
 
@@ -107,24 +227,80 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
 
   const currentVolume = isMuted ? 0 : volume;
   const liked = isLiked(currentTrack.id);
+  const qualityBadges = getQualityBadges(currentTrack);
+
+  // Pull-to-dismiss transform
+  const dismissTransform = isDismissing
+    ? 'translateY(100%)'
+    : dragY > 0
+      ? `translateY(${dragY}px)`
+      : undefined;
+
+  const dismissTransition = isDismissing
+    ? 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)'
+    : dragY > 0
+      ? 'none'
+      : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+
+  const dismissOpacity = dragY > 0
+    ? Math.max(0.3, 1 - dragY / 400)
+    : 1;
 
   return (
     <div
+      ref={containerRef}
       className="fixed inset-0 z-50 flex flex-col"
-      style={{ animation: 'slideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+      style={{
+        animation: dragY === 0 && !isDismissing ? 'slideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' : undefined,
+        transform: dismissTransform,
+        transition: dismissTransition,
+        opacity: dismissOpacity,
+      }}
+      onTouchStart={handlePullStart}
+      onTouchMove={handlePullMove}
+      onTouchEnd={handlePullEnd}
     >
-      {/* ── Ambient background (vivid album art bleed) ── */}
+      {/* ── Animated mesh gradient background ── */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
-          src={currentTrack.coverUrl}
-          className="absolute inset-0 w-full h-full object-cover scale-150 blur-3xl opacity-90 saturate-[2]"
-          alt=""
-          aria-hidden="true"
-        />
-        {/* Dark gradient layered on top for legibility */}
-        <div className="absolute inset-0 bg-black/55" />
-        <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/75 to-transparent" />
+        {/* Animated color blobs */}
+        <div className="absolute inset-0" style={{ background: '#000' }}>
+          <div
+            className="absolute w-[140%] h-[140%] -left-[20%] -top-[20%] opacity-80"
+            style={{
+              background: `
+                radial-gradient(ellipse at 20% 20%, ${gradientColors[0]} 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, ${gradientColors[1]} 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, ${gradientColors[2]} 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 70%, ${gradientColors[3]} 0%, transparent 50%)
+              `,
+              animation: 'meshFloat 12s ease-in-out infinite alternate',
+              filter: 'blur(40px) saturate(1.5)',
+            }}
+          />
+          <div
+            className="absolute w-[130%] h-[130%] -left-[15%] -top-[15%] opacity-60"
+            style={{
+              background: `
+                radial-gradient(ellipse at 70% 30%, ${gradientColors[2]} 0%, transparent 45%),
+                radial-gradient(ellipse at 30% 70%, ${gradientColors[0]} 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, ${gradientColors[3]} 0%, transparent 40%)
+              `,
+              animation: 'meshFloat 16s ease-in-out infinite alternate-reverse',
+              filter: 'blur(50px) saturate(1.3)',
+            }}
+          />
+        </div>
+        {/* Dark overlay for legibility */}
+        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/70 to-transparent" />
       </div>
+
+      {/* ── Pull indicator (visible during drag) ── */}
+      {dragY > 10 && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50">
+          <div className="w-10 h-1 rounded-full bg-white/40" />
+        </div>
+      )}
 
       {/* ── Scrollable content ── */}
       <div
@@ -165,61 +341,96 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
         </div>
 
-        {/* ── Album art ── */}
-        <div className="flex-1 flex items-center justify-center mb-7">
-          <div className="relative w-full max-w-[320px] aspect-square">
-            <div
-              className={`w-full h-full rounded-[18px] overflow-hidden transition-transform duration-500 ease-out ${
-                isPlaying && !isStalled
-                  ? 'scale-100 shadow-[0_24px_80px_rgba(0,0,0,0.7)]'
-                  : 'scale-[0.875] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
-              }`}
-            >
-              <img
-                src={currentTrack.coverUrl}
-                alt={`${currentTrack.album} cover art`}
-                className="w-full h-full object-cover"
-              />
+        {/* ── Lyrics view OR Album art + controls ── */}
+        {showLyrics ? (
+          /* ── LYRICS MODE ── */
+          <div className="flex-1 min-h-0 flex flex-col">
+            <SyncedLyrics
+              trackId={currentTrack.id}
+              currentTime={currentTime}
+              className="flex-1 min-h-0"
+            />
+          </div>
+        ) : (
+          /* ── PLAYER MODE ── */
+          <>
+            {/* ── Album art ── */}
+            <div className="flex-1 flex items-center justify-center mb-7">
+              <div className="relative w-full max-w-[320px] aspect-square">
+                <div
+                  className={`w-full h-full rounded-[18px] overflow-hidden transition-transform duration-500 ease-out ${
+                    isPlaying && !isStalled
+                      ? 'scale-100 shadow-[0_24px_80px_rgba(0,0,0,0.7)]'
+                      : 'scale-[0.875] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
+                  }`}
+                >
+                  <img
+                    src={currentTrack.coverUrl}
+                    alt={`${currentTrack.album} cover art`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {isStalled && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-[18px] bg-black/40">
+                    <Loader2 size={44} className="text-white/80 animate-spin" />
+                  </div>
+                )}
+              </div>
             </div>
 
-            {isStalled && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-[18px] bg-black/40">
-                <Loader2 size={44} className="text-white/80 animate-spin" />
+            {/* ── Track info row ── */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-[24px] font-bold text-white truncate leading-tight">
+                  {currentTrack.title}
+                </h2>
+                <button
+                  onClick={() => {
+                    showNowPlaying(false);
+                    if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
+                  }}
+                  className="text-[17px] font-medium text-[#fc3c44] truncate active:opacity-60 transition-opacity text-left max-w-full"
+                >
+                  {currentTrack.artist}
+                </button>
+              </div>
+
+              <button
+                onClick={() => toggleLike(currentTrack.id)}
+                className="pt-1 active:scale-90 transition-transform flex-shrink-0"
+                aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
+              >
+                <Heart
+                  size={26}
+                  strokeWidth={1.75}
+                  fill={liked ? '#fc3c44' : 'none'}
+                  className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
+                />
+              </button>
+            </div>
+
+            {/* ── Audio quality badges ── */}
+            {qualityBadges.length > 0 && (
+              <div className="flex items-center gap-2 mb-4">
+                {qualityBadges.map((badge) => (
+                  <span
+                    key={badge.label}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider text-white/50 border border-white/15 bg-white/[0.06]"
+                  >
+                    {badge.label}
+                    {badge.detail && (
+                      <span className="text-white/35 font-normal normal-case">
+                        {badge.detail}
+                      </span>
+                    )}
+                  </span>
+                ))}
               </div>
             )}
-          </div>
-        </div>
-
-        {/* ── Track info row ── */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <div className="flex-1 min-w-0">
-            <h2 className="text-[24px] font-bold text-white truncate leading-tight">
-              {currentTrack.title}
-            </h2>
-            <button
-              onClick={() => {
-                showNowPlaying(false);
-                if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
-              }}
-              className="text-[17px] font-medium text-[#fc3c44] truncate active:opacity-60 transition-opacity text-left max-w-full"
-            >
-              {currentTrack.artist}
-            </button>
-          </div>
-
-          <button
-            onClick={() => toggleLike(currentTrack.id)}
-            className="pt-1 active:scale-90 transition-transform flex-shrink-0"
-            aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
-          >
-            <Heart
-              size={26}
-              strokeWidth={1.75}
-              fill={liked ? '#fc3c44' : 'none'}
-              className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
-            />
-          </button>
-        </div>
+            {qualityBadges.length === 0 && <div className="mb-4" />}
+          </>
+        )}
 
         {/* ── Error banner ── */}
         {errorMessage && (
@@ -386,14 +597,22 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         {/* ── Bottom action row ── */}
         <div className="flex items-center justify-between">
           <button
+            onClick={() => setShowLyrics((v) => !v)}
+            className={`flex-shrink-0 p-2 active:opacity-40 active:scale-90 transition-all ${
+              showLyrics ? 'text-[#fc3c44]' : 'text-white/40'
+            }`}
+            aria-label={showLyrics ? 'Hide lyrics' : 'Show lyrics'}
+          >
+            <Mic2 size={22} />
+          </button>
+
+          <button
             onClick={() => setShowQueue(true)}
             className="flex-shrink-0 p-2 text-white/40 active:opacity-40 active:scale-90 transition-transform"
             aria-label="View queue"
           >
             <ListMusic size={22} />
           </button>
-          {/* Spacer */}
-          <div />
         </div>
 
         {/* ── More options popover ── */}
