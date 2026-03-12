@@ -79,10 +79,18 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   }, [tracks, songSort]);
 
   const uniqueAlbums = useMemo(() => {
-    const seen = new Set<string>();
+    const seenIds = new Set<string>();
+    const seenTitleCover = new Set<string>();
     return albums.filter((album) => {
-      if (seen.has(album.id)) return false;
-      seen.add(album.id);
+      if (seenIds.has(album.id)) return false;
+      seenIds.add(album.id);
+
+      // Secondary dedup: same title + same cover URL ≈ same album
+      // (catches duplicates created by inconsistent artist metadata)
+      const key = `${album.title.trim().toLowerCase()}::${album.coverUrl}`;
+      if (seenTitleCover.has(key)) return false;
+      seenTitleCover.add(key);
+
       return true;
     });
   }, [albums]);

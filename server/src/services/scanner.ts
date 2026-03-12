@@ -215,6 +215,23 @@ function resolveArtistName(meta: IAudioMetadata): string {
   );
 }
 
+/**
+ * Resolve the artist name used for **album grouping**.
+ * Prefers `albumartist` over `artist` because `albumartist` is
+ * consistent across all tracks of an album, while `artist` may
+ * vary per track (e.g. "Artist feat. Someone").  Using `artist`
+ * for album grouping caused the same album to be split into many
+ * duplicate records — one per unique track-level artist string.
+ */
+function resolveAlbumArtistName(meta: IAudioMetadata): string {
+  return (
+    meta.common.albumartist?.trim() ||
+    meta.common.artist?.trim() ||
+    meta.common.artists?.[0]?.trim() ||
+    'Unknown Artist'
+  );
+}
+
 function resolveAlbumTitle(meta: IAudioMetadata): string {
   return meta.common.album?.trim() || 'Unknown Album';
 }
@@ -253,28 +270,45 @@ async function processFile(filePath: string): Promise<void> {
 
   // ── Resolve denormalized strings ──────────────────────────
   const artistName = resolveArtistName(meta);
+  const albumArtistName = resolveAlbumArtistName(meta);
   const albumTitle = resolveAlbumTitle(meta);
   const trackTitle = resolveTitle(common.title, filePath);
 
-  // ── Upsert Artist ─────────────────────────────────────────
-  // `updateMany` on `name` is not possible since `name` is unique —
-  // we use `upsert` with the unique field as the where clause.
-  const artist = await db.artist.upsert({
-    where:  { name: artistName },
+  // ── Upsert Album Artist ───────────────────────────────────
+  // Use `albumartist` (when available) for album grouping so
+  // that all tracks of the same album share a single Album row,
+  // even when individual tracks have different `artist` tags
+  // (e.g. featuring credits).
+  const albumArtist = await db.artist.upsert({
+    where:  { name: albumArtistName },
     update: {
       // Update imageUrl if we found cover art and it wasn't set before
       ...(coverPath && { imageUrl: coverPath }),
     },
     create: {
-      name:     artistName,
+      name:     albumArtistName,
       imageUrl: coverPath ?? null,
     },
   });
 
+  // ── Upsert Track Artist (may differ from album artist) ────
+  const trackArtist = albumArtistName === artistName
+    ? albumArtist
+    : await db.artist.upsert({
+        where:  { name: artistName },
+        update: {
+          ...(coverPath && { imageUrl: coverPath }),
+        },
+        create: {
+          name:     artistName,
+          imageUrl: coverPath ?? null,
+        },
+      });
+
   // ── Upsert Album ──────────────────────────────────────────
   const album = await db.album.upsert({
     where: {
-      title_artistId: { title: albumTitle, artistId: artist.id },
+      title_artistId: { title: albumTitle, artistId: albumArtist.id },
     },
     update: {
       year:        common.year        ?? undefined,
@@ -285,7 +319,7 @@ async function processFile(filePath: string): Promise<void> {
     },
     create: {
       title:       albumTitle,
-      artistId:    artist.id,
+      artistId:    albumArtist.id,
       year:        common.year        ?? null,
       genre:       common.genre?.[0]  ?? null,
       coverPath:   coverPath          ?? null,
@@ -300,7 +334,7 @@ async function processFile(filePath: string): Promise<void> {
     where:  { filePath },
     update: {
       title:       trackTitle,
-      artistId:    artist.id,
+      artistId:    trackArtist.id,
       albumId:     album.id,
       duration:    format.duration    ?? null,
       trackNumber: common.track?.no   ?? null,
@@ -314,7 +348,7 @@ async function processFile(filePath: string): Promise<void> {
     },
     create: {
       title:       trackTitle,
-      artistId:    artist.id,
+      artistId:    trackArtist.id,
       albumId:     album.id,
       filePath,
       duration:    format.duration    ?? null,
