@@ -388,14 +388,19 @@ export async function getOrCreateLikedPlaylist(): Promise<Playlist> {
 
 export async function getLikedTrackIds(): Promise<string[]> {
   const liked = await getOrCreateLikedPlaylist();
-  return liked.trackIds;
+  // The list endpoint doesn't include trackIds, so fetch the full playlist
+  const full = await api.getPlaylist(liked.id);
+  return full?.trackIds ?? [];
 }
 
-export async function setLikedTrackIds(trackIds: string[]): Promise<Playlist> {
+export async function addLikedTrack(trackId: string): Promise<void> {
   const liked = await getOrCreateLikedPlaylist();
-  const updated = await api.updatePlaylist(liked.id, { trackIds });
-  storeLikedId(updated.id);
-  return updated;
+  await addTrackToPlaylist(liked.id, trackId);
+}
+
+export async function removeLikedTrack(trackId: string): Promise<void> {
+  const liked = await getOrCreateLikedPlaylist();
+  await removeTrackFromPlaylist(liked.id, trackId);
 }
 
 // ─────────────────────────────────────────────────────────────
