@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTracks } from '@/hooks/useTracks';
-import { api, addTrackToPlaylist, removeTrackFromPlaylist } from '@/services/api';
+import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { api, addTrackToPlaylist, removeTrackFromPlaylist, getStoredLikedPlaylistId } from '@/services/api';
 import type { Playlist, Track } from '@/types/music';
 import { usePlayer } from '@/context/PlayerContext';
-import { ChevronLeft, Loader2, Play, Plus, Trash2 } from 'lucide-react';
+import { ChevronLeft, Loader2, Play, Plus, Trash2, Heart } from 'lucide-react';
 import { TrackRow } from '@/components/TrackRow';
 
 interface PlaylistDetailProps {
@@ -21,6 +22,11 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
 
   const { data: allTracks, loading: tracksLoading } = useTracks();
   const { playTrack } = usePlayer();
+  const { isLiked, toggleLike } = useLikedTracks();
+
+  const likedPlaylistId = getStoredLikedPlaylistId();
+  const isLikedPlaylist =
+    playlistId === likedPlaylistId || playlist?.name.toLowerCase() === 'liked tracks';
 
   useEffect(() => {
     let mounted = true;
@@ -86,7 +92,12 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
     if (!playlist) return;
     setSaving(true);
     try {
-      await removeTrackFromPlaylist(playlist.id, trackId);
+      if (isLikedPlaylist) {
+        // For the Liked Tracks playlist, removing = unliking the track
+        await toggleLike(trackId);
+      } else {
+        await removeTrackFromPlaylist(playlist.id, trackId);
+      }
       setPlaylist((prev) =>
         prev ? { ...prev, trackIds: prev.trackIds.filter((id) => id !== trackId) } : prev,
       );
@@ -134,8 +145,16 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
 
       {/* Header */}
       <div className="pt-20 px-5 pb-4 text-left">
-        <div className="w-40 h-40 rounded-2xl overflow-hidden shadow-2xl mb-5 bg-gradient-to-br from-rose-500/60 to-rose-900/80 flex items-center justify-center">
-          <span className="text-4xl">🎵</span>
+        <div className={`w-40 h-40 rounded-2xl overflow-hidden shadow-2xl mb-5 flex items-center justify-center ${
+          isLikedPlaylist
+            ? 'bg-gradient-to-br from-[#fc3c44]/60 to-[#7a001a]/80'
+            : 'bg-gradient-to-br from-rose-500/60 to-rose-900/80'
+        }`}>
+          {isLikedPlaylist ? (
+            <Heart size={60} className="text-white" fill="white" />
+          ) : (
+            <span className="text-4xl">🎵</span>
+          )}
         </div>
         <h1 className="text-2xl font-bold text-white">{playlist.name}</h1>
         {playlist.description && (
@@ -155,15 +174,17 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
             <Play size={18} fill="white" />
             <span className="text-sm font-semibold text-white">Play</span>
           </button>
-          <button
-            onClick={() => setShowAddSongs((v) => !v)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-white/10 rounded-full active:scale-95 transition-transform"
-          >
-            <Plus size={16} className="text-rose-400" />
-            <span className="text-sm font-semibold text-white">
-              {showAddSongs ? 'Done' : 'Add Songs'}
-            </span>
-          </button>
+          {!isLikedPlaylist && (
+            <button
+              onClick={() => setShowAddSongs((v) => !v)}
+              className="flex items-center gap-2 px-6 py-2.5 bg-white/10 rounded-full active:scale-95 transition-transform"
+            >
+              <Plus size={16} className="text-rose-400" />
+              <span className="text-sm font-semibold text-white">
+                {showAddSongs ? 'Done' : 'Add Songs'}
+              </span>
+            </button>
+          )}
           {saving && <Loader2 className="w-4 h-4 animate-spin text-white/70" />}
         </div>
       </div>
@@ -185,6 +206,8 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
                 showArtist
                 showAlbum={false}
                 queue={playlistTracks}
+                isLiked={isLiked(track.id)}
+                onToggleLike={toggleLike}
               />
             </div>
             <button

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
-import { Track } from '@/types/music';
+import { Track, Playlist } from '@/types/music';
 import { Play, Pause, MoreHorizontal, Heart } from 'lucide-react';
+import { api, addTrackToPlaylist, getStoredLikedPlaylistId } from '@/services/api';
 
 interface TrackRowProps {
   track: Track;
@@ -29,6 +30,7 @@ export function TrackRow({
   const isActive  = state.currentTrack?.id === track.id;
   const isPlaying = isActive && state.isPlaying;
   const [showMenu, setShowMenu] = useState(false);
+  const [menuPlaylists, setMenuPlaylists] = useState<Playlist[] | null>(null);
 
   const handleClick = () => {
     if (isActive) {
@@ -113,9 +115,17 @@ export function TrackRow({
 
       {/* More button */}
       <button
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          setShowMenu((v) => !v);
+          const next = !showMenu;
+          setShowMenu(next);
+          if (next && menuPlaylists === null) {
+            const all = await api.getPlaylists();
+            const likedId = getStoredLikedPlaylistId();
+            setMenuPlaylists(
+              all.filter((p) => p.id !== likedId && p.name.toLowerCase() !== 'liked tracks'),
+            );
+          }
         }}
         className="text-white/25 active:text-white/60 flex-shrink-0 p-1 active:scale-90 transition-all"
         aria-label="More options"
@@ -126,7 +136,7 @@ export function TrackRow({
       {/* Context menu */}
       {showMenu && (
         <div
-          className="absolute right-3 top-full mt-1 z-30 rounded-[14px] overflow-hidden shadow-2xl py-1 min-w-[160px]"
+          className="absolute right-3 top-full mt-1 z-30 rounded-[14px] overflow-hidden shadow-2xl py-1 min-w-[180px]"
           style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -141,9 +151,28 @@ export function TrackRow({
               {isLiked ? 'Remove from Liked' : 'Add to Liked'}
             </button>
           )}
-          {!onToggleLike && (
+          {menuPlaylists && menuPlaylists.length > 0 && (
+            <>
+              <div className="px-4 pt-2 pb-1 text-[11px] text-white/35 uppercase tracking-wider">
+                Add to Playlist
+              </div>
+              {menuPlaylists.map((pl) => (
+                <button
+                  key={pl.id}
+                  onClick={() => {
+                    void addTrackToPlaylist(pl.id, track.id);
+                    setShowMenu(false);
+                  }}
+                  className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] last:border-0 border-b border-white/[0.06]"
+                >
+                  {pl.name}
+                </button>
+              ))}
+            </>
+          )}
+          {!onToggleLike && menuPlaylists !== null && menuPlaylists.length === 0 && (
             <div className="px-4 py-2.5 text-[13px] text-white/40">
-              More actions coming soon
+              No playlists yet
             </div>
           )}
         </div>

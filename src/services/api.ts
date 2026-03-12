@@ -354,6 +354,10 @@ function getStoredLikedId(): string | null {
   }
 }
 
+export function getStoredLikedPlaylistId(): string | null {
+  return getStoredLikedId();
+}
+
 function storeLikedId(id: string) {
   if (typeof window === 'undefined') return;
   try {
