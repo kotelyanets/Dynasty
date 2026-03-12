@@ -68,7 +68,8 @@ export function useOfflineCache() {
   useEffect(() => {
     if (!('caches' in window)) return;
 
-    caches.open(AUDIO_CACHE).then(async (cache) => {
+    (async () => {
+      const cache = await caches.open(AUDIO_CACHE);
       const keys = await cache.keys();
       const cachedIds = new Set<string>();
       for (const req of keys) {
@@ -86,7 +87,7 @@ export function useOfflineCache() {
         if (meta[id]) updated[id] = meta[id];
       }
       saveMeta(updated);
-    });
+    })();
   }, []);
 
   // ── Download a track to the cache ──────────────────────────
