@@ -34,16 +34,28 @@ const albumRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       },
     })) as any[];
 
-    // Deduplicate albums that are practically identical but differ only 
-    // by casing or whitespace in SQLite.
-    const seen = new Set<string>();
+    // Deduplicate albums that are practically identical.
+    // Primary key: title + artist (handles casing/whitespace differences).
+    // Secondary key: title + cover art (catches albums split across
+    // different artist records due to inconsistent track-level artist tags).
+    const seenByTitleArtist = new Set<string>();
+    const seenByTitleCover  = new Set<string>();
     const deduplicated = albums.filter((a) => {
-      const key = `${a.title.trim().toLowerCase()}::${a.artist.name.trim().toLowerCase()}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        return true;
+      const titleNorm = a.title.trim().toLowerCase();
+      const artistNorm = a.artist.name.trim().toLowerCase();
+
+      const keyByArtist = `${titleNorm}::${artistNorm}`;
+      if (seenByTitleArtist.has(keyByArtist)) return false;
+      seenByTitleArtist.add(keyByArtist);
+
+      // Cover-based dedup: same title + same cover ≈ same album
+      if (a.coverPath) {
+        const keyByCover = `${titleNorm}::${a.coverPath}`;
+        if (seenByTitleCover.has(keyByCover)) return false;
+        seenByTitleCover.add(keyByCover);
       }
-      return false;
+
+      return true;
     });
 
     return reply.send(
