@@ -10,6 +10,26 @@
  * The audio keeps playing when the user switches tabs, navigates
  * to different pages, or even minimises the app on iOS (background
  * audio via the Web Audio API / MediaSession lock-screen controls).
+ *
+ * ── Critical guarantees (do NOT remove) ─────────────────────
+ *
+ * 1. AUDIO ENGINE
+ *    useAudioEngine() below wires the singleton HTMLAudioElement
+ *    (exported from playerStore.ts) to all its DOM events. Chunked
+ *    streaming (Range headers) is handled automatically by the browser
+ *    because audioEl.src is set directly to the /api/stream/:id URL.
+ *
+ * 2. API URL
+ *    All backend calls in api.ts read BASE_URL from VITE_API_URL
+ *    (your .env file, e.g. your Tailscale IP). Nothing here is
+ *    hardcoded to localhost.
+ *
+ * 3. SAFE AREA
+ *    index.html sets viewport-fit=cover so env(safe-area-inset-bottom)
+ *    returns the real iPhone notch/home-indicator height.
+ *    • Tab bar:       style={{ paddingBottom: 'max(env(...), 8px)' }}
+ *    • Content area:  style={{ paddingBottom: 'calc(Npx + env(...))' }}
+ *    Both values account for safe area — see comments inline below.
  */
 
 import { useState, useCallback } from 'react';
@@ -85,15 +105,21 @@ function AppContent() {
       {/* ── Scrollable page content ── */}
       <main className="flex-1 overflow-y-auto overscroll-y-contain scrollbar-hide">
         {/*
-          paddingBottom = fixed bar height + env(safe-area-inset-bottom).
-          MiniPlayer (~60px) + TabBar (~56px) + safe area = ~116/60 + safe area.
-          Using calc so iPhone home indicator never clips content.
+          SAFE-AREA GUARANTEE
+          ────────────────────────────────────────────────────────────
+          The fixed bottom zone height is:
+            • With track:    MiniPlayer(~84px) + TabBar(~60px) = ~144px
+            • Without track: TabBar(~60px)
+          We add env(safe-area-inset-bottom, 0px) on top of each so
+          that the iPhone home indicator never clips the last list item.
+          `viewport-fit=cover` in index.html is required for env() to
+          return a non-zero value on notched iPhones.
         */}
         <div
           style={{
             paddingBottom: hasTrack
               ? 'calc(148px + env(safe-area-inset-bottom, 0px))'
-              : 'calc(64px + env(safe-area-inset-bottom, 0px))',
+              : 'calc(80px + env(safe-area-inset-bottom, 0px))',
           }}
         >
           {nav.view === 'home' && <Home onNavigate={navigate} />}
@@ -122,7 +148,10 @@ function AppContent() {
         {/* Floating glass mini player card */}
         {hasTrack && <MiniPlayer />}
 
-        {/* Tab bar */}
+        {/* Tab bar
+            SAFE-AREA GUARANTEE: paddingBottom uses max(env(safe-area-inset-bottom, 0px), 8px)
+            so the iPhone home-indicator swipe area is always cleared.
+            The fallback of 8px ensures minimum padding on non-notched devices. */}
         <div
           className="bg-black/80 backdrop-blur-3xl border-t border-white/[0.08]"
           style={{ WebkitBackdropFilter: 'blur(40px)', backdropFilter: 'blur(40px)' }}
