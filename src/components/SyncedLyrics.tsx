@@ -94,11 +94,13 @@ export function SyncedLyrics({ trackId, currentTime, className = '' }: SyncedLyr
     );
   }
 
+  const fadeGradient = 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)';
+
   return (
     <div
       ref={containerRef}
       className={`overflow-y-auto scrollbar-hide py-8 px-2 ${className}`}
-      style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)' }}
+      style={{ maskImage: fadeGradient, WebkitMaskImage: fadeGradient }}
     >
       {lyrics.map((line, i) => {
         const isActive = i === activeIndex;

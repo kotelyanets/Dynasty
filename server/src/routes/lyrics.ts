@@ -35,7 +35,7 @@ const lyricsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
 
       // Look for .lrc file alongside the audio file
       const ext = path.extname(track.filePath);
-      const lrcPath = track.filePath.replace(new RegExp(`\\${ext}$`), '.lrc');
+      const lrcPath = track.filePath.slice(0, -ext.length) + '.lrc';
 
       try {
         await fs.promises.access(lrcPath, fs.constants.R_OK);

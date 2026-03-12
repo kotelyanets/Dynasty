@@ -38,8 +38,10 @@ export function parseLrc(raw: string): LyricLine[] {
     while (match) {
       const minutes = parseInt(match[1], 10);
       const seconds = parseInt(match[2], 10);
-      const centiseconds = match[3] ? parseInt(match[3].padEnd(3, '0').slice(0, 3), 10) : 0;
-      timestamps.push(minutes * 60 + seconds + centiseconds / 1000);
+      // Fractional seconds: treat as decimal fraction (pad right with zeros)
+      // [01:23.5] → 500ms, [01:23.45] → 450ms, [01:23.456] → 456ms
+      const fractional = match[3] ? parseInt(match[3].padEnd(3, '0').slice(0, 3), 10) : 0;
+      timestamps.push(minutes * 60 + seconds + fractional / 1000);
       remaining = remaining.slice(match[0].length);
       match = tsRegex.exec(remaining);
     }
@@ -52,9 +54,9 @@ export function parseLrc(raw: string): LyricLine[] {
       if (singleMatch) {
         const minutes = parseInt(singleMatch[1], 10);
         const seconds = parseInt(singleMatch[2], 10);
-        const centiseconds = singleMatch[3] ? parseInt(singleMatch[3].padEnd(3, '0').slice(0, 3), 10) : 0;
+        const fractional = singleMatch[3] ? parseInt(singleMatch[3].padEnd(3, '0').slice(0, 3), 10) : 0;
         lines.push({
-          time: minutes * 60 + seconds + centiseconds / 1000,
+          time: minutes * 60 + seconds + fractional / 1000,
           text: singleMatch[4] || '',
         });
       }

@@ -37,6 +37,11 @@ function getImageData(src: string, size = 64): Promise<ImageData> {
   });
 }
 
+/** Minimum R+G+B sum — pixels darker than this are nearly black and uninteresting */
+const MIN_BRIGHTNESS = 45;
+/** Maximum R+G+B sum — pixels brighter than this are nearly white and uninteresting */
+const MAX_BRIGHTNESS = 720;
+
 /**
  * Simple colour bucketing: round each channel to the nearest
  * multiple of `step` and count occurrences.
@@ -52,8 +57,9 @@ function quantize(data: Uint8ClampedArray, step = 32): RGB[] {
 
     // Skip near-transparent pixels
     if (a < 128) continue;
-    // Skip very dark and very light pixels (not interesting)
-    if (r + g + b < 45 || r + g + b > 720) continue;
+    // Skip very dark and very light pixels (not interesting for gradients)
+    const brightness = r + g + b;
+    if (brightness < MIN_BRIGHTNESS || brightness > MAX_BRIGHTNESS) continue;
 
     const qr = Math.round(r / step) * step;
     const qg = Math.round(g / step) * step;
