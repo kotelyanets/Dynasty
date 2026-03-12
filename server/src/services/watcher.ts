@@ -208,7 +208,9 @@ export async function startWatcher(): Promise<void> {
         if (!isSupportedAudio(filePath)) return;
         // Remove from pending in case it was queued but deleted before processing
         pendingFiles.delete(filePath);
-        handleDelete(filePath);
+        handleDelete(filePath).catch((err) =>
+          console.error('[Watcher] Unlink error:', err),
+        );
       })
       .on('ready', () => {
         console.log(`[Watcher] 👀 Watching for changes: ${musicDir}`);
