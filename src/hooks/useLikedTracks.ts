@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getLikedTrackIds, setLikedTrackIds } from '@/services/api';
+import { getLikedTrackIds, addLikedTrack, removeLikedTrack } from '@/services/api';
 
 export function useLikedTracks() {
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
@@ -28,11 +28,13 @@ export function useLikedTracks() {
       const next = new Set(prev);
       if (next.has(trackId)) {
         next.delete(trackId);
+        // Fire-and-forget sync with backend; we optimistically update UI.
+        void removeLikedTrack(trackId);
       } else {
         next.add(trackId);
+        // Fire-and-forget sync with backend; we optimistically update UI.
+        void addLikedTrack(trackId);
       }
-      // Fire-and-forget sync with backend; we optimistically update UI.
-      void setLikedTrackIds(Array.from(next));
       return next;
     });
   }, []);
