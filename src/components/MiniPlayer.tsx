@@ -1,12 +1,8 @@
 import { usePlayer } from '@/context/PlayerContext';
-import { useLikedTracks } from '@/hooks/useLikedTracks';
-import { Play, Pause, SkipForward, Loader2, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { haptic } from '@/utils/haptics';
+import { Play, Pause, SkipForward, Loader2 } from 'lucide-react';
 
 export function MiniPlayer() {
   const { state, togglePlay, next, showNowPlaying } = usePlayer();
-  const { isLiked, toggleLike } = useLikedTracks();
   const { currentTrack, isPlaying, currentTime, duration, buffered, bufferingState } = state;
 
   if (!currentTrack) return null;
@@ -60,31 +56,18 @@ export function MiniPlayer() {
           </div>
 
           {/* Controls — stopPropagation so tapping them won't open NowPlaying */}
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => { haptic(); toggleLike(currentTrack.id); }}
-              className="w-10 h-10 flex items-center justify-center active:scale-90 active:opacity-60 transition-all duration-150"
-              aria-label={isLiked(currentTrack.id) ? 'Remove from Liked' : 'Add to Liked'}
-            >
-              <Heart
-                size={20}
-                strokeWidth={1.75}
-                fill={isLiked(currentTrack.id) ? '#fc3c44' : 'none'}
-                className={isLiked(currentTrack.id) ? 'text-[#fc3c44]' : 'text-white/70'}
-              />
-            </button>
-
+          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => { haptic(); togglePlay(); }}
               className="w-11 h-11 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
               {isStalled ? (
-                <Loader2 size={24} className="animate-spin text-white/70" />
+                <Loader2 size={22} className="animate-spin text-white/70" />
               ) : isPlaying ? (
-                <Pause size={26} fill="white" strokeWidth={0} />
+                <Pause size={24} fill="white" strokeWidth={0} />
               ) : (
-                <Play size={26} fill="white" strokeWidth={0} />
+                <Play size={24} fill="white" strokeWidth={0} />
               )}
             </button>
 
@@ -93,7 +76,7 @@ export function MiniPlayer() {
               className="w-10 h-10 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label="Next track"
             >
-              <SkipForward size={22} fill="white" strokeWidth={0} />
+              <SkipForward size={20} fill="white" strokeWidth={0} />
             </button>
           </div>
         </div>

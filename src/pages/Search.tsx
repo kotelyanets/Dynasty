@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TrackRow } from '@/components/TrackRow';
 import { useSearch } from '@/hooks/useSearch';
+import { useAlbums } from '@/hooks/useAlbums';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { Search as SearchIcon, X, Loader2, ChevronRight } from 'lucide-react';
 
@@ -11,9 +12,36 @@ interface SearchProps {
 export function Search({ onNavigate }: SearchProps) {
   const [query, setQuery] = useState('');
   const { data: results, loading } = useSearch(query);
+  const { data: albums } = useAlbums();
   const { isLiked, toggleLike } = useLikedTracks();
 
   const hasResults = results.tracks.length > 0 || results.albums.length > 0 || results.artists.length > 0;
+
+  // Derive browse categories from album genres
+  const genreColors: Record<string, string> = {
+    'Rock':        'from-[#d63384] to-[#6f42c1]',
+    'Pop':         'from-[#e91e63] to-[#ff5722]',
+    'Hip-Hop':     'from-[#ff9800] to-[#f44336]',
+    'R&B':         'from-[#9c27b0] to-[#3f51b5]',
+    'Electronic':  'from-[#00bcd4] to-[#2196f3]',
+    'Jazz':        'from-[#795548] to-[#ff9800]',
+    'Classical':   'from-[#607d8b] to-[#455a64]',
+    'Country':     'from-[#8bc34a] to-[#4caf50]',
+    'Metal':       'from-[#424242] to-[#212121]',
+    'Folk':        'from-[#a1887f] to-[#6d4c41]',
+    'Indie':       'from-[#26c6da] to-[#00838f]',
+    'Alternative': 'from-[#7e57c2] to-[#4527a0]',
+    'Soul':        'from-[#ff7043] to-[#bf360c]',
+    'Reggae':      'from-[#66bb6a] to-[#2e7d32]',
+    'Blues':       'from-[#42a5f5] to-[#1565c0]',
+    'Punk':        'from-[#ef5350] to-[#b71c1c]',
+    'Latin':       'from-[#ffa726] to-[#e65100]',
+    'Dance':       'from-[#ab47bc] to-[#6a1b9a]',
+  };
+  const defaultGradient = 'from-[#fc3c44] to-[#c2185b]';
+
+  const genres = [...new Set(albums.map((a) => a.genre).filter(Boolean))];
+
 
   return (
     <div className="pb-4">
@@ -43,13 +71,31 @@ export function Search({ onNavigate }: SearchProps) {
         </div>
       </div>
 
-      {/* Empty state */}
+      {/* Browse categories when no query */}
       {!query.trim() && (
-        <div className="px-5 mt-10 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-white/[0.07] flex items-center justify-center mx-auto mb-4">
-            <SearchIcon size={28} className="text-white/25" />
+        <div className="px-5 mt-4">
+          <h2 className="text-[22px] font-bold text-white mb-3">Browse Categories</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {genres.map((genre) => (
+              <button
+                key={genre}
+                onClick={() => onNavigate('library', genre)}
+                className={`relative h-[110px] rounded-[14px] overflow-hidden bg-gradient-to-br ${genreColors[genre] ?? defaultGradient} active:scale-[0.97] transition-transform duration-150 text-left`}
+              >
+                <span className="absolute top-3 left-3.5 text-[18px] font-bold text-white drop-shadow-sm">
+                  {genre}
+                </span>
+              </button>
+            ))}
           </div>
-          <p className="text-white/40 text-[15px] font-medium">Search your music library</p>
+          {genres.length === 0 && (
+            <div className="text-center mt-8">
+              <div className="w-16 h-16 rounded-2xl bg-white/[0.07] flex items-center justify-center mx-auto mb-4">
+                <SearchIcon size={28} className="text-white/25" />
+              </div>
+              <p className="text-white/40 text-[15px] font-medium">Search your music library</p>
+            </div>
+          )}
         </div>
       )}
 
