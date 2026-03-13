@@ -6,6 +6,15 @@
  * creating a Siri-like visual effect.
  *
  * Activated by tapping the album art on the NowPlaying screen.
+ *
+ * Performance optimisations (mobile-first):
+ *   • Geometry detail 2 (162 vertices vs 2562 at detail 4)
+ *   • MeshBasicMaterial (no lighting calculations needed for wireframe)
+ *   • Antialias disabled, pixel ratio capped at 1.5
+ *   • Rendering throttled to ~30 fps
+ *   • Pauses entirely when the browser tab is hidden
+ *   • Reuses Color object to avoid GC pressure
+ *   • Full dispose of geometry / material / renderer on cleanup
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
@@ -19,6 +28,9 @@ interface AudioVisualizerProps {
   size?: number;
 }
 
+/** Target interval between frames (~30 fps). */
+const FRAME_INTERVAL_MS = 1000 / 30;
+
 export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -28,6 +40,9 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
   const animFrameRef = useRef<number>(0);
   const originalPositionsRef = useRef<Float32Array | null>(null);
   const [initialized, setInitialized] = useState(false);
+
+  // Reusable Color object — avoids allocation every frame
+  const tmpColorRef = useRef(new THREE.Color());
 
   const initScene = useCallback(() => {
     if (!containerRef.current || initialized) return;
@@ -41,23 +56,22 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
     camera.position.z = 2.5;
     cameraRef.current = camera;
 
-    // Renderer
+    // Renderer — antialias off & lower pixel ratio for mobile perf
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: false,
+      powerPreference: 'low-power',
     });
     renderer.setSize(size, size);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Sphere geometry
-    const geometry = new THREE.IcosahedronGeometry(1, 4);
-    const material = new THREE.MeshPhongMaterial({
+    // Sphere geometry — detail 2 gives 162 vertices (vs 2562 at 4)
+    const geometry = new THREE.IcosahedronGeometry(1, 2);
+    const material = new THREE.MeshBasicMaterial({
       color: 0xfc3c44,
-      emissive: 0xfc3c44,
-      emissiveIntensity: 0.3,
       wireframe: true,
       transparent: true,
       opacity: 0.8,
@@ -70,18 +84,6 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
     const positions = geometry.getAttribute('position');
     originalPositionsRef.current = new Float32Array(positions.array);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    const pointLight = new THREE.PointLight(0xfc3c44, 2, 10);
-    pointLight.position.set(2, 2, 2);
-    scene.add(pointLight);
-
-    const pointLight2 = new THREE.PointLight(0x6366f1, 1.5, 10);
-    pointLight2.position.set(-2, -2, 2);
-    scene.add(pointLight2);
-
     setInitialized(true);
   }, [size, initialized]);
 
@@ -92,7 +94,7 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
     }
   }, [active, initScene]);
 
-  // Animation loop
+  // Animation loop — throttled to ~30 fps, pauses when tab hidden
   useEffect(() => {
     if (!active || !initialized) return;
 
@@ -102,9 +104,21 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
       : new Uint8Array(32);
 
     let time = 0;
+    let lastFrame = 0;
+    let paused = false;
 
-    const animate = () => {
+    const onVisibility = () => {
+      paused = document.hidden;
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    const animate = (now: number) => {
       animFrameRef.current = requestAnimationFrame(animate);
+
+      // Skip frames to stay ≤ 30 fps & skip entirely when tab hidden
+      if (paused || now - lastFrame < FRAME_INTERVAL_MS) return;
+      lastFrame = now;
+
       time += 0.01;
 
       const sphere = sphereRef.current;
@@ -120,10 +134,19 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
         analyser.getByteFrequencyData(dataArray);
       }
 
-      // Calculate average frequency bands
-      const bass = dataArray.slice(0, 4).reduce((a, b) => a + b, 0) / (4 * 255);
-      const mid = dataArray.slice(4, 12).reduce((a, b) => a + b, 0) / (8 * 255);
-      const treble = dataArray.slice(12).reduce((a, b) => a + b, 0) / (Math.max(1, dataArray.length - 12) * 255);
+      // Calculate average frequency bands (inline sums — no .slice())
+      let bassSum = 0;
+      for (let i = 0; i < 4; i++) bassSum += dataArray[i] ?? 0;
+      const bass = bassSum / (4 * 255);
+
+      let midSum = 0;
+      for (let i = 4; i < 12; i++) midSum += dataArray[i] ?? 0;
+      const mid = midSum / (8 * 255);
+
+      let trebleSum = 0;
+      const trebleLen = Math.max(1, dataArray.length - 12);
+      for (let i = 12; i < dataArray.length; i++) trebleSum += dataArray[i] ?? 0;
+      const treble = trebleSum / (trebleLen * 255);
 
       // Morph sphere based on frequency
       const geometry = sphere.geometry as THREE.BufferGeometry;
@@ -135,7 +158,6 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
         const oy = originalPositions[i + 1];
         const oz = originalPositions[i + 2];
 
-        // Calculate displacement based on position and frequency
         const noise = Math.sin(ox * 3 + time * 2) * Math.cos(oy * 3 + time * 1.5) * Math.sin(oz * 3 + time);
         const displacement = 1 + (bass * 0.3 + mid * 0.15 + treble * 0.1) + noise * 0.08 * (1 + bass);
 
@@ -149,37 +171,47 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
       sphere.rotation.x += 0.003;
       sphere.rotation.y += 0.005;
 
-      // Update material color based on frequency
-      // Hue shifts from red (0.98) toward purple as mids increase
-      const material = sphere.material as THREE.MeshPhongMaterial;
+      // Update material color — reuse tmpColor to avoid allocation
+      const material = sphere.material as THREE.MeshBasicMaterial;
       const hue = (0.98 + mid * 0.1) % 1;
-      const color = new THREE.Color();
-      color.setHSL(hue, 0.8, 0.5 + bass * 0.2);
-      material.color = color;
-      material.emissive = color;
-      material.emissiveIntensity = 0.2 + bass * 0.5;
+      tmpColorRef.current.setHSL(hue, 0.8, 0.5 + bass * 0.2);
+      material.color.copy(tmpColorRef.current);
       material.opacity = 0.6 + bass * 0.4;
 
       renderer.render(scene, camera);
     };
 
-    animate();
+    animFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
     };
   }, [active, initialized]);
 
-  // Cleanup on unmount
+  // Full cleanup on unmount — dispose geometry, material, renderer
   useEffect(() => {
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+
+      const sphere = sphereRef.current;
+      if (sphere) {
+        sphere.geometry.dispose();
+        (sphere.material as THREE.Material).dispose();
+      }
+
       if (rendererRef.current) {
         rendererRef.current.dispose();
         rendererRef.current.domElement.remove();
+        rendererRef.current = null;
       }
+
+      sceneRef.current = null;
+      cameraRef.current = null;
+      sphereRef.current = null;
+      originalPositionsRef.current = null;
     };
   }, []);
 

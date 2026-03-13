@@ -142,8 +142,11 @@ export function initListeningParty(httpServer: HttpServer): Server {
         if (room.hostId === socket.id) {
           io?.to(roomId).emit('room:closed');
           rooms.delete(roomId);
-        } else {
-          room.listeners.delete(socket.id);
+        } else if (room.listeners.delete(socket.id)) {
+          // Notify remaining participants of the updated count
+          io?.to(roomId).emit('room:listener-left', {
+            listenerCount: room.listeners.size,
+          });
         }
       }
     });

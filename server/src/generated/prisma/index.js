@@ -243,6 +243,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": true,
   "ciName": "GitHub Actions",
   "inlineDatasources": {
     "db": {
