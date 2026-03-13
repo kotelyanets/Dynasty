@@ -15,6 +15,7 @@ import type {
   FastifyReply,
 } from 'fastify';
 import db from '../db';
+import { likeBodySchema } from '../validation';
 
 // ─────────────────────────────────────────────────────────────
 //  Track response builder
@@ -281,10 +282,11 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       request: FastifyRequest<{ Params: { id: string }; Body: { isLiked: boolean } }>,
       reply: FastifyReply
     ) => {
-      const { isLiked } = request.body;
-      if (typeof isLiked !== 'boolean') {
-        return reply.status(400).send({ error: 'isLiked must be a boolean' });
+      const parsed = likeBodySchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'isLiked must be a boolean' });
       }
+      const { isLiked } = parsed.data;
 
       const updated = await db.track.update({
         where: { id: request.params.id },

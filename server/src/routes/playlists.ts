@@ -17,6 +17,12 @@ import type {
   FastifyReply,
 } from 'fastify';
 import db from '../db';
+import {
+  createPlaylistSchema,
+  updatePlaylistSchema,
+  trackIdsSchema,
+  reorderSchema,
+} from '../validation';
 
 const TRACK_SELECT = {
   id:          true,
@@ -84,15 +90,15 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     request: FastifyRequest<{ Body: { name: string; description?: string } }>,
     reply: FastifyReply
   ) => {
-    const body = request.body as { name?: string; description?: string };
-    if (!body.name?.trim()) {
-      return reply.status(400).send({ error: 'name is required' });
+    const parsed = createPlaylistSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
     }
 
     const playlist = await db.playlist.create({
       data: {
-        name:        body.name.trim(),
-        description: body.description?.trim() ?? null,
+        name:        parsed.data.name.trim(),
+        description: parsed.data.description?.trim() ?? null,
       },
     });
 
@@ -140,10 +146,14 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.patch<{ Params: { id: string } }>(
     '/playlists/:id',
     async (
-      request: FastifyRequest<{ Params: { id: string }; Body: unknown }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply
     ) => {
-      const body = request.body as { name?: string; description?: string };
+      const parsed = updatePlaylistSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
+      }
+      const body = parsed.data;
       const updated = await db.playlist.update({
         where: { id: request.params.id },
         data: {
@@ -171,14 +181,14 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.post<{ Params: { id: string } }>(
     '/playlists/:id/tracks',
     async (
-      request: FastifyRequest<{ Params: { id: string }; Body: unknown }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply
     ) => {
-      const body = request.body as { trackIds?: string[] };
-      const trackIds = body.trackIds;
-      if (!Array.isArray(trackIds) || trackIds.length === 0) {
-        return reply.status(400).send({ error: 'trackIds[] is required' });
+      const parsed = trackIdsSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'trackIds[] is required' });
       }
+      const { trackIds } = parsed.data;
 
       const playlistId = request.params.id;
 
@@ -246,14 +256,14 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.put<{ Params: { id: string } }>(
     '/playlists/:id/reorder',
     async (
-      request: FastifyRequest<{ Params: { id: string }; Body: unknown }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply
     ) => {
-      const body = request.body as { trackIds?: string[] };
-      const trackIds = body.trackIds;
-      if (!Array.isArray(trackIds)) {
-        return reply.status(400).send({ error: 'trackIds[] is required' });
+      const parsed = reorderSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'trackIds[] is required' });
       }
+      const { trackIds } = parsed.data;
 
       const playlistId = request.params.id;
 
