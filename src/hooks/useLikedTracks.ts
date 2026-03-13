@@ -24,20 +24,39 @@ export function useLikedTracks() {
   }, []);
 
   const toggleLike = useCallback(async (trackId: string) => {
+    const wasLiked = likedIds.has(trackId);
+
+    // Optimistic UI update
     setLikedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(trackId)) {
+      if (wasLiked) {
         next.delete(trackId);
-        // Fire-and-forget sync with backend; we optimistically update UI.
-        void removeLikedTrack(trackId);
       } else {
         next.add(trackId);
-        // Fire-and-forget sync with backend; we optimistically update UI.
-        void addLikedTrack(trackId);
       }
       return next;
     });
-  }, []);
+
+    try {
+      // Persist to backend
+      if (wasLiked) {
+        await removeLikedTrack(trackId);
+      } else {
+        await addLikedTrack(trackId);
+      }
+    } catch {
+      // Revert on failure
+      setLikedIds((prev) => {
+        const reverted = new Set(prev);
+        if (wasLiked) {
+          reverted.add(trackId);
+        } else {
+          reverted.delete(trackId);
+        }
+        return reverted;
+      });
+    }
+  }, [likedIds]);
 
   const isLiked = useCallback(
     (trackId: string) => likedIds.has(trackId),

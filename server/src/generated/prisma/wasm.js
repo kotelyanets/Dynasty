@@ -155,6 +155,7 @@ exports.Prisma.TrackScalarFieldEnum = {
   fileSize: 'fileSize',
   mimeType: 'mimeType',
   loudnessLufs: 'loudnessLufs',
+  isLiked: 'isLiked',
   playCount: 'playCount',
   lastPlayed: 'lastPlayed',
   createdAt: 'createdAt',

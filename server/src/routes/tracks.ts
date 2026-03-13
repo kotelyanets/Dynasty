@@ -24,6 +24,7 @@ function buildTrack(t: {
   id: string; title: string; duration: number | null; trackNumber: number | null;
   diskNumber: number | null; genre: string | null; playCount: number;
   bitrate: number | null; sampleRate: number | null; codec: string | null;
+  isLiked: boolean;
   artist: { id: string; name: string };
   album: { id: string; title: string; year: number | null; coverPath: string | null } | null;
 }) {
@@ -42,6 +43,7 @@ function buildTrack(t: {
     coverUrl:    t.album?.coverPath ?? '/covers/default.jpg',
     audioUrl:    `/api/stream/${t.id}`,
     playCount:   t.playCount,
+    isLiked:     t.isLiked,
     bitrate:     t.bitrate         ?? undefined,
     sampleRate:  t.sampleRate      ?? undefined,
     codec:       t.codec           ?? undefined,
@@ -228,6 +230,18 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     });
   });
 
+  // ── GET /api/tracks/liked-ids ─────────────────────────────
+  // Returns an array of track IDs that have isLiked === true.
+  // Used by the frontend to hydrate the liked-tracks set on load.
+  // Registered before /tracks/:id so the static path is unambiguous.
+  fastify.get('/tracks/liked-ids', async (_request: FastifyRequest, reply: FastifyReply) => {
+    const tracks = await db.track.findMany({
+      where: { isLiked: true },
+      select: { id: true },
+    });
+    return reply.send(tracks.map((t) => t.id));
+  });
+
   // ── GET /api/tracks/:id ───────────────────────────────────
   fastify.get<{ Params: { id: string } }>(
     '/tracks/:id',
@@ -256,6 +270,30 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
 
       if (!updated) return reply.status(404).send({ error: 'Track not found' });
       return reply.send(updated);
+    }
+  );
+
+  // ── PATCH /api/tracks/:id/like ────────────────────────────
+  // Toggle the isLiked flag on a track. Receives { isLiked: boolean }.
+  fastify.patch<{ Params: { id: string }; Body: { isLiked: boolean } }>(
+    '/tracks/:id/like',
+    async (
+      request: FastifyRequest<{ Params: { id: string }; Body: { isLiked: boolean } }>,
+      reply: FastifyReply
+    ) => {
+      const { isLiked } = request.body as { isLiked?: boolean };
+      if (typeof isLiked !== 'boolean') {
+        return reply.status(400).send({ error: 'isLiked must be a boolean' });
+      }
+
+      const updated = await db.track.update({
+        where: { id: request.params.id },
+        data: { isLiked },
+        include: TRACK_INCLUDE,
+      }).catch(() => null);
+
+      if (!updated) return reply.status(404).send({ error: 'Track not found' });
+      return reply.send(buildTrack(updated));
     }
   );
 
