@@ -23,6 +23,7 @@ import db from '../db';
 function buildTrack(t: {
   id: string; title: string; duration: number | null; trackNumber: number | null;
   diskNumber: number | null; genre: string | null; playCount: number;
+  bitrate: number | null; sampleRate: number | null; codec: string | null;
   artist: { id: string; name: string };
   album: { id: string; title: string; year: number | null; coverPath: string | null } | null;
 }) {
@@ -41,6 +42,9 @@ function buildTrack(t: {
     coverUrl:    t.album?.coverPath ?? '/covers/default.jpg',
     audioUrl:    `/api/stream/${t.id}`,
     playCount:   t.playCount,
+    bitrate:     t.bitrate         ?? undefined,
+    sampleRate:  t.sampleRate      ?? undefined,
+    codec:       t.codec           ?? undefined,
   };
 }
 

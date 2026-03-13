@@ -34,6 +34,9 @@ interface PlayerState {
   isMuted: boolean;          // ← NEW
   shuffle: boolean;
   repeat: RepeatMode;
+  crossfadeEnabled: boolean;
+  crossfadeDuration: number;
+  autoplayInfinity: boolean;
   showNowPlaying: boolean;
   errorMessage: string | null; // ← NEW
   playHistory: Track[];        // ← NEW: recently played tracks
@@ -54,10 +57,12 @@ interface PlayerContextType {
   toggleMute: () => void;   // ← NEW
   toggleShuffle: () => void;
   toggleRepeat: () => void;
-  toggleKaraoke: () => void;       // ← NEW
-  toggleSpatialAudio: () => void;  // ← NEW
+  toggleCrossfade: () => void;
+  setCrossfadeDuration: (seconds: number) => void;
+  toggleAutoplayInfinity: () => void;
   showNowPlaying: (show: boolean) => void;
   addToQueue: (tracks: Track[]) => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
   formatTime: (seconds: number) => string;
 }
 
@@ -100,6 +105,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     isMuted: storeState.isMuted,
     shuffle: storeState.shuffle,
     repeat: storeState.repeat,
+    crossfadeEnabled: storeState.crossfadeEnabled,
+    crossfadeDuration: storeState.crossfadeDuration,
+    autoplayInfinity: storeState.autoplayInfinity,
     showNowPlaying: storeState.showNowPlaying,
     errorMessage: storeState.errorMessage,
     playHistory: storeState.playHistory,
@@ -122,10 +130,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         toggleMute: storeState.toggleMute,
         toggleShuffle: storeState.toggleShuffle,
         toggleRepeat: storeState.toggleRepeat,
-        toggleKaraoke: storeState.toggleKaraoke,
-        toggleSpatialAudio: storeState.toggleSpatialAudio,
+        toggleCrossfade: storeState.toggleCrossfade,
+        setCrossfadeDuration: storeState.setCrossfadeDuration,
+        toggleAutoplayInfinity: storeState.toggleAutoplayInfinity,
         showNowPlaying: showNowPlayingFn,
         addToQueue: storeState.addToQueue,
+        reorderQueue: storeState.reorderQueue,
         formatTime,
       }}
     >

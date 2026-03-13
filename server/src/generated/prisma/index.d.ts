@@ -3351,6 +3351,7 @@ export namespace Prisma {
     bitrate: number | null
     sampleRate: number | null
     fileSize: number | null
+    loudnessLufs: number | null
     playCount: number | null
   }
 
@@ -3361,6 +3362,7 @@ export namespace Prisma {
     bitrate: number | null
     sampleRate: number | null
     fileSize: number | null
+    loudnessLufs: number | null
     playCount: number | null
   }
 
@@ -3379,6 +3381,7 @@ export namespace Prisma {
     codec: string | null
     fileSize: number | null
     mimeType: string | null
+    loudnessLufs: number | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3400,6 +3403,7 @@ export namespace Prisma {
     codec: string | null
     fileSize: number | null
     mimeType: string | null
+    loudnessLufs: number | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3421,6 +3425,7 @@ export namespace Prisma {
     codec: number
     fileSize: number
     mimeType: number
+    loudnessLufs: number
     playCount: number
     lastPlayed: number
     createdAt: number
@@ -3436,6 +3441,7 @@ export namespace Prisma {
     bitrate?: true
     sampleRate?: true
     fileSize?: true
+    loudnessLufs?: true
     playCount?: true
   }
 
@@ -3446,6 +3452,7 @@ export namespace Prisma {
     bitrate?: true
     sampleRate?: true
     fileSize?: true
+    loudnessLufs?: true
     playCount?: true
   }
 
@@ -3464,6 +3471,7 @@ export namespace Prisma {
     codec?: true
     fileSize?: true
     mimeType?: true
+    loudnessLufs?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3485,6 +3493,7 @@ export namespace Prisma {
     codec?: true
     fileSize?: true
     mimeType?: true
+    loudnessLufs?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3506,6 +3515,7 @@ export namespace Prisma {
     codec?: true
     fileSize?: true
     mimeType?: true
+    loudnessLufs?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3614,6 +3624,7 @@ export namespace Prisma {
     codec: string | null
     fileSize: number | null
     mimeType: string | null
+    loudnessLufs: number | null
     playCount: number
     lastPlayed: Date | null
     createdAt: Date
@@ -3654,6 +3665,7 @@ export namespace Prisma {
     codec?: boolean
     fileSize?: boolean
     mimeType?: boolean
+    loudnessLufs?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3679,6 +3691,7 @@ export namespace Prisma {
     codec?: boolean
     fileSize?: boolean
     mimeType?: boolean
+    loudnessLufs?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3702,6 +3715,7 @@ export namespace Prisma {
     codec?: boolean
     fileSize?: boolean
     mimeType?: boolean
+    loudnessLufs?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3741,6 +3755,7 @@ export namespace Prisma {
       codec: string | null
       fileSize: number | null
       mimeType: string | null
+      loudnessLufs: number | null
       playCount: number
       lastPlayed: Date | null
       createdAt: Date
@@ -4155,6 +4170,7 @@ export namespace Prisma {
     readonly codec: FieldRef<"Track", 'String'>
     readonly fileSize: FieldRef<"Track", 'Int'>
     readonly mimeType: FieldRef<"Track", 'String'>
+    readonly loudnessLufs: FieldRef<"Track", 'Float'>
     readonly playCount: FieldRef<"Track", 'Int'>
     readonly lastPlayed: FieldRef<"Track", 'DateTime'>
     readonly createdAt: FieldRef<"Track", 'DateTime'>
@@ -6505,6 +6521,7 @@ export namespace Prisma {
     codec: 'codec',
     fileSize: 'fileSize',
     mimeType: 'mimeType',
+    loudnessLufs: 'loudnessLufs',
     playCount: 'playCount',
     lastPlayed: 'lastPlayed',
     createdAt: 'createdAt',
@@ -6746,6 +6763,7 @@ export namespace Prisma {
     codec?: StringNullableFilter<"Track"> | string | null
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
+    loudnessLufs?: FloatNullableFilter<"Track"> | number | null
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -6770,6 +6788,7 @@ export namespace Prisma {
     codec?: SortOrderInput | SortOrder
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    loudnessLufs?: SortOrderInput | SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -6797,6 +6816,7 @@ export namespace Prisma {
     codec?: StringNullableFilter<"Track"> | string | null
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
+    loudnessLufs?: FloatNullableFilter<"Track"> | number | null
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -6821,6 +6841,7 @@ export namespace Prisma {
     codec?: SortOrderInput | SortOrder
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    loudnessLufs?: SortOrderInput | SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -6850,6 +6871,7 @@ export namespace Prisma {
     codec?: StringNullableWithAggregatesFilter<"Track"> | string | null
     fileSize?: IntNullableWithAggregatesFilter<"Track"> | number | null
     mimeType?: StringNullableWithAggregatesFilter<"Track"> | string | null
+    loudnessLufs?: FloatNullableWithAggregatesFilter<"Track"> | number | null
     playCount?: IntWithAggregatesFilter<"Track"> | number
     lastPlayed?: DateTimeNullableWithAggregatesFilter<"Track"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Track"> | Date | string
@@ -7141,6 +7163,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7165,6 +7188,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7185,6 +7209,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7209,6 +7234,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7231,6 +7257,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7250,6 +7277,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7271,6 +7299,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7680,6 +7709,7 @@ export namespace Prisma {
     codec?: SortOrder
     fileSize?: SortOrder
     mimeType?: SortOrder
+    loudnessLufs?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7693,6 +7723,7 @@ export namespace Prisma {
     bitrate?: SortOrder
     sampleRate?: SortOrder
     fileSize?: SortOrder
+    loudnessLufs?: SortOrder
     playCount?: SortOrder
   }
 
@@ -7711,6 +7742,7 @@ export namespace Prisma {
     codec?: SortOrder
     fileSize?: SortOrder
     mimeType?: SortOrder
+    loudnessLufs?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7732,6 +7764,7 @@ export namespace Prisma {
     codec?: SortOrder
     fileSize?: SortOrder
     mimeType?: SortOrder
+    loudnessLufs?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7745,6 +7778,7 @@ export namespace Prisma {
     bitrate?: SortOrder
     sampleRate?: SortOrder
     fileSize?: SortOrder
+    loudnessLufs?: SortOrder
     playCount?: SortOrder
   }
 
@@ -8440,6 +8474,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8462,6 +8497,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8543,6 +8579,7 @@ export namespace Prisma {
     codec?: StringNullableFilter<"Track"> | string | null
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
+    loudnessLufs?: FloatNullableFilter<"Track"> | number | null
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -8585,6 +8622,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8607,6 +8645,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8909,6 +8948,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8932,6 +8972,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8996,6 +9037,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9019,6 +9061,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9050,6 +9093,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -9104,6 +9148,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9126,6 +9171,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9147,6 +9193,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9167,6 +9214,7 @@ export namespace Prisma {
     codec?: string | null
     fileSize?: number | null
     mimeType?: string | null
+    loudnessLufs?: number | null
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -9186,6 +9234,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9208,6 +9257,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9229,6 +9279,7 @@ export namespace Prisma {
     codec?: NullableStringFieldUpdateOperationsInput | string | null
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

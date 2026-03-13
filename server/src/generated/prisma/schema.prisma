@@ -106,6 +106,10 @@ model Track {
   // from the file extension on every request.
   mimeType String?
 
+  // ReplayGain / loudness normalization (LUFS value from FFmpeg).
+  // Typical range: -23 to -5. Null if FFmpeg was not available.
+  loudnessLufs Float?
+
   // Playback analytics (optional — used for "Recently Played" smart lists)
   playCount  Int       @default(0)
   lastPlayed DateTime?

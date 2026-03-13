@@ -52,6 +52,8 @@ import { ArtistDetail } from '@/pages/ArtistDetail';
 import { PlaylistDetail } from '@/pages/PlaylistDetail';
 import { usePlayerStore } from '@/store/playerStore';
 import { Home as HomeIcon, Search as SearchIcon, Library as LibraryIcon } from 'lucide-react';
+import { LayoutGroup, AnimatePresence } from 'framer-motion';
+import { haptic } from '@/utils/haptics';
 
 interface NavState {
   view: string;
@@ -159,7 +161,9 @@ function AppContent() {
       {/* ── Fixed bottom: floating mini player + tab bar ── */}
       <div className="fixed bottom-0 left-0 right-0 z-40">
         {/* Floating glass mini player card */}
-        {hasTrack && <MiniPlayer />}
+        <LayoutGroup>
+          {hasTrack && !showNowPlaying && <MiniPlayer />}
+        </LayoutGroup>
 
         {/* Tab bar
             SAFE-AREA GUARANTEE: paddingBottom uses max(env(safe-area-inset-bottom, 0px), 6px)
@@ -179,7 +183,7 @@ function AppContent() {
               return (
                 <button
                   key={id}
-                  onClick={() => switchTab(id)}
+                  onClick={() => { haptic(); switchTab(id); }}
                   className={`flex flex-col items-center gap-0.5 py-0.5 px-5 transition-all duration-200 active:scale-90 ${
                     isActive ? 'text-[#fc3c44]' : 'text-[#8e8e93]'
                   }`}
@@ -198,7 +202,13 @@ function AppContent() {
       </div>
 
       {/* ── Full-screen Now Playing overlay ── */}
-      {showNowPlaying && <NowPlaying onNavigate={navigate} />}
+      <AnimatePresence>
+        {showNowPlaying && (
+          <LayoutGroup>
+            <NowPlaying onNavigate={navigate} />
+          </LayoutGroup>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

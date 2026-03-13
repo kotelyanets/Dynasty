@@ -106,9 +106,9 @@ model Track {
   // from the file extension on every request.
   mimeType    String?
 
-  // Lyrics text content (parsed from .lrc files or embedded tags).
-  // Used for full-text search to find tracks by lyric fragments.
-  lyrics      String?
+  // ReplayGain / loudness normalization (LUFS value from FFmpeg).
+  // Typical range: -23 to -5. Null if FFmpeg was not available.
+  loudnessLufs Float?
 
   // Playback analytics (optional — used for "Recently Played" smart lists)
   playCount   Int      @default(0)

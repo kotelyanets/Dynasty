@@ -21,6 +21,14 @@ export interface Track {
    * Leave undefined to stay in "demo mode" (progress simulated).
    */
   audioUrl?: string;
+
+  // ── Technical audio metadata (for quality badges) ──────────
+  /** Bitrate in kbps (e.g. 320 for MP3, 1411 for CD FLAC) */
+  bitrate?: number;
+  /** Sample rate in Hz (e.g. 44100, 96000) */
+  sampleRate?: number;
+  /** Codec name (e.g. "FLAC", "MPEG 1 Layer 3") */
+  codec?: string;
 }
 
 export interface Album {
@@ -102,9 +110,16 @@ export interface PlayerStoreState {
   shuffle: boolean;
   repeat: RepeatMode;
 
-  // ── audio effects ──────────────────────────────────────────
-  karaokeEnabled: boolean;
-  spatialAudioEnabled: boolean;
+  // ── crossfade & autoplay ────────────────────────────────────
+  crossfadeEnabled: boolean;
+  /** Crossfade overlap duration in seconds (default 5). */
+  crossfadeDuration: number;
+  /** When true, auto-fetch similar tracks when the queue runs out. */
+  autoplayInfinity: boolean;
+  /** Internal flag — true while a crossfade transition is in progress. */
+  _isCrossfading: boolean;
+  /** Internal flag — true when infinity mode needs more tracks. */
+  _awaitingAutoplay: boolean;
 
   // ── UI state ────────────────────────────────────────────────
   showNowPlaying: boolean;
@@ -113,10 +128,11 @@ export interface PlayerStoreState {
 
 export interface PlayerStoreActions {
   // ── queue management ───────────────────────────────────────
-  playTrack: (track: Track, queue?: Track[], index?: number) => void;
+  playTrack: (track: Track, queue?: Track[], index?: number, options?: { skipAudioLoad?: boolean }) => void;
   playQueueIndex: (index: number) => void;
   addToQueue: (tracks: Track[]) => void;
   clearQueue: () => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
 
   // ── transport ──────────────────────────────────────────────
   play: () => void;
@@ -133,6 +149,9 @@ export interface PlayerStoreActions {
   // ── modes ───────────────────────────────────────────────────
   toggleShuffle: () => void;
   toggleRepeat: () => void;
+  toggleCrossfade: () => void;
+  setCrossfadeDuration: (seconds: number) => void;
+  toggleAutoplayInfinity: () => void;
 
   // ── audio effects ──────────────────────────────────────────
   toggleKaraoke: () => void;
@@ -148,6 +167,8 @@ export interface PlayerStoreActions {
   _setBufferingState: (s: BufferingState) => void;
   _setIsPlaying: (v: boolean) => void;
   _setError: (msg: string | null) => void;
+  _setIsCrossfading: (v: boolean) => void;
+  _setAwaitingAutoplay: (v: boolean) => void;
 }
 
 export type PlayerStore = PlayerStoreState & PlayerStoreActions;
@@ -187,6 +208,9 @@ export interface ApiTrack {
   year: number;
   coverUrl: string;   // e.g. /api/cover/:trackId
   audioUrl: string;   // e.g. /api/stream/:trackId
+  bitrate?: number;   // kbps
+  sampleRate?: number; // Hz
+  codec?: string;     // e.g. "FLAC", "MPEG 1 Layer 3"
 }
 
 export interface ApiAlbum {
