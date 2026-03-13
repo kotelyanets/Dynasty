@@ -19,6 +19,11 @@
  *    streaming (Range headers) is handled automatically by the browser
  *    because audioEl.src is set directly to the /api/stream/:id URL.
  *
+ * 1b. MEDIA SESSION
+ *    useMediaSession() subscribes to the Zustand player store and
+ *    bridges track metadata / position / transport actions to the OS
+ *    lock-screen controls (Control Center, AirPods, CarPlay, etc.).
+ *
  * 2. API URL
  *    All backend calls in api.ts read BASE_URL from VITE_API_URL
  *    (your .env file, e.g. your Tailscale IP). Nothing here is
@@ -35,6 +40,7 @@
 import { useState, useCallback } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
+import { useMediaSession } from '@/hooks/useMediaSession';
 import { MiniPlayer } from '@/components/MiniPlayer';
 import { NowPlaying } from '@/components/NowPlaying';
 import { Home } from '@/pages/Home';
@@ -61,6 +67,11 @@ function AppContent() {
   // This registers all HTMLAudioElement event listeners and the
   // Zustand subscription that keeps audioEl in sync with the store.
   useAudioEngine();
+
+  // ── Mount the MediaSession bridge ONCE ─────────────────
+  // This subscribes to store changes and keeps the OS lock-screen
+  // controls (artwork, title, play/pause, seek) in sync.
+  useMediaSession();
 
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 

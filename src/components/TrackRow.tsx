@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
+import { useOfflineCache } from '@/hooks/useOfflineCache';
 import { Track, Playlist } from '@/types/music';
-import { Play, Pause, MoreHorizontal, Heart } from 'lucide-react';
+import { Play, Pause, MoreHorizontal, Heart, Download, Loader2, CheckCircle2 } from 'lucide-react';
 import { api, addTrackToPlaylist, getStoredLikedPlaylistId } from '@/services/api';
 
 interface TrackRowProps {
@@ -27,6 +28,7 @@ export function TrackRow({
   onToggleLike,
 }: TrackRowProps) {
   const { state, playTrack, togglePlay, formatTime } = usePlayer();
+  const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
   const isActive  = state.currentTrack?.id === track.id;
   const isPlaying = isActive && state.isPlaying;
   const [showMenu, setShowMenu] = useState(false);
@@ -149,6 +151,38 @@ export function TrackRow({
               className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] border-b border-white/[0.06]"
             >
               {isLiked ? 'Remove from Liked' : 'Add to Liked'}
+            </button>
+          )}
+          {/* Download for offline */}
+          {track.audioUrl && (
+            <button
+              onClick={async () => {
+                if (isDownloaded(track.id)) {
+                  await removeDownload(track);
+                } else {
+                  await downloadTrack(track);
+                }
+                setShowMenu(false);
+              }}
+              disabled={isDownloading(track.id)}
+              className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] border-b border-white/[0.06] flex items-center gap-2"
+            >
+              {isDownloading(track.id) ? (
+                <>
+                  <Loader2 size={14} className="animate-spin flex-shrink-0" />
+                  Downloading…
+                </>
+              ) : isDownloaded(track.id) ? (
+                <>
+                  <CheckCircle2 size={14} className="text-green-400 flex-shrink-0" />
+                  Remove Download
+                </>
+              ) : (
+                <>
+                  <Download size={14} className="flex-shrink-0" />
+                  Download
+                </>
+              )}
             </button>
           )}
           {menuPlaylists && menuPlaylists.length > 0 && (

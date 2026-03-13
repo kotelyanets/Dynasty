@@ -5,11 +5,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { useOfflineCache } from '@/hooks/useOfflineCache';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
-  Loader2, AlertCircle, Heart,
+  Loader2, AlertCircle, Heart, Download, CheckCircle2,
 } from 'lucide-react';
 
 interface NowPlayingProps {
@@ -23,6 +24,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     formatTime, setVolume, toggleMute,
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
+  const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
 
   const {
     currentTrack, isPlaying, currentTime, duration,
@@ -420,10 +422,42 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 showNowPlaying(false);
                 if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
               }}
-              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10"
+              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10 border-b border-white/[0.08]"
             >
               Go to Artist
             </button>
+            {/* Download for offline */}
+            {currentTrack.audioUrl && (
+              <button
+                onClick={async () => {
+                  if (isDownloaded(currentTrack.id)) {
+                    await removeDownload(currentTrack);
+                  } else {
+                    await downloadTrack(currentTrack);
+                  }
+                  setShowMoreMenu(false);
+                }}
+                disabled={isDownloading(currentTrack.id)}
+                className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10 flex items-center gap-2"
+              >
+                {isDownloading(currentTrack.id) ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin flex-shrink-0" />
+                    Downloading…
+                  </>
+                ) : isDownloaded(currentTrack.id) ? (
+                  <>
+                    <CheckCircle2 size={14} className="text-green-400 flex-shrink-0" />
+                    Remove Download
+                  </>
+                ) : (
+                  <>
+                    <Download size={14} className="flex-shrink-0" />
+                    Download
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
 
