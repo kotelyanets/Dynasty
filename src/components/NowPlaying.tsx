@@ -424,19 +424,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 />
               </button>
             </div>
-
-          <button
-            onClick={() => { haptic(); toggleLike(currentTrack.id); }}
-            className="pt-1 active:scale-90 transition-transform flex-shrink-0"
-            aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
-          >
-            <Heart
-              size={26}
-              strokeWidth={1.75}
-              fill={liked ? '#fc3c44' : 'none'}
-              className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
-            />
-          </button>
+          </div>
         </div>
 
         {/* ── Error banner ── */}
