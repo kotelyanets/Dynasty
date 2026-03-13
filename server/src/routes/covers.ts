@@ -23,8 +23,8 @@ export default async function coverRoutes(server: FastifyInstance) {
   }>('/covers/:filename', async (request, reply) => {
     const { filename } = request.params;
 
-    // Sanitise filename: only allow alphanumeric, dash, underscore, dot
-    if (!/^[\w\-.]+$/.test(filename)) {
+    // Sanitise filename: only allow alphanumeric, dash, underscore with a single extension
+    if (!/^[\w-]+\.[\w]+$/.test(filename)) {
       return reply.status(400).send({ error: 'Invalid filename' });
     }
 
@@ -40,7 +40,7 @@ export default async function coverRoutes(server: FastifyInstance) {
     // Parse and validate resize query params
     const parsed = coverResizeQuerySchema.safeParse(request.query);
     const params = parsed.success ? parsed.data : {};
-    const width  = params.w;
+    const width = params.w;
     const height = params.h;
     const format = params.format ?? 'webp';
     const quality = params.q ?? 80;

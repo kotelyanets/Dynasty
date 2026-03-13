@@ -68,7 +68,7 @@ export const pushSubscribeSchema = z.object({
 });
 
 export const pushUnsubscribeSchema = z.object({
-  endpoint: z.string().url('Missing endpoint'),
+  endpoint: z.string().url('Invalid endpoint URL'),
 });
 
 // ─────────────────────────────────────────────────────────────
