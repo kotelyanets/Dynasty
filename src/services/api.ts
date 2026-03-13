@@ -123,6 +123,7 @@ function mapTrack(t: ApiTrack): Track {
     bitrate: t.bitrate,
     sampleRate: t.sampleRate,
     codec: t.codec,
+    isLiked: t.isLiked,
   };
 }
 
@@ -362,10 +363,55 @@ export const api = {
 };
 
 // ─────────────────────────────────────────────────────────────
-//  Helpers for "Liked Tracks" playlist
+//  Helpers for "Liked Tracks" (backed by the isLiked column)
 // ─────────────────────────────────────────────────────────────
 
-function getStoredLikedId(): string | null {
+export async function getLikedTrackIds(): Promise<string[]> {
+  if (IS_DEMO) {
+    // Demo mode: fall back to localStorage
+    try {
+      const raw = localStorage.getItem('vault_liked_ids');
+      return raw ? (JSON.parse(raw) as string[]) : [];
+    } catch {
+      return [];
+    }
+  }
+  return apiFetch<string[]>('/api/tracks/liked-ids');
+}
+
+export async function addLikedTrack(trackId: string): Promise<void> {
+  if (IS_DEMO) {
+    const ids = await getLikedTrackIds();
+    if (!ids.includes(trackId)) {
+      localStorage.setItem('vault_liked_ids', JSON.stringify([...ids, trackId]));
+    }
+    return;
+  }
+  await apiFetch(`/api/tracks/${encodeURIComponent(trackId)}/like`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isLiked: true }),
+  });
+}
+
+export async function removeLikedTrack(trackId: string): Promise<void> {
+  if (IS_DEMO) {
+    const ids = await getLikedTrackIds();
+    localStorage.setItem('vault_liked_ids', JSON.stringify(ids.filter((id) => id !== trackId)));
+    return;
+  }
+  await apiFetch(`/api/tracks/${encodeURIComponent(trackId)}/like`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isLiked: false }),
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Legacy "Liked Tracks" playlist helpers
+//  Still used by Library / PlaylistDetail for the "Liked Tracks"
+//  playlist view.
+// ─────────────────────────────────────────────────────────────
+
+export function getStoredLikedPlaylistId(): string | null {
   if (typeof window === 'undefined') return null;
   try {
     return localStorage.getItem(LIKED_PLAYLIST_KEY);
@@ -374,21 +420,8 @@ function getStoredLikedId(): string | null {
   }
 }
 
-export function getStoredLikedPlaylistId(): string | null {
-  return getStoredLikedId();
-}
-
-function storeLikedId(id: string) {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(LIKED_PLAYLIST_KEY, id);
-  } catch {
-    // ignore
-  }
-}
-
 export async function getOrCreateLikedPlaylist(): Promise<Playlist> {
-  const storedId = getStoredLikedId();
+  const storedId = getStoredLikedPlaylistId();
   const playlists = await api.getPlaylists();
 
   let liked =
@@ -400,27 +433,16 @@ export async function getOrCreateLikedPlaylist(): Promise<Playlist> {
   }
 
   if (!storedId || storedId !== liked.id) {
-    storeLikedId(liked.id);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LIKED_PLAYLIST_KEY, liked.id);
+      } catch {
+        // ignore
+      }
+    }
   }
 
   return liked;
-}
-
-export async function getLikedTrackIds(): Promise<string[]> {
-  const liked = await getOrCreateLikedPlaylist();
-  // The list endpoint doesn't include trackIds, so fetch the full playlist
-  const full = await api.getPlaylist(liked.id);
-  return full?.trackIds ?? [];
-}
-
-export async function addLikedTrack(trackId: string): Promise<void> {
-  const liked = await getOrCreateLikedPlaylist();
-  await addTrackToPlaylist(liked.id, trackId);
-}
-
-export async function removeLikedTrack(trackId: string): Promise<void> {
-  const liked = await getOrCreateLikedPlaylist();
-  await removeTrackFromPlaylist(liked.id, trackId);
 }
 
 // ─────────────────────────────────────────────────────────────

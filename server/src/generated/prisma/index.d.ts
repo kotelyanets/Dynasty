@@ -3382,6 +3382,7 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
+    isLiked: boolean | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3404,6 +3405,7 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
+    isLiked: boolean | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3426,6 +3428,7 @@ export namespace Prisma {
     fileSize: number
     mimeType: number
     loudnessLufs: number
+    isLiked: number
     playCount: number
     lastPlayed: number
     createdAt: number
@@ -3472,6 +3475,7 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
+    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3494,6 +3498,7 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
+    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3516,6 +3521,7 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
+    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3625,6 +3631,7 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
+    isLiked: boolean
     playCount: number
     lastPlayed: Date | null
     createdAt: Date
@@ -3666,6 +3673,7 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
+    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3692,6 +3700,7 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
+    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3716,6 +3725,7 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
+    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -3756,6 +3766,7 @@ export namespace Prisma {
       fileSize: number | null
       mimeType: string | null
       loudnessLufs: number | null
+      isLiked: boolean
       playCount: number
       lastPlayed: Date | null
       createdAt: Date
@@ -4171,6 +4182,7 @@ export namespace Prisma {
     readonly fileSize: FieldRef<"Track", 'Int'>
     readonly mimeType: FieldRef<"Track", 'String'>
     readonly loudnessLufs: FieldRef<"Track", 'Float'>
+    readonly isLiked: FieldRef<"Track", 'Boolean'>
     readonly playCount: FieldRef<"Track", 'Int'>
     readonly lastPlayed: FieldRef<"Track", 'DateTime'>
     readonly createdAt: FieldRef<"Track", 'DateTime'>
@@ -6522,6 +6534,7 @@ export namespace Prisma {
     fileSize: 'fileSize',
     mimeType: 'mimeType',
     loudnessLufs: 'loudnessLufs',
+    isLiked: 'isLiked',
     playCount: 'playCount',
     lastPlayed: 'lastPlayed',
     createdAt: 'createdAt',
@@ -6600,6 +6613,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
   /**
    * Deep Input Types
@@ -6764,6 +6784,7 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
+    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -6789,6 +6810,7 @@ export namespace Prisma {
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
     loudnessLufs?: SortOrderInput | SortOrder
+    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -6817,6 +6839,7 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
+    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -6842,6 +6865,7 @@ export namespace Prisma {
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
     loudnessLufs?: SortOrderInput | SortOrder
+    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -6872,6 +6896,7 @@ export namespace Prisma {
     fileSize?: IntNullableWithAggregatesFilter<"Track"> | number | null
     mimeType?: StringNullableWithAggregatesFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableWithAggregatesFilter<"Track"> | number | null
+    isLiked?: BoolWithAggregatesFilter<"Track"> | boolean
     playCount?: IntWithAggregatesFilter<"Track"> | number
     lastPlayed?: DateTimeNullableWithAggregatesFilter<"Track"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Track"> | Date | string
@@ -7164,6 +7189,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7189,6 +7215,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7210,6 +7237,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7235,6 +7263,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7258,6 +7287,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -7278,6 +7308,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7300,6 +7331,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7657,6 +7689,11 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -7710,6 +7747,7 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
+    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7743,6 +7781,7 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
+    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7765,6 +7804,7 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
+    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -7796,6 +7836,14 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8096,6 +8144,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -8360,6 +8412,11 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -8385,6 +8442,14 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8475,6 +8540,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8498,6 +8564,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8580,6 +8647,7 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
+    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -8623,6 +8691,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8646,6 +8715,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8949,6 +9019,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -8973,6 +9044,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -9038,6 +9110,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9062,6 +9135,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9094,6 +9168,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -9149,6 +9224,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9172,6 +9248,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9194,6 +9271,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9215,6 +9293,7 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
+    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -9235,6 +9314,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9258,6 +9338,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9280,6 +9361,7 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

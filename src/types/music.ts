@@ -29,6 +29,8 @@ export interface Track {
   sampleRate?: number;
   /** Codec name (e.g. "FLAC", "MPEG 1 Layer 3") */
   codec?: string;
+  /** Whether the user has "hearted" this track */
+  isLiked?: boolean;
 }
 
 export interface Album {
@@ -211,6 +213,7 @@ export interface ApiTrack {
   bitrate?: number;   // kbps
   sampleRate?: number; // Hz
   codec?: string;     // e.g. "FLAC", "MPEG 1 Layer 3"
+  isLiked?: boolean;  // true when the user has "hearted" this track
 }
 
 export interface ApiAlbum {
