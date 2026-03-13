@@ -150,10 +150,11 @@ export function AudioVisualizer({ active, size = 300 }: AudioVisualizerProps) {
       sphere.rotation.y += 0.005;
 
       // Update material color based on frequency
+      // Hue shifts from red (0.98) toward purple as mids increase
       const material = sphere.material as THREE.MeshPhongMaterial;
-      const hue = 0.98 + mid * 0.1; // Shift from red toward purple with mids
+      const hue = (0.98 + mid * 0.1) % 1;
       const color = new THREE.Color();
-      color.setHSL(hue % 1, 0.8, 0.5 + bass * 0.2);
+      color.setHSL(hue, 0.8, 0.5 + bass * 0.2);
       material.color = color;
       material.emissive = color;
       material.emissiveIntensity = 0.2 + bass * 0.5;

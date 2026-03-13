@@ -24,6 +24,18 @@ interface PreloadedTrack {
   buffer: AudioBuffer | null;
 }
 
+// Reuse a single AudioContext for all preloading to avoid resource exhaustion
+let preloadCtx: AudioContext | null = null;
+
+function getPreloadContext(): AudioContext {
+  if (!preloadCtx || preloadCtx.state === 'closed') {
+    const Ctor = window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    preloadCtx = new Ctor();
+  }
+  return preloadCtx;
+}
+
 export function useGaplessPlayback(): void {
   const preloadRef = useRef<PreloadedTrack | null>(null);
   const preloadingRef = useRef(false);
@@ -66,10 +78,9 @@ export function useGaplessPlayback(): void {
             return res.arrayBuffer();
           })
           .then((arrayBuffer) => {
-            const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-            return audioCtx.decodeAudioData(arrayBuffer).then((buffer) => {
+            const ctx = getPreloadContext();
+            return ctx.decodeAudioData(arrayBuffer).then((buffer) => {
               preloadRef.current = { trackId: nextTrack.id, buffer };
-              audioCtx.close();
             });
           })
           .catch(() => {

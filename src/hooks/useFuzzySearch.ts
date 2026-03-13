@@ -13,7 +13,7 @@
  *      cached catalog to rescue typo'd queries.
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { api } from '@/services/api';
 import type { Track, Album, Artist } from '@/types/music';
@@ -76,6 +76,7 @@ let catalogCache: {
 } | null = null;
 
 let catalogLoading = false;
+let catalogVersion = 0;
 
 async function ensureCatalog(): Promise<typeof catalogCache> {
   if (catalogCache) return catalogCache;
@@ -99,6 +100,7 @@ async function ensureCatalog(): Promise<typeof catalogCache> {
       api.getArtists(),
     ]);
     catalogCache = { tracks, albums, artists };
+    catalogVersion++;
   } catch {
     catalogCache = { tracks: [], albums: [], artists: [] };
   }
@@ -110,25 +112,25 @@ export function useFuzzySearch(query: string): UseFuzzySearchResult {
   const [data, setData] = useState<SearchResults>(EMPTY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const catalogRef = useRef(catalogCache);
+  const [catVersion, setCatVersion] = useState(catalogVersion);
 
   // Pre-warm catalog in background
   useEffect(() => {
-    ensureCatalog().then((c) => {
-      catalogRef.current = c;
+    ensureCatalog().then(() => {
+      setCatVersion(catalogVersion);
     });
   }, []);
 
-  // Memoize fuse instances (rebuilt when catalog changes)
+  // Memoize fuse instances (rebuilt when catalog updates)
   const fuseInstances = useMemo(() => {
-    const cat = catalogRef.current;
+    const cat = catalogCache;
     if (!cat) return null;
     return {
       tracks: new Fuse(cat.tracks, TRACK_FUSE_OPTIONS),
       albums: new Fuse(cat.albums, ALBUM_FUSE_OPTIONS),
       artists: new Fuse(cat.artists, ARTIST_FUSE_OPTIONS),
     };
-  }, [catalogRef.current]);
+  }, [catVersion]);
 
   useEffect(() => {
     if (!query.trim()) {
