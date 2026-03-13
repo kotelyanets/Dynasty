@@ -55,9 +55,13 @@ export async function queueAction(action: Omit<OfflineAction, 'id' | 'timestamp'
 
   // Request Background Sync if supported
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
-    const reg = await navigator.serviceWorker.ready;
     try {
-      await (reg as ServiceWorkerRegistration & { sync: { register: (tag: string) => Promise<void> } }).sync.register('vault-sync');
+      const reg = await navigator.serviceWorker.ready;
+      // SyncManager API: the 'sync' property is available when Background Sync is supported
+      const syncReg = reg as ServiceWorkerRegistration & {
+        sync: { register(tag: string): Promise<void> };
+      };
+      await syncReg.sync.register('vault-sync');
     } catch {
       // Background Sync not available — will flush manually
     }

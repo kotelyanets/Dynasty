@@ -85,7 +85,7 @@ export function SmartPlaylistBuilder({ onPreview, loading }: SmartPlaylistBuilde
 
   const handlePreview = useCallback(() => {
     haptic();
-    const validRules = rules.filter((r) => r.value.trim() !== '');
+    const validRules = rules.filter((r) => String(r.value).trim() !== '');
     if (validRules.length > 0) {
       onPreview(validRules);
     }

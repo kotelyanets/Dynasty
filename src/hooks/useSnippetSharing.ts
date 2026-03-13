@@ -36,12 +36,13 @@ export function useSnippetFromUrl() {
         if (track) {
           usePlayerStore.getState().playTrack(track);
           // Wait for track to load, then seek
-          const unsub = usePlayerStore.subscribe(
+          let unsubscribe: (() => void) | null = null;
+          unsubscribe = usePlayerStore.subscribe(
             (s) => s.bufferingState,
             (state) => {
               if (state === 'ready') {
                 usePlayerStore.getState().seek(seekTime);
-                unsub();
+                unsubscribe?.();
               }
             },
           );
