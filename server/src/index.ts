@@ -20,12 +20,15 @@ import config from './config';
 import db from './db';
 
 // Route modules
-import streamRoutes         from './routes/stream';
-import artistRoutes         from './routes/artists';
-import albumRoutes          from './routes/albums';
-import trackRoutes          from './routes/tracks';
-import playlistRoutes       from './routes/playlists';
-import recommendationRoutes from './routes/recommendations';
+import streamRoutes   from './routes/stream';
+import artistRoutes   from './routes/artists';
+import albumRoutes    from './routes/albums';
+import trackRoutes    from './routes/tracks';
+import playlistRoutes from './routes/playlists';
+import lyricsRoutes   from './routes/lyrics';
+
+// Services
+import { startWatcher, stopWatcher } from './services/watcher';
 
 // ─────────────────────────────────────────────────────────────
 //  Build the Fastify instance
@@ -93,11 +96,11 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(streamRoutes);
 
   // All other routes are under /api
-  await server.register(artistRoutes,         { prefix: '/api' });
-  await server.register(albumRoutes,          { prefix: '/api' });
-  await server.register(trackRoutes,          { prefix: '/api' });
-  await server.register(playlistRoutes,       { prefix: '/api' });
-  await server.register(recommendationRoutes, { prefix: '/api' });
+  await server.register(artistRoutes,   { prefix: '/api' });
+  await server.register(albumRoutes,    { prefix: '/api' });
+  await server.register(trackRoutes,    { prefix: '/api' });
+  await server.register(playlistRoutes, { prefix: '/api' });
+  await server.register(lyricsRoutes,   { prefix: '/api' });
 
   // ── Frontend static assets (Vite build) ───────────────────
   //
@@ -186,6 +189,17 @@ async function start(): Promise<void> {
     console.log('\n  → Set VITE_API_URL=http://<your-ip>:3001 in the frontend .env');
     console.log('  → Run the scanner: npm run scan\n');
 
+    // ── Start file-system watcher ──────────────────────────
+    // Automatically picks up new/changed/deleted audio files
+    // in MUSIC_DIR without requiring a manual `npm run scan`.
+    try {
+      await startWatcher();
+    } catch (err) {
+      // Non-fatal: server still works, just no auto-scanning
+      console.warn('[Server] File watcher failed to start:', (err as Error).message);
+      console.warn('[Server] Auto-scanning disabled — use `npm run scan` manually.');
+    }
+
   } catch (err) {
     console.error('Fatal: server failed to start:', err);
     await db.$disconnect().catch(() => {});
@@ -196,6 +210,7 @@ async function start(): Promise<void> {
   const shutdown = async (signal: string) => {
     console.log(`\n[${signal}] Shutting down gracefully...`);
     try {
+      await stopWatcher();
       await server?.close();
       await db.$disconnect();
       console.log('Server closed. Bye! 👋');

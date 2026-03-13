@@ -8,6 +8,12 @@
  *   Attach every relevant HTMLAudioElement event to the matching
  *   Zustand action so the store always reflects the true audio state.
  *
+ * Also handles:
+ *   • Initialising the Web Audio API pipeline (EQ + normalization)
+ *     on first user interaction.
+ *   • Applying per-track loudness normalization (LUFS → GainNode).
+ *   • Notifying the sleep timer when a track ends.
+ *
  * Why a hook instead of doing this in the store itself?
  *   The Web Audio API's event system is side-effectful and React
  *   manages the cleanup lifecycle via useEffect. Keeping it here
@@ -24,6 +30,11 @@
 
 import { useEffect, useRef } from 'react';
 import { audioEl, usePlayerStore } from '@/store/playerStore';
+import { ensureAudioPipeline, setNormalizationGain, resetNormalizationGain } from '@/audio/audioNodes';
+import { useSleepTimerStore } from '@/store/sleepTimerStore';
+
+/** Target loudness for normalization (Spotify / Apple Music standard). */
+const TARGET_LUFS = -14;
 
 export function useAudioEngine() {
   // Track whether we've received a user-initiated play command
@@ -34,22 +45,16 @@ export function useAudioEngine() {
     const store = usePlayerStore.getState;
 
     // ── timeupdate ──────────────────────────────────────────
-    // Fires ~4× per second (250 ms). We sync currentTime and
-    // compute the buffered fraction from the TimeRanges object.
     const onTimeUpdate = () => {
       store()._setCurrentTime(audioEl.currentTime);
 
-      // Calculate how much of the file is buffered (0–1)
       if (audioEl.buffered.length > 0 && audioEl.duration > 0) {
-        // Use the end of the last buffered range as the high-water mark
         const bufferedEnd = audioEl.buffered.end(audioEl.buffered.length - 1);
         store()._setBuffered(bufferedEnd / audioEl.duration);
       }
     };
 
     // ── durationchange ─────────────────────────────────────
-    // Fires once the browser knows the exact length of the file.
-    // For VBR MP3s this can update mid-stream, so we always sync.
     const onDurationChange = () => {
       if (isFinite(audioEl.duration)) {
         store()._setDuration(audioEl.duration);
@@ -57,10 +62,6 @@ export function useAudioEngine() {
     };
 
     // ── canplay ─────────────────────────────────────────────
-    // The browser has buffered enough to begin playing without
-    // an immediate stall. This is the correct place to call play()
-    // after a src change — calling it in playTrack() directly can
-    // race with the load() call on iOS.
     const onCanPlay = () => {
       store()._setBufferingState('ready');
       if (pendingPlay.current || store().isPlaying) {
@@ -74,28 +75,25 @@ export function useAudioEngine() {
     };
 
     // ── waiting ─────────────────────────────────────────────
-    // Network stall during playback (e.g. the buffer ran out).
     const onWaiting = () => store()._setBufferingState('buffering');
 
     // ── playing ─────────────────────────────────────────────
-    // Audio has actually started making sound. Distinct from 'play'
-    // which fires when play() is called but before audio has started.
     const onPlaying = () => {
       store()._setIsPlaying(true);
       store()._setBufferingState('ready');
+      // Ensure Web Audio pipeline is active (requires user gesture on iOS)
+      ensureAudioPipeline();
     };
 
     // ── pause ───────────────────────────────────────────────
     const onPause = () => store()._setIsPlaying(false);
 
     // ── ended ───────────────────────────────────────────────
-    // Track finished naturally. Advance to next (store handles
-    // repeat-one by re-seeking to 0 and calling play).
-    // If a crossfade is in progress the transition is already being
-    // handled by useCrossfade — don't double-advance.
     const onEnded = () => {
       if (store()._isCrossfading) return;
       store()._setIsPlaying(false);
+      // Notify sleep timer
+      useSleepTimerStore.getState()._onTrackEnd();
       store().next();
     };
 
@@ -115,7 +113,6 @@ export function useAudioEngine() {
     };
 
     // ── stalled ─────────────────────────────────────────────
-    // The browser is trying to fetch but the server has stalled.
     const onStalled = () => {
       if (store().isPlaying) store()._setBufferingState('buffering');
     };
@@ -141,15 +138,10 @@ export function useAudioEngine() {
     audioEl.addEventListener('volumechange', onVolumeChange);
 
     // ── Subscribe to isPlaying changes from the store ───────
-    // When the user presses Play/Pause from the UI (not from
-    // hardware keys — those go through MediaSession → store.play/pause
-    // → audioEl), we need to propagate the state change to audioEl.
     const unsubscribe = usePlayerStore.subscribe(
       (s) => s.isPlaying,
       (isPlaying) => {
         if (isPlaying) {
-          // If the audio is not yet ready, mark pendingPlay so canplay
-          // will trigger the play() call instead.
           if (audioEl.readyState < 3 && audioEl.src) {
             pendingPlay.current = true;
           } else if (audioEl.src && audioEl.paused) {
@@ -165,6 +157,20 @@ export function useAudioEngine() {
       },
     );
 
+    // ── Subscribe to track changes for loudness normalization ─
+    const unsubNorm = usePlayerStore.subscribe(
+      (s) => s.currentTrack,
+      (track) => {
+        if (!track?.loudnessLufs) {
+          resetNormalizationGain();
+          return;
+        }
+        // Calculate gain adjustment: how much louder/quieter than target
+        const gainDb = TARGET_LUFS - track.loudnessLufs;
+        setNormalizationGain(gainDb);
+      },
+    );
+
     return () => {
       audioEl.removeEventListener('timeupdate', onTimeUpdate);
       audioEl.removeEventListener('durationchange', onDurationChange);
@@ -177,6 +183,7 @@ export function useAudioEngine() {
       audioEl.removeEventListener('stalled', onStalled);
       audioEl.removeEventListener('volumechange', onVolumeChange);
       unsubscribe();
+      unsubNorm();
     };
   }, []); // ← empty deps: this runs once, the ref to audioEl is stable
 }

@@ -11,9 +11,8 @@
  *   • No need to pass refs around — the store is the single source of truth.
  *   • `useAudioEngine` (a one-time-mounted hook in App.tsx) attaches all
  *     the DOM event listeners and wires them back into this store.
- *
- * MediaSession API is initialised here too so that the OS lock-screen
- * controls work even if the NowPlaying modal is closed.
+ *   • `useMediaSession` (a one-time-mounted hook in App.tsx) subscribes to
+ *     store changes and bridges them to the OS lock-screen / MediaSession.
  */
 
 import { create } from 'zustand';
@@ -100,43 +99,6 @@ function pickShuffledNext(
 }
 
 // ─────────────────────────────────────────────────────────────
-//  MediaSession helpers (defined here, called from actions)
-// ─────────────────────────────────────────────────────────────
-
-function updateMediaSessionMetadata(track: Track) {
-  if (!('mediaSession' in navigator)) return;
-
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: track.title,
-    artist: track.artist,
-    album: track.album,
-    artwork: [
-      // Provide multiple sizes; iOS will pick the best fit for
-      // lock screen / Control Center / CarPlay.
-      { src: track.coverUrl, sizes: '96x96',   type: 'image/svg+xml' },
-      { src: track.coverUrl, sizes: '128x128', type: 'image/svg+xml' },
-      { src: track.coverUrl, sizes: '192x192', type: 'image/svg+xml' },
-      { src: track.coverUrl, sizes: '256x256', type: 'image/svg+xml' },
-      { src: track.coverUrl, sizes: '512x512', type: 'image/svg+xml' },
-    ],
-  });
-}
-
-function updateMediaSessionPositionState(duration: number, currentTime: number) {
-  if (!('mediaSession' in navigator)) return;
-  if (!isFinite(duration) || duration <= 0) return;
-  try {
-    navigator.mediaSession.setPositionState({
-      duration,
-      playbackRate: 1,
-      position: Math.min(currentTime, duration),
-    });
-  } catch {
-    // Safari < 15.4 may throw if position > duration during a seek
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
 //  Store
 // ─────────────────────────────────────────────────────────────
 
@@ -170,8 +132,6 @@ export const usePlayerStore = create<PlayerStore>()(
 
     _setCurrentTime: (t) => {
       set({ currentTime: t });
-      // Keep OS position indicator in sync (throttled by the browser)
-      updateMediaSessionPositionState(get().duration, t);
     },
 
     _setDuration: (d) => set({ duration: d }),
@@ -182,9 +142,6 @@ export const usePlayerStore = create<PlayerStore>()(
 
     _setIsPlaying: (v) => {
       set({ isPlaying: v });
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = v ? 'playing' : 'paused';
-      }
     },
 
     _setError: (msg) =>
@@ -232,8 +189,6 @@ export const usePlayerStore = create<PlayerStore>()(
         audioEl.src = '';
         startDemoPlayback();
       }
-
-      updateMediaSessionMetadata(track);
     },
 
     playQueueIndex: (index) => {
@@ -247,6 +202,26 @@ export const usePlayerStore = create<PlayerStore>()(
 
     clearQueue: () =>
       set({ queue: [], queueIndex: -1, currentTrack: null, isPlaying: false }),
+
+    reorderQueue: (fromIndex, toIndex) => {
+      const { queue, queueIndex } = get();
+      if (fromIndex === toIndex) return;
+      if (fromIndex < 0 || fromIndex >= queue.length) return;
+      if (toIndex < 0 || toIndex >= queue.length) return;
+      const newQueue = [...queue];
+      const [moved] = newQueue.splice(fromIndex, 1);
+      newQueue.splice(toIndex, 0, moved);
+      // Update queueIndex to keep pointing at the currently playing track
+      let newIndex = queueIndex;
+      if (queueIndex === fromIndex) {
+        newIndex = toIndex;
+      } else if (fromIndex < queueIndex && toIndex >= queueIndex) {
+        newIndex = queueIndex - 1;
+      } else if (fromIndex > queueIndex && toIndex <= queueIndex) {
+        newIndex = queueIndex + 1;
+      }
+      set({ queue: newQueue, queueIndex: newIndex });
+    },
 
     // ─────────────────────────────────────────────────────────
     //  Transport
@@ -369,7 +344,6 @@ export const usePlayerStore = create<PlayerStore>()(
       } else {
         set({ currentTime: clamped });
       }
-      updateMediaSessionPositionState(duration, clamped);
     },
 
     // ─────────────────────────────────────────────────────────
@@ -425,33 +399,3 @@ export const usePlayerStore = create<PlayerStore>()(
   })),
 );
 
-// ─────────────────────────────────────────────────────────────
-//  Register MediaSession action handlers ONCE
-//  These fire from the lock screen / AirPods / CarPlay controls
-//  and route straight into our Zustand actions.
-// ─────────────────────────────────────────────────────────────
-
-if ('mediaSession' in navigator) {
-  const ms = navigator.mediaSession;
-
-  ms.setActionHandler('play', () => usePlayerStore.getState().play());
-  ms.setActionHandler('pause', () => usePlayerStore.getState().pause());
-  ms.setActionHandler('nexttrack', () => usePlayerStore.getState().next());
-  ms.setActionHandler('previoustrack', () => usePlayerStore.getState().prev());
-
-  ms.setActionHandler('seekto', (details) => {
-    if (details.seekTime !== undefined) {
-      usePlayerStore.getState().seek(details.seekTime);
-    }
-  });
-
-  ms.setActionHandler('seekforward', (details) => {
-    const { currentTime } = usePlayerStore.getState();
-    usePlayerStore.getState().seek(currentTime + (details.seekOffset ?? 10));
-  });
-
-  ms.setActionHandler('seekbackward', (details) => {
-    const { currentTime } = usePlayerStore.getState();
-    usePlayerStore.getState().seek(currentTime - (details.seekOffset ?? 10));
-  });
-}

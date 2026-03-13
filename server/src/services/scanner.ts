@@ -24,6 +24,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { execFile } from 'child_process';
 import * as mm from 'music-metadata';
 import type { IAudioMetadata, IPicture } from 'music-metadata';
 import db from '../db';
@@ -56,7 +57,7 @@ export interface ScanResult {
 //  Constants
 // ─────────────────────────────────────────────────────────────
 
-const SUPPORTED_EXTENSIONS = new Set([
+export const SUPPORTED_EXTENSIONS = new Set([
   '.mp3', '.flac', '.m4a', '.aac',
   '.ogg', '.opus', '.wav', '.wma', '.alac',
 ]);
@@ -73,6 +74,63 @@ const MIME_BY_EXT: Record<string, string> = {
   '.wma':  'audio/x-ms-wma',
   '.alac': 'audio/mp4',
 };
+
+// ─────────────────────────────────────────────────────────────
+//  Loudness (LUFS) measurement via FFmpeg
+// ─────────────────────────────────────────────────────────────
+
+let _ffmpegAvailable: boolean | null = null;
+
+/**
+ * Check once if FFmpeg is available on the system PATH.
+ */
+async function isFfmpegAvailable(): Promise<boolean> {
+  if (_ffmpegAvailable !== null) return _ffmpegAvailable;
+  return new Promise((resolve) => {
+    execFile('ffmpeg', ['-version'], (err) => {
+      _ffmpegAvailable = !err;
+      if (!_ffmpegAvailable) {
+        console.warn('[Scanner] FFmpeg not found — loudness normalization (LUFS) will be skipped.');
+      }
+      resolve(_ffmpegAvailable);
+    });
+  });
+}
+
+/**
+ * Measure integrated loudness (LUFS) of an audio file using FFmpeg.
+ * Returns null if FFmpeg is unavailable or measurement fails.
+ *
+ * Uses the EBU R128 `ebur128` audio filter which outputs a summary
+ * line like:  I: -14.0 LUFS
+ */
+async function measureLoudness(filePath: string): Promise<number | null> {
+  if (!(await isFfmpegAvailable())) return null;
+
+  return new Promise((resolve) => {
+    // -nostats suppresses progress; -f null discards output
+    const args = [
+      '-i', filePath,
+      '-af', 'ebur128=peak=none',
+      '-f', 'null', '-',
+    ];
+
+    execFile('ffmpeg', args, { timeout: 30000 }, (err, _stdout, stderr) => {
+      if (err) {
+        resolve(null);
+        return;
+      }
+      // Parse "I: -14.0 LUFS" from the summary block in stderr
+      const match = stderr.match(/I:\s+([-\d.]+)\s+LUFS/);
+      if (match && match[1]) {
+        const lufs = parseFloat(match[1]);
+        resolve(isFinite(lufs) ? lufs : null);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+}
 
 // ─────────────────────────────────────────────────────────────
 //  File system helpers
@@ -131,7 +189,7 @@ async function getExistingPaths(): Promise<Set<string>> {
  * Ensures the covers output directory exists.
  * Called once at the start of a scan.
  */
-async function ensureCoversDir(): Promise<void> {
+export async function ensureCoversDir(): Promise<void> {
   await fs.promises.mkdir(config.coversDir, { recursive: true });
 }
 
@@ -244,7 +302,7 @@ function resolveAlbumTitle(meta: IAudioMetadata): string {
  * Process a single audio file:
  *   parse → extract art → upsert Artist/Album/Track
  */
-async function processFile(filePath: string): Promise<void> {
+export async function processFile(filePath: string): Promise<void> {
   // ── Parse metadata ────────────────────────────────────────
   // `skipCovers: false` is important — we want the embedded art.
   // `duration: true` forces a full file read for accurate duration
@@ -267,6 +325,9 @@ async function processFile(filePath: string): Promise<void> {
   // ── File stats ────────────────────────────────────────────
   const stat = await fs.promises.stat(filePath);
   const mimeType = getMimeType(filePath);
+
+  // ── Measure loudness (LUFS) via FFmpeg ────────────────────
+  const loudnessLufs = await measureLoudness(filePath);
 
   // ── Resolve denormalized strings ──────────────────────────
   const artistName = resolveArtistName(meta);
@@ -345,6 +406,7 @@ async function processFile(filePath: string): Promise<void> {
       codec:       format.codec       ?? null,
       fileSize:    stat.size,
       mimeType,
+      loudnessLufs,
     },
     create: {
       title:       trackTitle,
@@ -360,6 +422,7 @@ async function processFile(filePath: string): Promise<void> {
       codec:       format.codec       ?? null,
       fileSize:    stat.size,
       mimeType,
+      loudnessLufs,
     },
   });
 }

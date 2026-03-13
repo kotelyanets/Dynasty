@@ -119,6 +119,10 @@ function mapTrack(t: ApiTrack): Track {
     // Resolve relative cover URL to absolute using the API base
     coverUrl: t.coverUrl.startsWith('http') ? t.coverUrl : `${BASE_URL}${t.coverUrl}`,
     audioUrl: t.audioUrl.startsWith('http') ? t.audioUrl : `${BASE_URL}${t.audioUrl}`,
+    // Pass through quality metadata
+    bitrate: t.bitrate,
+    sampleRate: t.sampleRate,
+    codec: t.codec,
   };
 }
 
@@ -340,25 +344,20 @@ export const api = {
     return IS_DEMO ? '' : `${BASE_URL}/api/stream/${trackId}`;
   },
 
-  // ── Recommendations (for ♾️ Infinite Autoplay) ─────────────
-
+  // ── Lyrics ────────────────────────────────────────────────
   /**
-   * Fetch tracks similar to the given trackId (same genre / artist).
-   * Falls back to random mock data tracks in demo mode.
+   * Fetches raw LRC text for a track. Returns null if not found.
    */
-  async getRecommendations(trackId: string, limit = 10): Promise<Track[]> {
-    if (IS_DEMO) {
-      // In demo mode, return a shuffled selection of all tracks
-      const shuffled = [...allTracks].sort(() => Math.random() - 0.5);
-      return shuffled
-        .filter((t) => t.id !== trackId)
-        .slice(0, limit);
+  async getLyrics(trackId: string): Promise<string | null> {
+    if (IS_DEMO) return null;
+    try {
+      const url = `${BASE_URL}/api/lyrics/${trackId}`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      return await res.text();
+    } catch {
+      return null;
     }
-
-    const data = await apiFetch<{ items: ApiTrack[] }>(
-      `/api/tracks/similar?trackId=${encodeURIComponent(trackId)}&limit=${limit}`,
-    );
-    return data.items.map(mapTrack);
   },
 };
 
