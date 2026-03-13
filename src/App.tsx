@@ -37,7 +37,7 @@
  *    Both values account for safe area — see comments inline below.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Component, type ReactNode, type ErrorInfo } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
@@ -67,8 +67,51 @@ interface NavState {
 }
 
 // ─────────────────────────────────────────────────────────────
+//  Error Boundary — prevents a white/black screen of death
+// ─────────────────────────────────────────────────────────────
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends Component<{ children: ReactNode; onReset: () => void }, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[ErrorBoundary] Caught error:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center">
+          <p className="text-white/70 text-lg font-medium">Something went wrong</p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false });
+              this.props.onReset();
+            }}
+            className="px-6 py-2 bg-[#fc3c44] text-white rounded-full text-sm font-semibold active:opacity-70"
+          >
+            Go Home
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
 //  App shell
 // ─────────────────────────────────────────────────────────────
+
+/** Views that require a valid `id` parameter. */
+const DETAIL_VIEWS = ['album', 'artist', 'playlist'];
 
 function AppContent() {
   // ── Mount the audio engine ONCE ─────────────────────────
@@ -105,6 +148,9 @@ function AppContent() {
   const showNowPlaying = usePlayerStore((s) => s.showNowPlaying);
 
   const navigate = useCallback((view: string, id?: string) => {
+    // Prevent navigating to detail views without an ID (causes black screen)
+    if (DETAIL_VIEWS.includes(view) && !id) return;
+
     setNav((prev) => ({
       view,
       id,
@@ -138,6 +184,7 @@ function AppContent() {
     <div className="h-[100dvh] flex flex-col bg-black text-white overflow-hidden">
       {/* ── Scrollable page content ── */}
       <main className="flex-1 overflow-y-auto overscroll-y-contain scrollbar-hide">
+        <ErrorBoundary onReset={() => switchTab('home')}>
         {/*
           SAFE-AREA GUARANTEE
           ────────────────────────────────────────────────────────────
@@ -175,7 +222,13 @@ function AppContent() {
           {nav.view === 'playlist' && nav.id && (
             <PlaylistDetail playlistId={nav.id} onBack={goBack} onNavigate={navigate} />
           )}
+          {/* Fallback: if view doesn't match any route or detail view has no ID, show Home */}
+          {!['home', 'search', 'library'].includes(nav.view) &&
+           !(DETAIL_VIEWS.includes(nav.view) && nav.id) && (
+            <Home onNavigate={navigate} />
+          )}
         </div>
+        </ErrorBoundary>
       </main>
 
       {/* ── Fixed bottom: floating mini player + tab bar ── */}

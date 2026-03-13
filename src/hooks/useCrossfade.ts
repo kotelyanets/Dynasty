@@ -170,19 +170,10 @@ export function useCrossfade() {
     audioEl.pause();
 
     // Swap: load the next track into the main audioEl from browser cache
-    audioEl.src = nextTrack.audioUrl;
+    audioEl.src = nextTrack.audioUrl ?? '';
 
     const onReady = () => {
-      audioEl.currentTime = crossfadeEl.currentTime;
-
-      const p = audioEl.play();
-      if (p) p.catch(() => {});
-
-      // Stop crossfade element
-      crossfadeEl.pause();
-      crossfadeEl.src = '';
-
-      // Reset gain nodes
+      // Reset gain nodes BEFORE playing to prevent audio overlap artifacts
       if (useWebAudio && mainGain && xfGain) {
         mainGain.gain.value = 1;
         xfGain.gain.value = 0;
@@ -190,6 +181,15 @@ export function useCrossfade() {
         audioEl.volume = store.volume;
         crossfadeEl.volume = 0;
       }
+
+      // Stop crossfade element first to prevent overlap
+      crossfadeEl.pause();
+      crossfadeEl.src = '';
+
+      audioEl.currentTime = crossfadeEl.currentTime || 0;
+
+      const p = audioEl.play();
+      if (p) p.catch(() => {});
 
       // Update store metadata (skip audio load since audioEl is already playing)
       store.playTrack(nextTrack, queue, nextIndex, { skipAudioLoad: true });

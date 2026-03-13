@@ -126,6 +126,10 @@ export interface PlayerStoreState {
   // ── UI state ────────────────────────────────────────────────
   showNowPlaying: boolean;
   errorMessage: string | null;
+
+  // ── audio effects ──────────────────────────────────────────
+  karaokeEnabled: boolean;
+  spatialAudioEnabled: boolean;
 }
 
 export interface PlayerStoreActions {
