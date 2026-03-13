@@ -21,6 +21,12 @@ export interface Track {
    * Leave undefined to stay in "demo mode" (progress simulated).
    */
   audioUrl?: string;
+  /**
+   * Integrated loudness in LUFS (EBU R128) measured by FFmpeg.
+   * Used for automatic volume normalization between tracks.
+   * Null when FFmpeg was not available during the scan.
+   */
+  loudnessLufs?: number | null;
 }
 
 export interface Album {
@@ -177,6 +183,7 @@ export interface ApiTrack {
   year: number;
   coverUrl: string;   // e.g. /api/cover/:trackId
   audioUrl: string;   // e.g. /api/stream/:trackId
+  loudnessLufs?: number | null;
 }
 
 export interface ApiAlbum {

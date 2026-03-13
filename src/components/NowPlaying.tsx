@@ -5,11 +5,15 @@
 import { useRef, useState, useEffect } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { usePictureInPicture } from '@/hooks/usePictureInPicture';
+import { useEQStore, EQ_PRESETS, EQ_PRESET_KEYS, EQ_BAND_LABELS } from '@/store/eqStore';
+import { useSleepTimerStore } from '@/store/sleepTimerStore';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart,
+  Moon, SlidersHorizontal, PictureInPicture2, X,
 } from 'lucide-react';
 
 interface NowPlayingProps {
@@ -23,6 +27,22 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     formatTime, setVolume, toggleMute,
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
+  const { isPiPActive, isPiPSupported, togglePiP } = usePictureInPicture();
+
+  // EQ store
+  const eqEnabled = useEQStore((s) => s.enabled);
+  const eqPreset = useEQStore((s) => s.preset);
+  const eqBands = useEQStore((s) => s.bands);
+  const setEQEnabled = useEQStore((s) => s.setEnabled);
+  const setEQPreset = useEQStore((s) => s.setPreset);
+  const setEQBand = useEQStore((s) => s.setBand);
+
+  // Sleep timer store
+  const sleepMode = useSleepTimerStore((s) => s.mode);
+  const sleepRemaining = useSleepTimerStore((s) => s.remainingSeconds);
+  const startSleepTimer = useSleepTimerStore((s) => s.startTimer);
+  const startEndOfTrack = useSleepTimerStore((s) => s.startEndOfTrack);
+  const cancelSleep = useSleepTimerStore((s) => s.cancel);
 
   const {
     currentTrack, isPlaying, currentTime, duration,
@@ -44,6 +64,8 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   // ── UI overlay state ────────────────────────────────────
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showQueue, setShowQueue]       = useState(false);
+  const [showEQ, setShowEQ]             = useState(false);
+  const [showSleepMenu, setShowSleepMenu] = useState(false);
 
   useEffect(() => {
     setIsSeeking(false);
@@ -107,6 +129,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
 
   const currentVolume = isMuted ? 0 : volume;
   const liked = isLiked(currentTrack.id);
+
+  // ── Sleep timer display ─────────────────────────────────
+  const formatSleepTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div
@@ -392,9 +421,191 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           >
             <ListMusic size={22} />
           </button>
-          {/* Spacer */}
-          <div />
+
+          <div className="flex items-center gap-1">
+            {/* Sleep Timer */}
+            <button
+              onClick={() => setShowSleepMenu((v) => !v)}
+              className={`p-2 active:opacity-40 active:scale-90 transition-transform ${
+                sleepMode !== 'off' ? 'text-[#fc3c44]' : 'text-white/40'
+              }`}
+              aria-label="Sleep timer"
+            >
+              <Moon size={20} />
+              {sleepMode === 'timer' && (
+                <span className="absolute -mt-1 ml-3 text-[9px] text-[#fc3c44] font-bold tabular-nums">
+                  {formatSleepTime(sleepRemaining)}
+                </span>
+              )}
+            </button>
+
+            {/* Equalizer */}
+            <button
+              onClick={() => setShowEQ((v) => !v)}
+              className={`p-2 active:opacity-40 active:scale-90 transition-transform ${
+                eqEnabled ? 'text-[#fc3c44]' : 'text-white/40'
+              }`}
+              aria-label="Equalizer"
+            >
+              <SlidersHorizontal size={20} />
+            </button>
+
+            {/* Picture-in-Picture */}
+            {isPiPSupported && (
+              <button
+                onClick={togglePiP}
+                className={`p-2 active:opacity-40 active:scale-90 transition-transform ${
+                  isPiPActive ? 'text-[#fc3c44]' : 'text-white/40'
+                }`}
+                aria-label="Picture in Picture"
+              >
+                <PictureInPicture2 size={20} />
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* ── Sleep Timer menu ── */}
+        {showSleepMenu && (
+          <div
+            className="absolute left-6 right-6 bottom-24 z-50 rounded-2xl overflow-hidden shadow-2xl"
+            style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
+          >
+            <div className="flex items-center justify-between px-4 pt-3 pb-2">
+              <p className="text-sm font-bold text-white">Sleep Timer</p>
+              <button
+                onClick={() => setShowSleepMenu(false)}
+                className="text-white/40 active:opacity-50"
+                aria-label="Close sleep timer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {sleepMode !== 'off' && (
+              <button
+                onClick={() => { cancelSleep(); setShowSleepMenu(false); }}
+                className="w-full px-4 py-3 text-left text-sm text-red-400 active:bg-white/10 border-b border-white/[0.08]"
+              >
+                Cancel Timer {sleepMode === 'timer' && `(${formatSleepTime(sleepRemaining)})`}
+              </button>
+            )}
+
+            {[15, 30, 45, 60].map((mins) => (
+              <button
+                key={mins}
+                onClick={() => { startSleepTimer(mins); setShowSleepMenu(false); }}
+                className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10 border-b border-white/[0.08]"
+              >
+                {mins} minutes
+              </button>
+            ))}
+            <button
+              onClick={() => { startEndOfTrack(); setShowSleepMenu(false); }}
+              className="w-full px-4 py-3 text-left text-sm text-white/90 active:bg-white/10"
+            >
+              End of this track
+            </button>
+          </div>
+        )}
+
+        {/* ── Equalizer panel ── */}
+        {showEQ && (
+          <div
+            className="absolute left-0 right-0 bottom-0 z-40 rounded-t-[28px] overflow-hidden"
+            style={{ background: 'rgba(22,22,24,0.97)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
+          >
+            {/* Pill handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-white/25" />
+            </div>
+
+            <div className="flex items-center justify-between px-5 pt-1 pb-2">
+              <p className="text-base font-bold text-white">Equalizer</p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setEQEnabled(!eqEnabled)}
+                  className={`text-sm font-medium ${
+                    eqEnabled ? 'text-[#fc3c44]' : 'text-white/40'
+                  } active:opacity-60`}
+                >
+                  {eqEnabled ? 'ON' : 'OFF'}
+                </button>
+                <button
+                  onClick={() => setShowEQ(false)}
+                  className="text-sm text-[#fc3c44] font-medium active:opacity-60"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+
+            {/* Preset selector */}
+            <div className="flex gap-2 px-5 pb-3 overflow-x-auto scrollbar-hide">
+              {EQ_PRESET_KEYS.map((key) => (
+                <button
+                  key={key}
+                  onClick={() => setEQPreset(key)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+                    eqPreset === key
+                      ? 'bg-[#fc3c44] text-white'
+                      : 'bg-white/10 text-white/60'
+                  }`}
+                >
+                  {EQ_PRESETS[key].label}
+                </button>
+              ))}
+              {eqPreset === 'custom' && (
+                <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#fc3c44] text-white">
+                  Custom
+                </span>
+              )}
+            </div>
+
+            {/* Band sliders (vertical bars) */}
+            <div className="flex items-end justify-between px-4 pb-6 gap-1" style={{ height: '180px' }}>
+              {eqBands.map((gain, i) => {
+                const pct = ((gain + 12) / 24) * 100; // -12..+12 → 0..100%
+                return (
+                  <div key={i} className="flex flex-col items-center flex-1 h-full">
+                    <div
+                      className="relative w-full flex-1 flex items-center justify-center cursor-pointer touch-none"
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const y = e.clientY - rect.top;
+                        const newGain = 12 - (y / rect.height) * 24;
+                        setEQBand(i, Math.round(Math.max(-12, Math.min(12, newGain))));
+                      }}
+                    >
+                      {/* Track */}
+                      <div className="absolute w-[3px] h-full bg-white/15 rounded-full" />
+                      {/* Fill from center */}
+                      <div
+                        className="absolute w-[3px] rounded-full"
+                        style={{
+                          background: eqEnabled ? '#fc3c44' : 'rgba(255,255,255,0.3)',
+                          top: gain >= 0 ? `${50 - (gain / 12) * 50}%` : '50%',
+                          height: `${(Math.abs(gain) / 12) * 50}%`,
+                        }}
+                      />
+                      {/* Thumb */}
+                      <div
+                        className="absolute w-3 h-3 rounded-full shadow"
+                        style={{
+                          background: eqEnabled ? '#fc3c44' : 'rgba(255,255,255,0.5)',
+                          top: `calc(${100 - pct}% - 6px)`,
+                        }}
+                      />
+                    </div>
+                    <span className="text-[9px] text-white/40 mt-1 font-medium">
+                      {EQ_BAND_LABELS[i]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── More options popover ── */}
         {showMoreMenu && (

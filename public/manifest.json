@@ -1,0 +1,59 @@
+{
+  "name": "Vault Music",
+  "short_name": "Vault",
+  "description": "Personal self-hosted music streaming vault",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FA2D48'/><text x='50' y='68' text-anchor='middle' font-size='50' fill='white'>♪</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search",
+      "short_name": "Search",
+      "url": "/?view=search",
+      "description": "Search for music",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231C1C1E'/><text x='50' y='68' text-anchor='middle' font-size='50' fill='white'>🔍</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Recently Added",
+      "short_name": "Recent",
+      "url": "/?view=library",
+      "description": "Browse recently added music",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231C1C1E'/><text x='50' y='68' text-anchor='middle' font-size='50' fill='white'>🕐</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Liked Tracks",
+      "short_name": "Liked",
+      "url": "/?view=liked",
+      "description": "Your favorite tracks",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231C1C1E'/><text x='50' y='68' text-anchor='middle' font-size='50' fill='white'>❤️</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
