@@ -28,6 +28,7 @@ import {
   setMasterVolume,
   setMasterMuted,
 } from '@/audio/audioContext';
+import { audioProcessor } from '@/audio/AudioProcessor';
 
 // ─────────────────────────────────────────────────────────────
 //  Singleton audio element
@@ -126,6 +127,8 @@ export const usePlayerStore = create<PlayerStore>()(
     _awaitingAutoplay: false,
     showNowPlaying: false,
     errorMessage: null,
+    karaokeEnabled: false,
+    spatialAudioEnabled: false,
 
     // ─────────────────────────────────────────────────────────
     //  Internal setters — called exclusively by useAudioEngine

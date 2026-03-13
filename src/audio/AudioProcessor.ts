@@ -15,6 +15,7 @@
  */
 
 import { audioEl } from '@/store/playerStore';
+import { isAudioPipelineReady as isContextPipelineReady } from '@/audio/audioContext';
 
 class AudioProcessorSingleton {
   private ctx: AudioContext | null = null;
@@ -48,6 +49,13 @@ class AudioProcessorSingleton {
    */
   init(): void {
     if (this._initialized) return;
+
+    // If audioContext.ts already owns the MediaElementSource for audioEl,
+    // we cannot create another one. Mark as initialized but skip graph setup.
+    if (isContextPipelineReady()) {
+      this._initialized = true;
+      return;
+    }
 
     try {
       this.ctx = new AudioContext();

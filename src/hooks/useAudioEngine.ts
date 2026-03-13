@@ -31,6 +31,7 @@
 import { useEffect, useRef } from 'react';
 import { audioEl, usePlayerStore } from '@/store/playerStore';
 import { ensureAudioPipeline, setNormalizationGain, resetNormalizationGain } from '@/audio/audioNodes';
+import { ensureContextResumed } from '@/audio/audioContext';
 import { useSleepTimerStore } from '@/store/sleepTimerStore';
 
 /** Target loudness for normalization (Spotify / Apple Music standard). */
@@ -83,6 +84,8 @@ export function useAudioEngine() {
       store()._setBufferingState('ready');
       // Ensure Web Audio pipeline is active (requires user gesture on iOS)
       ensureAudioPipeline();
+      // Resume the audioContext.ts pipeline as well (fixes "No Sound on PC")
+      ensureContextResumed();
     };
 
     // ── pause ───────────────────────────────────────────────
@@ -124,6 +127,17 @@ export function useAudioEngine() {
         isMuted: audioEl.muted,
       });
     };
+
+    // ── Resume AudioContext on first user interaction (No Sound on PC fix) ─
+    const resumeOnInteraction = () => {
+      ensureContextResumed();
+      document.removeEventListener('click', resumeOnInteraction);
+      document.removeEventListener('touchstart', resumeOnInteraction);
+      document.removeEventListener('keydown', resumeOnInteraction);
+    };
+    document.addEventListener('click', resumeOnInteraction);
+    document.addEventListener('touchstart', resumeOnInteraction);
+    document.addEventListener('keydown', resumeOnInteraction);
 
     // ── Register all listeners ───────────────────────────────
     audioEl.addEventListener('timeupdate', onTimeUpdate);
@@ -182,6 +196,9 @@ export function useAudioEngine() {
       audioEl.removeEventListener('error', onError);
       audioEl.removeEventListener('stalled', onStalled);
       audioEl.removeEventListener('volumechange', onVolumeChange);
+      document.removeEventListener('click', resumeOnInteraction);
+      document.removeEventListener('touchstart', resumeOnInteraction);
+      document.removeEventListener('keydown', resumeOnInteraction);
       unsubscribe();
       unsubNorm();
     };

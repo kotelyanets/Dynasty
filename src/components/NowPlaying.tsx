@@ -37,15 +37,6 @@ import {
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
-import {
-  DndContext, closestCenter,
-  useSensor, useSensors, PointerSensor, TouchSensor,
-  type DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  SortableContext, verticalListSortingStrategy, useSortable,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import type { Track } from '@/types/music';
 
 interface NowPlayingProps {
@@ -468,7 +459,6 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
               </button>
             </div>
           </div>
-        </div>
 
         {/* ── Error banner ── */}
         {errorMessage && (

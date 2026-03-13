@@ -14,6 +14,7 @@
  */
 
 import { audioEl } from '@/store/playerStore';
+import { isAudioPipelineReady as isContextPipelineReady } from '@/audio/audioContext';
 
 // ── Standard 10-band EQ center frequencies (Hz) ────────────
 export const EQ_FREQUENCIES = [
@@ -40,6 +41,13 @@ export function ensureAudioPipeline(): boolean {
     if (audioCtx?.state === 'suspended') {
       audioCtx.resume().catch(() => {});
     }
+    return true;
+  }
+
+  // If audioContext.ts already owns the MediaElementSource for audioEl,
+  // skip creating a duplicate pipeline (only one source per element is allowed).
+  if (isContextPipelineReady()) {
+    _initialized = true;
     return true;
   }
 
