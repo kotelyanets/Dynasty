@@ -110,6 +110,9 @@ class ErrorBoundary extends Component<{ children: ReactNode; onReset: () => void
 //  App shell
 // ─────────────────────────────────────────────────────────────
 
+/** Views that require a valid `id` parameter. */
+const DETAIL_VIEWS = ['album', 'artist', 'playlist'];
+
 function AppContent() {
   // ── Mount the audio engine ONCE ─────────────────────────
   // This registers all HTMLAudioElement event listeners and the
@@ -146,8 +149,7 @@ function AppContent() {
 
   const navigate = useCallback((view: string, id?: string) => {
     // Prevent navigating to detail views without an ID (causes black screen)
-    const detailViews = ['album', 'artist', 'playlist'];
-    if (detailViews.includes(view) && !id) return;
+    if (DETAIL_VIEWS.includes(view) && !id) return;
 
     setNav((prev) => ({
       view,
@@ -222,9 +224,7 @@ function AppContent() {
           )}
           {/* Fallback: if view doesn't match any route or detail view has no ID, show Home */}
           {!['home', 'search', 'library'].includes(nav.view) &&
-           !(nav.view === 'album' && nav.id) &&
-           !(nav.view === 'artist' && nav.id) &&
-           !(nav.view === 'playlist' && nav.id) && (
+           !(DETAIL_VIEWS.includes(nav.view) && nav.id) && (
             <Home onNavigate={navigate} />
           )}
         </div>
