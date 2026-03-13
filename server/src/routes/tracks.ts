@@ -145,6 +145,7 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       { title:  cond },
       { artist: { name: cond } },
       { album:  { title: cond } },
+      { lyrics: cond },
     ]);
     const albumOr  = titleVariants.flatMap((cond) => [
       { title:  cond },

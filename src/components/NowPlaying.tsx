@@ -2,15 +2,19 @@
  * NowPlaying.tsx — Apple Music–style full-screen player
  */
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { useOfflineCache } from '@/hooks/useOfflineCache';
+import { useToast } from '@/context/ToastContext';
+import { audioProcessor } from '@/audio/AudioProcessor';
+import { LyricsMesh } from '@/components/LyricsMesh';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
+  Mic, MicOff, Headphones,
 } from 'lucide-react';
 
 interface NowPlayingProps {
@@ -22,15 +26,17 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     state, togglePlay, next, prev, seek,
     toggleShuffle, toggleRepeat, showNowPlaying,
     formatTime, setVolume, toggleMute,
+    toggleKaraoke, toggleSpatialAudio,
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
   const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
+  const { showToast } = useToast();
 
   const {
     currentTrack, isPlaying, currentTime, duration,
     shuffle, repeat, showNowPlaying: visible,
     buffered, bufferingState, volume, isMuted,
-    errorMessage,
+    errorMessage, playHistory, karaokeEnabled, spatialAudioEnabled,
   } = state;
 
   // ── Scrubber drag state ─────────────────────────────────
@@ -46,6 +52,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   // ── UI overlay state ────────────────────────────────────
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showQueue, setShowQueue]       = useState(false);
+
+  // ── Rubber-band scrubber state ─────────────────────────
+  const [scrubStretchY, setScrubStretchY] = useState(0);
+  const scrubStartY = useRef(0);
+
+  // ── Lyrics mesh toggle ─────────────────────────────────
+  const [showLyricsMesh, setShowLyricsMesh] = useState(false);
 
   useEffect(() => {
     setIsSeeking(false);
@@ -75,16 +88,29 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     isDragging.current = true;
     setIsSeeking(true);
     setSeekTime(getSeekTimeFromEvent(e));
+    // Track vertical position for rubber-band effect
+    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+    scrubStartY.current = clientY;
+    setScrubStretchY(0);
   };
   const handleScrubMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!isDragging.current) return;
     setSeekTime(getSeekTimeFromEvent(e));
+    // Calculate vertical stretch for rubber-band effect
+    const clientY = 'touches' in e
+      ? (e as React.TouchEvent).touches[0]?.clientY ?? 0
+      : (e as React.MouseEvent).clientY;
+    const deltaY = clientY - scrubStartY.current;
+    // Apply diminishing returns (rubber-band feel)
+    const stretch = Math.sign(deltaY) * Math.min(Math.abs(deltaY) * 0.4, 40);
+    setScrubStretchY(stretch);
   };
   const handleScrubEnd = () => {
     if (isDragging.current) {
       isDragging.current = false;
       seek(seekTime);
       setIsSeeking(false);
+      setScrubStretchY(0);
     }
   };
 
@@ -110,6 +136,46 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const currentVolume = isMuted ? 0 : volume;
   const liked = isLiked(currentTrack.id);
 
+  // ── Ensure AudioProcessor is initialized on first interaction ──
+  const ensureAudioInit = useCallback(() => {
+    if (!audioProcessor.isInitialized) {
+      audioProcessor.init();
+    }
+    audioProcessor.resume();
+  }, []);
+
+  const handleToggleKaraoke = useCallback(() => {
+    ensureAudioInit();
+    toggleKaraoke();
+    showToast({
+      icon: 'music',
+      title: !karaokeEnabled ? 'Karaoke Mode On' : 'Karaoke Mode Off',
+    });
+  }, [ensureAudioInit, toggleKaraoke, karaokeEnabled, showToast]);
+
+  const handleToggleSpatial = useCallback(() => {
+    ensureAudioInit();
+    toggleSpatialAudio();
+    showToast({
+      icon: 'music',
+      title: !spatialAudioEnabled ? 'Spatial Audio On' : 'Spatial Audio Off',
+    });
+  }, [ensureAudioInit, toggleSpatialAudio, spatialAudioEnabled, showToast]);
+
+  const handleToggleLike = useCallback(() => {
+    const wasLiked = liked;
+    toggleLike(currentTrack.id);
+    showToast({
+      icon: 'heart',
+      title: wasLiked ? 'Removed from Liked' : 'Added to Liked Tracks',
+    });
+  }, [liked, toggleLike, currentTrack.id, showToast]);
+
+  // Rubber-band scrubber transform
+  const scrubberScaleY = scrubStretchY !== 0
+    ? Math.max(0.3, 1 - Math.abs(scrubStretchY) / 100)
+    : 1;
+
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
@@ -117,12 +183,16 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     >
       {/* ── Ambient background (vivid album art bleed) ── */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
-          src={currentTrack.coverUrl}
-          className="absolute inset-0 w-full h-full object-cover scale-150 blur-3xl opacity-90 saturate-[2]"
-          alt=""
-          aria-hidden="true"
-        />
+        {showLyricsMesh ? (
+          <LyricsMesh coverUrl={currentTrack.coverUrl} isPlaying={isPlaying} />
+        ) : (
+          <img
+            src={currentTrack.coverUrl}
+            className="absolute inset-0 w-full h-full object-cover scale-150 blur-3xl opacity-90 saturate-[2]"
+            alt=""
+            aria-hidden="true"
+          />
+        )}
         {/* Dark gradient layered on top for legibility */}
         <div className="absolute inset-0 bg-black/55" />
         <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/75 to-transparent" />
@@ -210,7 +280,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
 
           <button
-            onClick={() => toggleLike(currentTrack.id)}
+            onClick={handleToggleLike}
             className="pt-1 active:scale-90 transition-transform flex-shrink-0"
             aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
           >
@@ -231,8 +301,11 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
         )}
 
-        {/* ── Scrubber ── */}
-        <div className="mb-5">
+        {/* ── Scrubber (rubber-band) ── */}
+        <div className="mb-5" style={{
+          transform: `translateY(${scrubStretchY}px) scaleY(${scrubberScaleY})`,
+          transition: isSeeking ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+        }}>
           <div
             ref={progressRef}
             className="relative h-10 flex items-center cursor-pointer touch-none select-none"
@@ -314,7 +387,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
         </div>
 
-        {/* ── Shuffle / Repeat row ── */}
+        {/* ── Shuffle / Repeat / Effects row ── */}
         <div className="flex items-center justify-between px-2 mb-6">
           <button
             onClick={toggleShuffle}
@@ -324,6 +397,28 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             aria-label={shuffle ? 'Shuffle on' : 'Shuffle off'}
           >
             <Shuffle size={20} />
+          </button>
+
+          <button
+            onClick={handleToggleKaraoke}
+            className={`p-2 transition-all active:scale-90 ${
+              karaokeEnabled ? 'text-[#fc3c44]' : 'text-white/40'
+            }`}
+            aria-label={karaokeEnabled ? 'Karaoke off' : 'Karaoke on'}
+            title="Apple Music Sing"
+          >
+            {karaokeEnabled ? <MicOff size={20} /> : <Mic size={20} />}
+          </button>
+
+          <button
+            onClick={handleToggleSpatial}
+            className={`p-2 transition-all active:scale-90 ${
+              spatialAudioEnabled ? 'text-[#fc3c44]' : 'text-white/40'
+            }`}
+            aria-label={spatialAudioEnabled ? 'Spatial Audio off' : 'Spatial Audio on'}
+            title="Spatial Audio"
+          >
+            <Headphones size={20} />
           </button>
 
           <button
@@ -397,7 +492,19 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           >
             <ListMusic size={22} />
           </button>
-          {/* Spacer */}
+
+          {/* Lyrics Mesh toggle */}
+          <button
+            onClick={() => setShowLyricsMesh((v) => !v)}
+            className={`px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all active:scale-95 ${
+              showLyricsMesh
+                ? 'bg-[#fc3c44]/20 text-[#fc3c44] border border-[#fc3c44]/30'
+                : 'bg-white/[0.08] text-white/40 border border-white/[0.08]'
+            }`}
+          >
+            {showLyricsMesh ? 'Mesh On' : 'Mesh'}
+          </button>
+
           <div />
         </div>
 
@@ -461,7 +568,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
         )}
 
-        {/* ── Queue panel ── */}
+        {/* ── Queue panel (with history) ── */}
         {showQueue && (
           <div
             className="absolute left-0 right-0 bottom-0 z-40 max-h-[55vh] rounded-t-[28px] overflow-hidden"
@@ -472,7 +579,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
               <div className="w-10 h-1 rounded-full bg-white/25" />
             </div>
             <div className="flex items-center justify-between px-5 pt-1 pb-3">
-              <p className="text-base font-bold text-white">Up Next</p>
+              <p className="text-base font-bold text-white">Playing Next</p>
               <button
                 onClick={() => setShowQueue(false)}
                 className="text-sm text-[#fc3c44] font-medium active:opacity-60"
@@ -482,6 +589,37 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             </div>
 
             <div className="px-3 pb-8 overflow-y-auto max-h-[42vh] scrollbar-hide">
+              {/* ── History (recently played) ── */}
+              {playHistory.length > 0 && (
+                <>
+                  <p className="px-2 pt-1 pb-2 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
+                    History
+                  </p>
+                  {playHistory.slice(0, 10).map((track, index) => (
+                    <div
+                      key={`history-${track.id}-${index}`}
+                      className="flex items-center gap-3 px-2 py-2.5 rounded-xl opacity-50"
+                    >
+                      <img
+                        src={track.coverUrl}
+                        alt={track.album}
+                        className="w-10 h-10 rounded-[8px] object-cover flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate text-white/60">{track.title}</p>
+                        <p className="text-[12px] text-white/30 truncate">{track.artist}</p>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* ── Current queue ── */}
+              {state.queue.length > 0 && (
+                <p className="px-2 pt-3 pb-2 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
+                  Up Next
+                </p>
+              )}
               {state.queue.map((track, index) => (
                 <div
                   key={`${track.id}-${index}`}
@@ -502,7 +640,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                   </div>
                 </div>
               ))}
-              {state.queue.length === 0 && (
+              {state.queue.length === 0 && playHistory.length === 0 && (
                 <p className="px-2 py-4 text-sm text-white/40 text-center">
                   Queue is empty
                 </p>

@@ -106,6 +106,10 @@ model Track {
   // from the file extension on every request.
   mimeType    String?
 
+  // Lyrics text content (parsed from .lrc files or embedded tags).
+  // Used for full-text search to find tracks by lyric fragments.
+  lyrics      String?
+
   // Playback analytics (optional — used for "Recently Played" smart lists)
   playCount   Int      @default(0)
   lastPlayed  DateTime?

@@ -56,7 +56,7 @@ export function Search({ onNavigate }: SearchProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Artists, Songs, Albums..."
+            placeholder="Artists, Songs, Lyrics, Albums..."
             className="w-full bg-white/[0.1] rounded-[12px] pl-10 pr-10 py-2.5 text-[15px] text-white placeholder:text-white/35 outline-none focus:bg-white/[0.14] transition-colors"
             autoFocus
           />
