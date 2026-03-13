@@ -208,6 +208,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     ? Math.max(0.3, 1 - dragY / 400)
     : 1;
 
+  // ── Sleep timer display ─────────────────────────────────
+  const formatSleepTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div
       ref={containerRef}
