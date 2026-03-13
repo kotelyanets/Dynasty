@@ -1,43 +1,21 @@
-import { useEffect, useState, useCallback } from 'react';
-import { getLikedTrackIds, addLikedTrack, removeLikedTrack } from '@/services/api';
+import { useEffect, useCallback } from 'react';
+import { useLikedStore } from '@/store/likedStore';
 
+/**
+ * Thin wrapper around the global Zustand liked-tracks store.
+ *
+ * Because every component shares the same store, toggling a like
+ * in NowPlaying instantly updates TrackRow, AlbumDetail, etc.
+ */
 export function useLikedTracks() {
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
+  const likedIds = useLikedStore((s) => s.likedIds);
+  const loading = useLikedStore((s) => s.loading);
+  const toggleLike = useLikedStore((s) => s.toggleLike);
+  const hydrate = useLikedStore((s) => s.hydrate);
 
-  useEffect(() => {
-    let mounted = true;
-    getLikedTrackIds()
-      .then((ids) => {
-        if (!mounted) return;
-        setLikedIds(new Set(ids));
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!mounted) return;
-        setLoading(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const toggleLike = useCallback(async (trackId: string) => {
-    setLikedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(trackId)) {
-        next.delete(trackId);
-        // Fire-and-forget sync with backend; we optimistically update UI.
-        void removeLikedTrack(trackId);
-      } else {
-        next.add(trackId);
-        // Fire-and-forget sync with backend; we optimistically update UI.
-        void addLikedTrack(trackId);
-      }
-      return next;
-    });
-  }, []);
+  // Trigger hydration on first mount (idempotent — only fetches once).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { hydrate(); }, []);
 
   const isLiked = useCallback(
     (trackId: string) => likedIds.has(trackId),
