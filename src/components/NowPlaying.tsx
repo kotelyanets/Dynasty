@@ -5,11 +5,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { SpectrumBars } from '@/components/SpectrumBars';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
-  Loader2, AlertCircle, Heart,
+  Loader2, AlertCircle, Heart, Infinity,
 } from 'lucide-react';
 
 interface NowPlayingProps {
@@ -19,14 +20,14 @@ interface NowPlayingProps {
 export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const {
     state, togglePlay, next, prev, seek,
-    toggleShuffle, toggleRepeat, showNowPlaying,
-    formatTime, setVolume, toggleMute,
+    toggleShuffle, toggleRepeat, toggleAutoplayInfinity,
+    showNowPlaying, formatTime, setVolume, toggleMute,
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
 
   const {
     currentTrack, isPlaying, currentTime, duration,
-    shuffle, repeat, showNowPlaying: visible,
+    shuffle, repeat, autoplayInfinity, showNowPlaying: visible,
     buffered, bufferingState, volume, isMuted,
     errorMessage,
   } = state;
@@ -185,6 +186,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             {isStalled && (
               <div className="absolute inset-0 flex items-center justify-center rounded-[18px] bg-black/40">
                 <Loader2 size={44} className="text-white/80 animate-spin" />
+              </div>
+            )}
+
+            {/* Spectrum bars overlay */}
+            {isPlaying && !isStalled && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+                <SpectrumBars barCount={5} height={20} gap={3} color="rgba(255,255,255,0.6)" />
               </div>
             )}
           </div>
@@ -392,8 +400,16 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           >
             <ListMusic size={22} />
           </button>
-          {/* Spacer */}
-          <div />
+
+          <button
+            onClick={toggleAutoplayInfinity}
+            className={`p-2 transition-all active:scale-90 ${
+              autoplayInfinity ? 'text-[#fc3c44]' : 'text-white/40'
+            }`}
+            aria-label={autoplayInfinity ? 'Autoplay on' : 'Autoplay off'}
+          >
+            <Infinity size={24} />
+          </button>
         </div>
 
         {/* ── More options popover ── */}

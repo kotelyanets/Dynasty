@@ -339,6 +339,27 @@ export const api = {
   streamUrl(trackId: string): string {
     return IS_DEMO ? '' : `${BASE_URL}/api/stream/${trackId}`;
   },
+
+  // ── Recommendations (for ♾️ Infinite Autoplay) ─────────────
+
+  /**
+   * Fetch tracks similar to the given trackId (same genre / artist).
+   * Falls back to random mock data tracks in demo mode.
+   */
+  async getRecommendations(trackId: string, limit = 10): Promise<Track[]> {
+    if (IS_DEMO) {
+      // In demo mode, return a shuffled selection of all tracks
+      const shuffled = [...allTracks].sort(() => Math.random() - 0.5);
+      return shuffled
+        .filter((t) => t.id !== trackId)
+        .slice(0, limit);
+    }
+
+    const data = await apiFetch<{ items: ApiTrack[] }>(
+      `/api/tracks/similar?trackId=${encodeURIComponent(trackId)}&limit=${limit}`,
+    );
+    return data.items.map(mapTrack);
+  },
 };
 
 // ─────────────────────────────────────────────────────────────

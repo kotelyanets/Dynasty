@@ -91,7 +91,10 @@ export function useAudioEngine() {
     // ── ended ───────────────────────────────────────────────
     // Track finished naturally. Advance to next (store handles
     // repeat-one by re-seeking to 0 and calling play).
+    // If a crossfade is in progress the transition is already being
+    // handled by useCrossfade — don't double-advance.
     const onEnded = () => {
+      if (store()._isCrossfading) return;
       store()._setIsPlaying(false);
       store().next();
     };

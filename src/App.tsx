@@ -35,6 +35,8 @@
 import { useState, useCallback } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
+import { useCrossfade } from '@/hooks/useCrossfade';
+import { useAutoplayInfinity } from '@/hooks/useAutoplayInfinity';
 import { MiniPlayer } from '@/components/MiniPlayer';
 import { NowPlaying } from '@/components/NowPlaying';
 import { Home } from '@/pages/Home';
@@ -61,6 +63,10 @@ function AppContent() {
   // This registers all HTMLAudioElement event listeners and the
   // Zustand subscription that keeps audioEl in sync with the store.
   useAudioEngine();
+
+  // ── Crossfade & autoplay hooks (run alongside the engine) ──
+  useCrossfade();
+  useAutoplayInfinity();
 
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 

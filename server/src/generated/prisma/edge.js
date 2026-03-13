@@ -174,7 +174,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\andko\\OneDrive\\Ambiente de Trabalho\\DYNASTY\\build-personal-music-pwa (1)\\server\\src\\generated\\prisma",
+      "value": "/home/runner/work/Dynasty/Dynasty/server/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -183,17 +183,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\andko\\OneDrive\\Ambiente de Trabalho\\DYNASTY\\build-personal-music-pwa (1)\\server\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/runner/work/Dynasty/Dynasty/server/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "5.22.0",
@@ -202,6 +201,8 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": true,
+  "ciName": "GitHub Actions",
   "inlineDatasources": {
     "db": {
       "url": {

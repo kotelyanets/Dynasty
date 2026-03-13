@@ -1,5 +1,6 @@
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { SpectrumBars } from '@/components/SpectrumBars';
 import { Play, Pause, SkipForward, Loader2, Heart } from 'lucide-react';
 
 export function MiniPlayer() {
@@ -40,6 +41,11 @@ export function MiniPlayer() {
           {/* Album art */}
           <div className="w-12 h-12 rounded-[10px] overflow-hidden flex-shrink-0 shadow-xl relative">
             <img src={currentTrack.coverUrl} alt={currentTrack.album} className="w-full h-full object-cover" />
+            {isPlaying && !isStalled && !hasError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                <SpectrumBars barCount={3} height={16} gap={2} color="rgba(255,255,255,0.85)" />
+              </div>
+            )}
             {hasError && (
               <div className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             )}

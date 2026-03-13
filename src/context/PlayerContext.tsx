@@ -34,6 +34,9 @@ interface PlayerState {
   isMuted: boolean;          // ← NEW
   shuffle: boolean;
   repeat: RepeatMode;
+  crossfadeEnabled: boolean;
+  crossfadeDuration: number;
+  autoplayInfinity: boolean;
   showNowPlaying: boolean;
   errorMessage: string | null; // ← NEW
 }
@@ -51,6 +54,9 @@ interface PlayerContextType {
   toggleMute: () => void;   // ← NEW
   toggleShuffle: () => void;
   toggleRepeat: () => void;
+  toggleCrossfade: () => void;
+  setCrossfadeDuration: (seconds: number) => void;
+  toggleAutoplayInfinity: () => void;
   showNowPlaying: (show: boolean) => void;
   addToQueue: (tracks: Track[]) => void;
   formatTime: (seconds: number) => string;
@@ -95,6 +101,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     isMuted: storeState.isMuted,
     shuffle: storeState.shuffle,
     repeat: storeState.repeat,
+    crossfadeEnabled: storeState.crossfadeEnabled,
+    crossfadeDuration: storeState.crossfadeDuration,
+    autoplayInfinity: storeState.autoplayInfinity,
     showNowPlaying: storeState.showNowPlaying,
     errorMessage: storeState.errorMessage,
   };
@@ -114,6 +123,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         toggleMute: storeState.toggleMute,
         toggleShuffle: storeState.toggleShuffle,
         toggleRepeat: storeState.toggleRepeat,
+        toggleCrossfade: storeState.toggleCrossfade,
+        setCrossfadeDuration: storeState.setCrossfadeDuration,
+        toggleAutoplayInfinity: storeState.toggleAutoplayInfinity,
         showNowPlaying: showNowPlayingFn,
         addToQueue: storeState.addToQueue,
         formatTime,

@@ -20,11 +20,12 @@ import config from './config';
 import db from './db';
 
 // Route modules
-import streamRoutes   from './routes/stream';
-import artistRoutes   from './routes/artists';
-import albumRoutes    from './routes/albums';
-import trackRoutes    from './routes/tracks';
-import playlistRoutes from './routes/playlists';
+import streamRoutes         from './routes/stream';
+import artistRoutes         from './routes/artists';
+import albumRoutes          from './routes/albums';
+import trackRoutes          from './routes/tracks';
+import playlistRoutes       from './routes/playlists';
+import recommendationRoutes from './routes/recommendations';
 
 // ─────────────────────────────────────────────────────────────
 //  Build the Fastify instance
@@ -92,10 +93,11 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(streamRoutes);
 
   // All other routes are under /api
-  await server.register(artistRoutes,   { prefix: '/api' });
-  await server.register(albumRoutes,    { prefix: '/api' });
-  await server.register(trackRoutes,    { prefix: '/api' });
-  await server.register(playlistRoutes, { prefix: '/api' });
+  await server.register(artistRoutes,         { prefix: '/api' });
+  await server.register(albumRoutes,          { prefix: '/api' });
+  await server.register(trackRoutes,          { prefix: '/api' });
+  await server.register(playlistRoutes,       { prefix: '/api' });
+  await server.register(recommendationRoutes, { prefix: '/api' });
 
   // ── Frontend static assets (Vite build) ───────────────────
   //
