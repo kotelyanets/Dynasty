@@ -281,7 +281,7 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       request: FastifyRequest<{ Params: { id: string }; Body: { isLiked: boolean } }>,
       reply: FastifyReply
     ) => {
-      const { isLiked } = request.body as { isLiked?: boolean };
+      const { isLiked } = request.body;
       if (typeof isLiked !== 'boolean') {
         return reply.status(400).send({ error: 'isLiked must be a boolean' });
       }

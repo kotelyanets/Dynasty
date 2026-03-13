@@ -127,6 +127,7 @@ model Track {
   @@index([albumId])
   @@index([title])
   @@index([lastPlayed])
+  @@index([isLiked])
 }
 
 // ─────────────────────────────────────────────────────────────
