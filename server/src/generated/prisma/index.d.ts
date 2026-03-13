@@ -38,6 +38,26 @@ export type Playlist = $Result.DefaultSelection<Prisma.$PlaylistPayload>
  * 
  */
 export type PlaylistTrack = $Result.DefaultSelection<Prisma.$PlaylistTrackPayload>
+/**
+ * Model PlaylistCollaborator
+ * 
+ */
+export type PlaylistCollaborator = $Result.DefaultSelection<Prisma.$PlaylistCollaboratorPayload>
+/**
+ * Model PlayHistory
+ * 
+ */
+export type PlayHistory = $Result.DefaultSelection<Prisma.$PlayHistoryPayload>
+/**
+ * Model SeekEvent
+ * 
+ */
+export type SeekEvent = $Result.DefaultSelection<Prisma.$SeekEventPayload>
+/**
+ * Model ListeningRoom
+ * 
+ */
+export type ListeningRoom = $Result.DefaultSelection<Prisma.$ListeningRoomPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -211,6 +231,46 @@ export class PrismaClient<
     * ```
     */
   get playlistTrack(): Prisma.PlaylistTrackDelegate<ExtArgs>;
+
+  /**
+   * `prisma.playlistCollaborator`: Exposes CRUD operations for the **PlaylistCollaborator** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlaylistCollaborators
+    * const playlistCollaborators = await prisma.playlistCollaborator.findMany()
+    * ```
+    */
+  get playlistCollaborator(): Prisma.PlaylistCollaboratorDelegate<ExtArgs>;
+
+  /**
+   * `prisma.playHistory`: Exposes CRUD operations for the **PlayHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlayHistories
+    * const playHistories = await prisma.playHistory.findMany()
+    * ```
+    */
+  get playHistory(): Prisma.PlayHistoryDelegate<ExtArgs>;
+
+  /**
+   * `prisma.seekEvent`: Exposes CRUD operations for the **SeekEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SeekEvents
+    * const seekEvents = await prisma.seekEvent.findMany()
+    * ```
+    */
+  get seekEvent(): Prisma.SeekEventDelegate<ExtArgs>;
+
+  /**
+   * `prisma.listeningRoom`: Exposes CRUD operations for the **ListeningRoom** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ListeningRooms
+    * const listeningRooms = await prisma.listeningRoom.findMany()
+    * ```
+    */
+  get listeningRoom(): Prisma.ListeningRoomDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -656,7 +716,11 @@ export namespace Prisma {
     Album: 'Album',
     Track: 'Track',
     Playlist: 'Playlist',
-    PlaylistTrack: 'PlaylistTrack'
+    PlaylistTrack: 'PlaylistTrack',
+    PlaylistCollaborator: 'PlaylistCollaborator',
+    PlayHistory: 'PlayHistory',
+    SeekEvent: 'SeekEvent',
+    ListeningRoom: 'ListeningRoom'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -672,7 +736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "artist" | "album" | "track" | "playlist" | "playlistTrack"
+      modelProps: "artist" | "album" | "track" | "playlist" | "playlistTrack" | "playlistCollaborator" | "playHistory" | "seekEvent" | "listeningRoom"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1026,6 +1090,286 @@ export namespace Prisma {
           }
         }
       }
+      PlaylistCollaborator: {
+        payload: Prisma.$PlaylistCollaboratorPayload<ExtArgs>
+        fields: Prisma.PlaylistCollaboratorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlaylistCollaboratorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlaylistCollaboratorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          findFirst: {
+            args: Prisma.PlaylistCollaboratorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlaylistCollaboratorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          findMany: {
+            args: Prisma.PlaylistCollaboratorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>[]
+          }
+          create: {
+            args: Prisma.PlaylistCollaboratorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          createMany: {
+            args: Prisma.PlaylistCollaboratorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlaylistCollaboratorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>[]
+          }
+          delete: {
+            args: Prisma.PlaylistCollaboratorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          update: {
+            args: Prisma.PlaylistCollaboratorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlaylistCollaboratorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlaylistCollaboratorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PlaylistCollaboratorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaylistCollaboratorPayload>
+          }
+          aggregate: {
+            args: Prisma.PlaylistCollaboratorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlaylistCollaborator>
+          }
+          groupBy: {
+            args: Prisma.PlaylistCollaboratorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlaylistCollaboratorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlaylistCollaboratorCountArgs<ExtArgs>
+            result: $Utils.Optional<PlaylistCollaboratorCountAggregateOutputType> | number
+          }
+        }
+      }
+      PlayHistory: {
+        payload: Prisma.$PlayHistoryPayload<ExtArgs>
+        fields: Prisma.PlayHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlayHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlayHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.PlayHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlayHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.PlayHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.PlayHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.PlayHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlayHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.PlayHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          update: {
+            args: Prisma.PlayHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlayHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlayHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PlayHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.PlayHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlayHistory>
+          }
+          groupBy: {
+            args: Prisma.PlayHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlayHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlayHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<PlayHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      SeekEvent: {
+        payload: Prisma.$SeekEventPayload<ExtArgs>
+        fields: Prisma.SeekEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SeekEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SeekEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          findFirst: {
+            args: Prisma.SeekEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SeekEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          findMany: {
+            args: Prisma.SeekEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>[]
+          }
+          create: {
+            args: Prisma.SeekEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          createMany: {
+            args: Prisma.SeekEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SeekEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>[]
+          }
+          delete: {
+            args: Prisma.SeekEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          update: {
+            args: Prisma.SeekEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.SeekEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SeekEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SeekEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeekEventPayload>
+          }
+          aggregate: {
+            args: Prisma.SeekEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeekEvent>
+          }
+          groupBy: {
+            args: Prisma.SeekEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeekEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SeekEventCountArgs<ExtArgs>
+            result: $Utils.Optional<SeekEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      ListeningRoom: {
+        payload: Prisma.$ListeningRoomPayload<ExtArgs>
+        fields: Prisma.ListeningRoomFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ListeningRoomFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ListeningRoomFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          findFirst: {
+            args: Prisma.ListeningRoomFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ListeningRoomFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          findMany: {
+            args: Prisma.ListeningRoomFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>[]
+          }
+          create: {
+            args: Prisma.ListeningRoomCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          createMany: {
+            args: Prisma.ListeningRoomCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ListeningRoomCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>[]
+          }
+          delete: {
+            args: Prisma.ListeningRoomDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          update: {
+            args: Prisma.ListeningRoomUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          deleteMany: {
+            args: Prisma.ListeningRoomDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ListeningRoomUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ListeningRoomUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListeningRoomPayload>
+          }
+          aggregate: {
+            args: Prisma.ListeningRoomAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateListeningRoom>
+          }
+          groupBy: {
+            args: Prisma.ListeningRoomGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ListeningRoomGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ListeningRoomCountArgs<ExtArgs>
+            result: $Utils.Optional<ListeningRoomCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1259,10 +1603,14 @@ export namespace Prisma {
 
   export type TrackCountOutputType = {
     playlistTracks: number
+    playHistory: number
+    seekEvents: number
   }
 
   export type TrackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     playlistTracks?: boolean | TrackCountOutputTypeCountPlaylistTracksArgs
+    playHistory?: boolean | TrackCountOutputTypeCountPlayHistoryArgs
+    seekEvents?: boolean | TrackCountOutputTypeCountSeekEventsArgs
   }
 
   // Custom InputTypes
@@ -1283,6 +1631,20 @@ export namespace Prisma {
     where?: PlaylistTrackWhereInput
   }
 
+  /**
+   * TrackCountOutputType without action
+   */
+  export type TrackCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayHistoryWhereInput
+  }
+
+  /**
+   * TrackCountOutputType without action
+   */
+  export type TrackCountOutputTypeCountSeekEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeekEventWhereInput
+  }
+
 
   /**
    * Count Type PlaylistCountOutputType
@@ -1290,10 +1652,12 @@ export namespace Prisma {
 
   export type PlaylistCountOutputType = {
     tracks: number
+    collaborators: number
   }
 
   export type PlaylistCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tracks?: boolean | PlaylistCountOutputTypeCountTracksArgs
+    collaborators?: boolean | PlaylistCountOutputTypeCountCollaboratorsArgs
   }
 
   // Custom InputTypes
@@ -1312,6 +1676,13 @@ export namespace Prisma {
    */
   export type PlaylistCountOutputTypeCountTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlaylistTrackWhereInput
+  }
+
+  /**
+   * PlaylistCountOutputType without action
+   */
+  export type PlaylistCountOutputTypeCountCollaboratorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlaylistCollaboratorWhereInput
   }
 
 
@@ -3681,6 +4052,8 @@ export namespace Prisma {
     artist?: boolean | ArtistDefaultArgs<ExtArgs>
     album?: boolean | Track$albumArgs<ExtArgs>
     playlistTracks?: boolean | Track$playlistTracksArgs<ExtArgs>
+    playHistory?: boolean | Track$playHistoryArgs<ExtArgs>
+    seekEvents?: boolean | Track$seekEventsArgs<ExtArgs>
     _count?: boolean | TrackCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["track"]>
 
@@ -3736,6 +4109,8 @@ export namespace Prisma {
     artist?: boolean | ArtistDefaultArgs<ExtArgs>
     album?: boolean | Track$albumArgs<ExtArgs>
     playlistTracks?: boolean | Track$playlistTracksArgs<ExtArgs>
+    playHistory?: boolean | Track$playHistoryArgs<ExtArgs>
+    seekEvents?: boolean | Track$seekEventsArgs<ExtArgs>
     _count?: boolean | TrackCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TrackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3749,6 +4124,8 @@ export namespace Prisma {
       artist: Prisma.$ArtistPayload<ExtArgs>
       album: Prisma.$AlbumPayload<ExtArgs> | null
       playlistTracks: Prisma.$PlaylistTrackPayload<ExtArgs>[]
+      playHistory: Prisma.$PlayHistoryPayload<ExtArgs>[]
+      seekEvents: Prisma.$SeekEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4138,6 +4515,8 @@ export namespace Prisma {
     artist<T extends ArtistDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ArtistDefaultArgs<ExtArgs>>): Prisma__ArtistClient<$Result.GetResult<Prisma.$ArtistPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     album<T extends Track$albumArgs<ExtArgs> = {}>(args?: Subset<T, Track$albumArgs<ExtArgs>>): Prisma__AlbumClient<$Result.GetResult<Prisma.$AlbumPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     playlistTracks<T extends Track$playlistTracksArgs<ExtArgs> = {}>(args?: Subset<T, Track$playlistTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistTrackPayload<ExtArgs>, T, "findMany"> | Null>
+    playHistory<T extends Track$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Track$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findMany"> | Null>
+    seekEvents<T extends Track$seekEventsArgs<ExtArgs> = {}>(args?: Subset<T, Track$seekEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4538,6 +4917,46 @@ export namespace Prisma {
   }
 
   /**
+   * Track.playHistory
+   */
+  export type Track$playHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    where?: PlayHistoryWhereInput
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    cursor?: PlayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayHistoryScalarFieldEnum | PlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Track.seekEvents
+   */
+  export type Track$seekEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    where?: SeekEventWhereInput
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    cursor?: SeekEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SeekEventScalarFieldEnum | SeekEventScalarFieldEnum[]
+  }
+
+  /**
    * Track without action
    */
   export type TrackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4725,6 +5144,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     tracks?: boolean | Playlist$tracksArgs<ExtArgs>
+    collaborators?: boolean | Playlist$collaboratorsArgs<ExtArgs>
     _count?: boolean | PlaylistCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["playlist"]>
 
@@ -4748,6 +5168,7 @@ export namespace Prisma {
 
   export type PlaylistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tracks?: boolean | Playlist$tracksArgs<ExtArgs>
+    collaborators?: boolean | Playlist$collaboratorsArgs<ExtArgs>
     _count?: boolean | PlaylistCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PlaylistIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4756,6 +5177,7 @@ export namespace Prisma {
     name: "Playlist"
     objects: {
       tracks: Prisma.$PlaylistTrackPayload<ExtArgs>[]
+      collaborators: Prisma.$PlaylistCollaboratorPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5129,6 +5551,7 @@ export namespace Prisma {
   export interface Prisma__PlaylistClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     tracks<T extends Playlist$tracksArgs<ExtArgs> = {}>(args?: Subset<T, Playlist$tracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistTrackPayload<ExtArgs>, T, "findMany"> | Null>
+    collaborators<T extends Playlist$collaboratorsArgs<ExtArgs> = {}>(args?: Subset<T, Playlist$collaboratorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5493,6 +5916,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlaylistTrackScalarFieldEnum | PlaylistTrackScalarFieldEnum[]
+  }
+
+  /**
+   * Playlist.collaborators
+   */
+  export type Playlist$collaboratorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    where?: PlaylistCollaboratorWhereInput
+    orderBy?: PlaylistCollaboratorOrderByWithRelationInput | PlaylistCollaboratorOrderByWithRelationInput[]
+    cursor?: PlaylistCollaboratorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlaylistCollaboratorScalarFieldEnum | PlaylistCollaboratorScalarFieldEnum[]
   }
 
   /**
@@ -6482,6 +6925,3813 @@ export namespace Prisma {
 
 
   /**
+   * Model PlaylistCollaborator
+   */
+
+  export type AggregatePlaylistCollaborator = {
+    _count: PlaylistCollaboratorCountAggregateOutputType | null
+    _min: PlaylistCollaboratorMinAggregateOutputType | null
+    _max: PlaylistCollaboratorMaxAggregateOutputType | null
+  }
+
+  export type PlaylistCollaboratorMinAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    userId: string | null
+    role: string | null
+    joinedAt: Date | null
+  }
+
+  export type PlaylistCollaboratorMaxAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    userId: string | null
+    role: string | null
+    joinedAt: Date | null
+  }
+
+  export type PlaylistCollaboratorCountAggregateOutputType = {
+    id: number
+    playlistId: number
+    userId: number
+    role: number
+    joinedAt: number
+    _all: number
+  }
+
+
+  export type PlaylistCollaboratorMinAggregateInputType = {
+    id?: true
+    playlistId?: true
+    userId?: true
+    role?: true
+    joinedAt?: true
+  }
+
+  export type PlaylistCollaboratorMaxAggregateInputType = {
+    id?: true
+    playlistId?: true
+    userId?: true
+    role?: true
+    joinedAt?: true
+  }
+
+  export type PlaylistCollaboratorCountAggregateInputType = {
+    id?: true
+    playlistId?: true
+    userId?: true
+    role?: true
+    joinedAt?: true
+    _all?: true
+  }
+
+  export type PlaylistCollaboratorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlaylistCollaborator to aggregate.
+     */
+    where?: PlaylistCollaboratorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlaylistCollaborators to fetch.
+     */
+    orderBy?: PlaylistCollaboratorOrderByWithRelationInput | PlaylistCollaboratorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlaylistCollaboratorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlaylistCollaborators from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlaylistCollaborators.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PlaylistCollaborators
+    **/
+    _count?: true | PlaylistCollaboratorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlaylistCollaboratorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlaylistCollaboratorMaxAggregateInputType
+  }
+
+  export type GetPlaylistCollaboratorAggregateType<T extends PlaylistCollaboratorAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlaylistCollaborator]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlaylistCollaborator[P]>
+      : GetScalarType<T[P], AggregatePlaylistCollaborator[P]>
+  }
+
+
+
+
+  export type PlaylistCollaboratorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlaylistCollaboratorWhereInput
+    orderBy?: PlaylistCollaboratorOrderByWithAggregationInput | PlaylistCollaboratorOrderByWithAggregationInput[]
+    by: PlaylistCollaboratorScalarFieldEnum[] | PlaylistCollaboratorScalarFieldEnum
+    having?: PlaylistCollaboratorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlaylistCollaboratorCountAggregateInputType | true
+    _min?: PlaylistCollaboratorMinAggregateInputType
+    _max?: PlaylistCollaboratorMaxAggregateInputType
+  }
+
+  export type PlaylistCollaboratorGroupByOutputType = {
+    id: string
+    playlistId: string
+    userId: string
+    role: string
+    joinedAt: Date
+    _count: PlaylistCollaboratorCountAggregateOutputType | null
+    _min: PlaylistCollaboratorMinAggregateOutputType | null
+    _max: PlaylistCollaboratorMaxAggregateOutputType | null
+  }
+
+  type GetPlaylistCollaboratorGroupByPayload<T extends PlaylistCollaboratorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlaylistCollaboratorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlaylistCollaboratorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlaylistCollaboratorGroupByOutputType[P]>
+            : GetScalarType<T[P], PlaylistCollaboratorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlaylistCollaboratorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    userId?: boolean
+    role?: boolean
+    joinedAt?: boolean
+    playlist?: boolean | PlaylistDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playlistCollaborator"]>
+
+  export type PlaylistCollaboratorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    userId?: boolean
+    role?: boolean
+    joinedAt?: boolean
+    playlist?: boolean | PlaylistDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playlistCollaborator"]>
+
+  export type PlaylistCollaboratorSelectScalar = {
+    id?: boolean
+    playlistId?: boolean
+    userId?: boolean
+    role?: boolean
+    joinedAt?: boolean
+  }
+
+  export type PlaylistCollaboratorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    playlist?: boolean | PlaylistDefaultArgs<ExtArgs>
+  }
+  export type PlaylistCollaboratorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    playlist?: boolean | PlaylistDefaultArgs<ExtArgs>
+  }
+
+  export type $PlaylistCollaboratorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PlaylistCollaborator"
+    objects: {
+      playlist: Prisma.$PlaylistPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      playlistId: string
+      userId: string
+      role: string
+      joinedAt: Date
+    }, ExtArgs["result"]["playlistCollaborator"]>
+    composites: {}
+  }
+
+  type PlaylistCollaboratorGetPayload<S extends boolean | null | undefined | PlaylistCollaboratorDefaultArgs> = $Result.GetResult<Prisma.$PlaylistCollaboratorPayload, S>
+
+  type PlaylistCollaboratorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PlaylistCollaboratorFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PlaylistCollaboratorCountAggregateInputType | true
+    }
+
+  export interface PlaylistCollaboratorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlaylistCollaborator'], meta: { name: 'PlaylistCollaborator' } }
+    /**
+     * Find zero or one PlaylistCollaborator that matches the filter.
+     * @param {PlaylistCollaboratorFindUniqueArgs} args - Arguments to find a PlaylistCollaborator
+     * @example
+     * // Get one PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlaylistCollaboratorFindUniqueArgs>(args: SelectSubset<T, PlaylistCollaboratorFindUniqueArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PlaylistCollaborator that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PlaylistCollaboratorFindUniqueOrThrowArgs} args - Arguments to find a PlaylistCollaborator
+     * @example
+     * // Get one PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlaylistCollaboratorFindUniqueOrThrowArgs>(args: SelectSubset<T, PlaylistCollaboratorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PlaylistCollaborator that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorFindFirstArgs} args - Arguments to find a PlaylistCollaborator
+     * @example
+     * // Get one PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlaylistCollaboratorFindFirstArgs>(args?: SelectSubset<T, PlaylistCollaboratorFindFirstArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PlaylistCollaborator that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorFindFirstOrThrowArgs} args - Arguments to find a PlaylistCollaborator
+     * @example
+     * // Get one PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlaylistCollaboratorFindFirstOrThrowArgs>(args?: SelectSubset<T, PlaylistCollaboratorFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PlaylistCollaborators that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PlaylistCollaborators
+     * const playlistCollaborators = await prisma.playlistCollaborator.findMany()
+     * 
+     * // Get first 10 PlaylistCollaborators
+     * const playlistCollaborators = await prisma.playlistCollaborator.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const playlistCollaboratorWithIdOnly = await prisma.playlistCollaborator.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlaylistCollaboratorFindManyArgs>(args?: SelectSubset<T, PlaylistCollaboratorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PlaylistCollaborator.
+     * @param {PlaylistCollaboratorCreateArgs} args - Arguments to create a PlaylistCollaborator.
+     * @example
+     * // Create one PlaylistCollaborator
+     * const PlaylistCollaborator = await prisma.playlistCollaborator.create({
+     *   data: {
+     *     // ... data to create a PlaylistCollaborator
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlaylistCollaboratorCreateArgs>(args: SelectSubset<T, PlaylistCollaboratorCreateArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PlaylistCollaborators.
+     * @param {PlaylistCollaboratorCreateManyArgs} args - Arguments to create many PlaylistCollaborators.
+     * @example
+     * // Create many PlaylistCollaborators
+     * const playlistCollaborator = await prisma.playlistCollaborator.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlaylistCollaboratorCreateManyArgs>(args?: SelectSubset<T, PlaylistCollaboratorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PlaylistCollaborators and returns the data saved in the database.
+     * @param {PlaylistCollaboratorCreateManyAndReturnArgs} args - Arguments to create many PlaylistCollaborators.
+     * @example
+     * // Create many PlaylistCollaborators
+     * const playlistCollaborator = await prisma.playlistCollaborator.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PlaylistCollaborators and only return the `id`
+     * const playlistCollaboratorWithIdOnly = await prisma.playlistCollaborator.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlaylistCollaboratorCreateManyAndReturnArgs>(args?: SelectSubset<T, PlaylistCollaboratorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PlaylistCollaborator.
+     * @param {PlaylistCollaboratorDeleteArgs} args - Arguments to delete one PlaylistCollaborator.
+     * @example
+     * // Delete one PlaylistCollaborator
+     * const PlaylistCollaborator = await prisma.playlistCollaborator.delete({
+     *   where: {
+     *     // ... filter to delete one PlaylistCollaborator
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlaylistCollaboratorDeleteArgs>(args: SelectSubset<T, PlaylistCollaboratorDeleteArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PlaylistCollaborator.
+     * @param {PlaylistCollaboratorUpdateArgs} args - Arguments to update one PlaylistCollaborator.
+     * @example
+     * // Update one PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlaylistCollaboratorUpdateArgs>(args: SelectSubset<T, PlaylistCollaboratorUpdateArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PlaylistCollaborators.
+     * @param {PlaylistCollaboratorDeleteManyArgs} args - Arguments to filter PlaylistCollaborators to delete.
+     * @example
+     * // Delete a few PlaylistCollaborators
+     * const { count } = await prisma.playlistCollaborator.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlaylistCollaboratorDeleteManyArgs>(args?: SelectSubset<T, PlaylistCollaboratorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlaylistCollaborators.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PlaylistCollaborators
+     * const playlistCollaborator = await prisma.playlistCollaborator.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlaylistCollaboratorUpdateManyArgs>(args: SelectSubset<T, PlaylistCollaboratorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PlaylistCollaborator.
+     * @param {PlaylistCollaboratorUpsertArgs} args - Arguments to update or create a PlaylistCollaborator.
+     * @example
+     * // Update or create a PlaylistCollaborator
+     * const playlistCollaborator = await prisma.playlistCollaborator.upsert({
+     *   create: {
+     *     // ... data to create a PlaylistCollaborator
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PlaylistCollaborator we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlaylistCollaboratorUpsertArgs>(args: SelectSubset<T, PlaylistCollaboratorUpsertArgs<ExtArgs>>): Prisma__PlaylistCollaboratorClient<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PlaylistCollaborators.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorCountArgs} args - Arguments to filter PlaylistCollaborators to count.
+     * @example
+     * // Count the number of PlaylistCollaborators
+     * const count = await prisma.playlistCollaborator.count({
+     *   where: {
+     *     // ... the filter for the PlaylistCollaborators we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlaylistCollaboratorCountArgs>(
+      args?: Subset<T, PlaylistCollaboratorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlaylistCollaboratorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PlaylistCollaborator.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlaylistCollaboratorAggregateArgs>(args: Subset<T, PlaylistCollaboratorAggregateArgs>): Prisma.PrismaPromise<GetPlaylistCollaboratorAggregateType<T>>
+
+    /**
+     * Group by PlaylistCollaborator.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaylistCollaboratorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlaylistCollaboratorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlaylistCollaboratorGroupByArgs['orderBy'] }
+        : { orderBy?: PlaylistCollaboratorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlaylistCollaboratorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlaylistCollaboratorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PlaylistCollaborator model
+   */
+  readonly fields: PlaylistCollaboratorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PlaylistCollaborator.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlaylistCollaboratorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    playlist<T extends PlaylistDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PlaylistDefaultArgs<ExtArgs>>): Prisma__PlaylistClient<$Result.GetResult<Prisma.$PlaylistPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PlaylistCollaborator model
+   */ 
+  interface PlaylistCollaboratorFieldRefs {
+    readonly id: FieldRef<"PlaylistCollaborator", 'String'>
+    readonly playlistId: FieldRef<"PlaylistCollaborator", 'String'>
+    readonly userId: FieldRef<"PlaylistCollaborator", 'String'>
+    readonly role: FieldRef<"PlaylistCollaborator", 'String'>
+    readonly joinedAt: FieldRef<"PlaylistCollaborator", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PlaylistCollaborator findUnique
+   */
+  export type PlaylistCollaboratorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter, which PlaylistCollaborator to fetch.
+     */
+    where: PlaylistCollaboratorWhereUniqueInput
+  }
+
+  /**
+   * PlaylistCollaborator findUniqueOrThrow
+   */
+  export type PlaylistCollaboratorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter, which PlaylistCollaborator to fetch.
+     */
+    where: PlaylistCollaboratorWhereUniqueInput
+  }
+
+  /**
+   * PlaylistCollaborator findFirst
+   */
+  export type PlaylistCollaboratorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter, which PlaylistCollaborator to fetch.
+     */
+    where?: PlaylistCollaboratorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlaylistCollaborators to fetch.
+     */
+    orderBy?: PlaylistCollaboratorOrderByWithRelationInput | PlaylistCollaboratorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlaylistCollaborators.
+     */
+    cursor?: PlaylistCollaboratorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlaylistCollaborators from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlaylistCollaborators.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlaylistCollaborators.
+     */
+    distinct?: PlaylistCollaboratorScalarFieldEnum | PlaylistCollaboratorScalarFieldEnum[]
+  }
+
+  /**
+   * PlaylistCollaborator findFirstOrThrow
+   */
+  export type PlaylistCollaboratorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter, which PlaylistCollaborator to fetch.
+     */
+    where?: PlaylistCollaboratorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlaylistCollaborators to fetch.
+     */
+    orderBy?: PlaylistCollaboratorOrderByWithRelationInput | PlaylistCollaboratorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlaylistCollaborators.
+     */
+    cursor?: PlaylistCollaboratorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlaylistCollaborators from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlaylistCollaborators.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlaylistCollaborators.
+     */
+    distinct?: PlaylistCollaboratorScalarFieldEnum | PlaylistCollaboratorScalarFieldEnum[]
+  }
+
+  /**
+   * PlaylistCollaborator findMany
+   */
+  export type PlaylistCollaboratorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter, which PlaylistCollaborators to fetch.
+     */
+    where?: PlaylistCollaboratorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlaylistCollaborators to fetch.
+     */
+    orderBy?: PlaylistCollaboratorOrderByWithRelationInput | PlaylistCollaboratorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PlaylistCollaborators.
+     */
+    cursor?: PlaylistCollaboratorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlaylistCollaborators from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlaylistCollaborators.
+     */
+    skip?: number
+    distinct?: PlaylistCollaboratorScalarFieldEnum | PlaylistCollaboratorScalarFieldEnum[]
+  }
+
+  /**
+   * PlaylistCollaborator create
+   */
+  export type PlaylistCollaboratorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PlaylistCollaborator.
+     */
+    data: XOR<PlaylistCollaboratorCreateInput, PlaylistCollaboratorUncheckedCreateInput>
+  }
+
+  /**
+   * PlaylistCollaborator createMany
+   */
+  export type PlaylistCollaboratorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PlaylistCollaborators.
+     */
+    data: PlaylistCollaboratorCreateManyInput | PlaylistCollaboratorCreateManyInput[]
+  }
+
+  /**
+   * PlaylistCollaborator createManyAndReturn
+   */
+  export type PlaylistCollaboratorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PlaylistCollaborators.
+     */
+    data: PlaylistCollaboratorCreateManyInput | PlaylistCollaboratorCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlaylistCollaborator update
+   */
+  export type PlaylistCollaboratorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PlaylistCollaborator.
+     */
+    data: XOR<PlaylistCollaboratorUpdateInput, PlaylistCollaboratorUncheckedUpdateInput>
+    /**
+     * Choose, which PlaylistCollaborator to update.
+     */
+    where: PlaylistCollaboratorWhereUniqueInput
+  }
+
+  /**
+   * PlaylistCollaborator updateMany
+   */
+  export type PlaylistCollaboratorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PlaylistCollaborators.
+     */
+    data: XOR<PlaylistCollaboratorUpdateManyMutationInput, PlaylistCollaboratorUncheckedUpdateManyInput>
+    /**
+     * Filter which PlaylistCollaborators to update
+     */
+    where?: PlaylistCollaboratorWhereInput
+  }
+
+  /**
+   * PlaylistCollaborator upsert
+   */
+  export type PlaylistCollaboratorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PlaylistCollaborator to update in case it exists.
+     */
+    where: PlaylistCollaboratorWhereUniqueInput
+    /**
+     * In case the PlaylistCollaborator found by the `where` argument doesn't exist, create a new PlaylistCollaborator with this data.
+     */
+    create: XOR<PlaylistCollaboratorCreateInput, PlaylistCollaboratorUncheckedCreateInput>
+    /**
+     * In case the PlaylistCollaborator was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlaylistCollaboratorUpdateInput, PlaylistCollaboratorUncheckedUpdateInput>
+  }
+
+  /**
+   * PlaylistCollaborator delete
+   */
+  export type PlaylistCollaboratorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+    /**
+     * Filter which PlaylistCollaborator to delete.
+     */
+    where: PlaylistCollaboratorWhereUniqueInput
+  }
+
+  /**
+   * PlaylistCollaborator deleteMany
+   */
+  export type PlaylistCollaboratorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlaylistCollaborators to delete
+     */
+    where?: PlaylistCollaboratorWhereInput
+  }
+
+  /**
+   * PlaylistCollaborator without action
+   */
+  export type PlaylistCollaboratorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlaylistCollaborator
+     */
+    select?: PlaylistCollaboratorSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistCollaboratorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PlayHistory
+   */
+
+  export type AggregatePlayHistory = {
+    _count: PlayHistoryCountAggregateOutputType | null
+    _avg: PlayHistoryAvgAggregateOutputType | null
+    _sum: PlayHistorySumAggregateOutputType | null
+    _min: PlayHistoryMinAggregateOutputType | null
+    _max: PlayHistoryMaxAggregateOutputType | null
+  }
+
+  export type PlayHistoryAvgAggregateOutputType = {
+    duration: number | null
+  }
+
+  export type PlayHistorySumAggregateOutputType = {
+    duration: number | null
+  }
+
+  export type PlayHistoryMinAggregateOutputType = {
+    id: string | null
+    trackId: string | null
+    userId: string | null
+    duration: number | null
+    playedAt: Date | null
+  }
+
+  export type PlayHistoryMaxAggregateOutputType = {
+    id: string | null
+    trackId: string | null
+    userId: string | null
+    duration: number | null
+    playedAt: Date | null
+  }
+
+  export type PlayHistoryCountAggregateOutputType = {
+    id: number
+    trackId: number
+    userId: number
+    duration: number
+    playedAt: number
+    _all: number
+  }
+
+
+  export type PlayHistoryAvgAggregateInputType = {
+    duration?: true
+  }
+
+  export type PlayHistorySumAggregateInputType = {
+    duration?: true
+  }
+
+  export type PlayHistoryMinAggregateInputType = {
+    id?: true
+    trackId?: true
+    userId?: true
+    duration?: true
+    playedAt?: true
+  }
+
+  export type PlayHistoryMaxAggregateInputType = {
+    id?: true
+    trackId?: true
+    userId?: true
+    duration?: true
+    playedAt?: true
+  }
+
+  export type PlayHistoryCountAggregateInputType = {
+    id?: true
+    trackId?: true
+    userId?: true
+    duration?: true
+    playedAt?: true
+    _all?: true
+  }
+
+  export type PlayHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlayHistory to aggregate.
+     */
+    where?: PlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayHistories to fetch.
+     */
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PlayHistories
+    **/
+    _count?: true | PlayHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PlayHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PlayHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlayHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlayHistoryMaxAggregateInputType
+  }
+
+  export type GetPlayHistoryAggregateType<T extends PlayHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlayHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlayHistory[P]>
+      : GetScalarType<T[P], AggregatePlayHistory[P]>
+  }
+
+
+
+
+  export type PlayHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayHistoryWhereInput
+    orderBy?: PlayHistoryOrderByWithAggregationInput | PlayHistoryOrderByWithAggregationInput[]
+    by: PlayHistoryScalarFieldEnum[] | PlayHistoryScalarFieldEnum
+    having?: PlayHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlayHistoryCountAggregateInputType | true
+    _avg?: PlayHistoryAvgAggregateInputType
+    _sum?: PlayHistorySumAggregateInputType
+    _min?: PlayHistoryMinAggregateInputType
+    _max?: PlayHistoryMaxAggregateInputType
+  }
+
+  export type PlayHistoryGroupByOutputType = {
+    id: string
+    trackId: string
+    userId: string
+    duration: number
+    playedAt: Date
+    _count: PlayHistoryCountAggregateOutputType | null
+    _avg: PlayHistoryAvgAggregateOutputType | null
+    _sum: PlayHistorySumAggregateOutputType | null
+    _min: PlayHistoryMinAggregateOutputType | null
+    _max: PlayHistoryMaxAggregateOutputType | null
+  }
+
+  type GetPlayHistoryGroupByPayload<T extends PlayHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlayHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlayHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlayHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], PlayHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlayHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    trackId?: boolean
+    userId?: boolean
+    duration?: boolean
+    playedAt?: boolean
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playHistory"]>
+
+  export type PlayHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    trackId?: boolean
+    userId?: boolean
+    duration?: boolean
+    playedAt?: boolean
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playHistory"]>
+
+  export type PlayHistorySelectScalar = {
+    id?: boolean
+    trackId?: boolean
+    userId?: boolean
+    duration?: boolean
+    playedAt?: boolean
+  }
+
+  export type PlayHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+  export type PlayHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+
+  export type $PlayHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PlayHistory"
+    objects: {
+      track: Prisma.$TrackPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      trackId: string
+      userId: string
+      duration: number
+      playedAt: Date
+    }, ExtArgs["result"]["playHistory"]>
+    composites: {}
+  }
+
+  type PlayHistoryGetPayload<S extends boolean | null | undefined | PlayHistoryDefaultArgs> = $Result.GetResult<Prisma.$PlayHistoryPayload, S>
+
+  type PlayHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PlayHistoryFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PlayHistoryCountAggregateInputType | true
+    }
+
+  export interface PlayHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlayHistory'], meta: { name: 'PlayHistory' } }
+    /**
+     * Find zero or one PlayHistory that matches the filter.
+     * @param {PlayHistoryFindUniqueArgs} args - Arguments to find a PlayHistory
+     * @example
+     * // Get one PlayHistory
+     * const playHistory = await prisma.playHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlayHistoryFindUniqueArgs>(args: SelectSubset<T, PlayHistoryFindUniqueArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PlayHistory that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PlayHistoryFindUniqueOrThrowArgs} args - Arguments to find a PlayHistory
+     * @example
+     * // Get one PlayHistory
+     * const playHistory = await prisma.playHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlayHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, PlayHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PlayHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryFindFirstArgs} args - Arguments to find a PlayHistory
+     * @example
+     * // Get one PlayHistory
+     * const playHistory = await prisma.playHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlayHistoryFindFirstArgs>(args?: SelectSubset<T, PlayHistoryFindFirstArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PlayHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryFindFirstOrThrowArgs} args - Arguments to find a PlayHistory
+     * @example
+     * // Get one PlayHistory
+     * const playHistory = await prisma.playHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlayHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, PlayHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PlayHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PlayHistories
+     * const playHistories = await prisma.playHistory.findMany()
+     * 
+     * // Get first 10 PlayHistories
+     * const playHistories = await prisma.playHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const playHistoryWithIdOnly = await prisma.playHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlayHistoryFindManyArgs>(args?: SelectSubset<T, PlayHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PlayHistory.
+     * @param {PlayHistoryCreateArgs} args - Arguments to create a PlayHistory.
+     * @example
+     * // Create one PlayHistory
+     * const PlayHistory = await prisma.playHistory.create({
+     *   data: {
+     *     // ... data to create a PlayHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlayHistoryCreateArgs>(args: SelectSubset<T, PlayHistoryCreateArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PlayHistories.
+     * @param {PlayHistoryCreateManyArgs} args - Arguments to create many PlayHistories.
+     * @example
+     * // Create many PlayHistories
+     * const playHistory = await prisma.playHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlayHistoryCreateManyArgs>(args?: SelectSubset<T, PlayHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PlayHistories and returns the data saved in the database.
+     * @param {PlayHistoryCreateManyAndReturnArgs} args - Arguments to create many PlayHistories.
+     * @example
+     * // Create many PlayHistories
+     * const playHistory = await prisma.playHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PlayHistories and only return the `id`
+     * const playHistoryWithIdOnly = await prisma.playHistory.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlayHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, PlayHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PlayHistory.
+     * @param {PlayHistoryDeleteArgs} args - Arguments to delete one PlayHistory.
+     * @example
+     * // Delete one PlayHistory
+     * const PlayHistory = await prisma.playHistory.delete({
+     *   where: {
+     *     // ... filter to delete one PlayHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlayHistoryDeleteArgs>(args: SelectSubset<T, PlayHistoryDeleteArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PlayHistory.
+     * @param {PlayHistoryUpdateArgs} args - Arguments to update one PlayHistory.
+     * @example
+     * // Update one PlayHistory
+     * const playHistory = await prisma.playHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlayHistoryUpdateArgs>(args: SelectSubset<T, PlayHistoryUpdateArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PlayHistories.
+     * @param {PlayHistoryDeleteManyArgs} args - Arguments to filter PlayHistories to delete.
+     * @example
+     * // Delete a few PlayHistories
+     * const { count } = await prisma.playHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlayHistoryDeleteManyArgs>(args?: SelectSubset<T, PlayHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PlayHistories
+     * const playHistory = await prisma.playHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlayHistoryUpdateManyArgs>(args: SelectSubset<T, PlayHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PlayHistory.
+     * @param {PlayHistoryUpsertArgs} args - Arguments to update or create a PlayHistory.
+     * @example
+     * // Update or create a PlayHistory
+     * const playHistory = await prisma.playHistory.upsert({
+     *   create: {
+     *     // ... data to create a PlayHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PlayHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlayHistoryUpsertArgs>(args: SelectSubset<T, PlayHistoryUpsertArgs<ExtArgs>>): Prisma__PlayHistoryClient<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PlayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryCountArgs} args - Arguments to filter PlayHistories to count.
+     * @example
+     * // Count the number of PlayHistories
+     * const count = await prisma.playHistory.count({
+     *   where: {
+     *     // ... the filter for the PlayHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlayHistoryCountArgs>(
+      args?: Subset<T, PlayHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlayHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PlayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlayHistoryAggregateArgs>(args: Subset<T, PlayHistoryAggregateArgs>): Prisma.PrismaPromise<GetPlayHistoryAggregateType<T>>
+
+    /**
+     * Group by PlayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlayHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlayHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: PlayHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlayHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlayHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PlayHistory model
+   */
+  readonly fields: PlayHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PlayHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlayHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    track<T extends TrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackDefaultArgs<ExtArgs>>): Prisma__TrackClient<$Result.GetResult<Prisma.$TrackPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PlayHistory model
+   */ 
+  interface PlayHistoryFieldRefs {
+    readonly id: FieldRef<"PlayHistory", 'String'>
+    readonly trackId: FieldRef<"PlayHistory", 'String'>
+    readonly userId: FieldRef<"PlayHistory", 'String'>
+    readonly duration: FieldRef<"PlayHistory", 'Float'>
+    readonly playedAt: FieldRef<"PlayHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PlayHistory findUnique
+   */
+  export type PlayHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayHistory to fetch.
+     */
+    where: PlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * PlayHistory findUniqueOrThrow
+   */
+  export type PlayHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayHistory to fetch.
+     */
+    where: PlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * PlayHistory findFirst
+   */
+  export type PlayHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayHistory to fetch.
+     */
+    where?: PlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayHistories to fetch.
+     */
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlayHistories.
+     */
+    cursor?: PlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlayHistories.
+     */
+    distinct?: PlayHistoryScalarFieldEnum | PlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * PlayHistory findFirstOrThrow
+   */
+  export type PlayHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayHistory to fetch.
+     */
+    where?: PlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayHistories to fetch.
+     */
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlayHistories.
+     */
+    cursor?: PlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlayHistories.
+     */
+    distinct?: PlayHistoryScalarFieldEnum | PlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * PlayHistory findMany
+   */
+  export type PlayHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayHistories to fetch.
+     */
+    where?: PlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayHistories to fetch.
+     */
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PlayHistories.
+     */
+    cursor?: PlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayHistories.
+     */
+    skip?: number
+    distinct?: PlayHistoryScalarFieldEnum | PlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * PlayHistory create
+   */
+  export type PlayHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PlayHistory.
+     */
+    data: XOR<PlayHistoryCreateInput, PlayHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * PlayHistory createMany
+   */
+  export type PlayHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PlayHistories.
+     */
+    data: PlayHistoryCreateManyInput | PlayHistoryCreateManyInput[]
+  }
+
+  /**
+   * PlayHistory createManyAndReturn
+   */
+  export type PlayHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PlayHistories.
+     */
+    data: PlayHistoryCreateManyInput | PlayHistoryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlayHistory update
+   */
+  export type PlayHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PlayHistory.
+     */
+    data: XOR<PlayHistoryUpdateInput, PlayHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which PlayHistory to update.
+     */
+    where: PlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * PlayHistory updateMany
+   */
+  export type PlayHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PlayHistories.
+     */
+    data: XOR<PlayHistoryUpdateManyMutationInput, PlayHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PlayHistories to update
+     */
+    where?: PlayHistoryWhereInput
+  }
+
+  /**
+   * PlayHistory upsert
+   */
+  export type PlayHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PlayHistory to update in case it exists.
+     */
+    where: PlayHistoryWhereUniqueInput
+    /**
+     * In case the PlayHistory found by the `where` argument doesn't exist, create a new PlayHistory with this data.
+     */
+    create: XOR<PlayHistoryCreateInput, PlayHistoryUncheckedCreateInput>
+    /**
+     * In case the PlayHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlayHistoryUpdateInput, PlayHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * PlayHistory delete
+   */
+  export type PlayHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which PlayHistory to delete.
+     */
+    where: PlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * PlayHistory deleteMany
+   */
+  export type PlayHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlayHistories to delete
+     */
+    where?: PlayHistoryWhereInput
+  }
+
+  /**
+   * PlayHistory without action
+   */
+  export type PlayHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SeekEvent
+   */
+
+  export type AggregateSeekEvent = {
+    _count: SeekEventCountAggregateOutputType | null
+    _avg: SeekEventAvgAggregateOutputType | null
+    _sum: SeekEventSumAggregateOutputType | null
+    _min: SeekEventMinAggregateOutputType | null
+    _max: SeekEventMaxAggregateOutputType | null
+  }
+
+  export type SeekEventAvgAggregateOutputType = {
+    timestamp: number | null
+  }
+
+  export type SeekEventSumAggregateOutputType = {
+    timestamp: number | null
+  }
+
+  export type SeekEventMinAggregateOutputType = {
+    id: string | null
+    trackId: string | null
+    timestamp: number | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type SeekEventMaxAggregateOutputType = {
+    id: string | null
+    trackId: string | null
+    timestamp: number | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type SeekEventCountAggregateOutputType = {
+    id: number
+    trackId: number
+    timestamp: number
+    userId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SeekEventAvgAggregateInputType = {
+    timestamp?: true
+  }
+
+  export type SeekEventSumAggregateInputType = {
+    timestamp?: true
+  }
+
+  export type SeekEventMinAggregateInputType = {
+    id?: true
+    trackId?: true
+    timestamp?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type SeekEventMaxAggregateInputType = {
+    id?: true
+    trackId?: true
+    timestamp?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type SeekEventCountAggregateInputType = {
+    id?: true
+    trackId?: true
+    timestamp?: true
+    userId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SeekEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeekEvent to aggregate.
+     */
+    where?: SeekEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeekEvents to fetch.
+     */
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SeekEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeekEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeekEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SeekEvents
+    **/
+    _count?: true | SeekEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SeekEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SeekEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeekEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeekEventMaxAggregateInputType
+  }
+
+  export type GetSeekEventAggregateType<T extends SeekEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeekEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeekEvent[P]>
+      : GetScalarType<T[P], AggregateSeekEvent[P]>
+  }
+
+
+
+
+  export type SeekEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeekEventWhereInput
+    orderBy?: SeekEventOrderByWithAggregationInput | SeekEventOrderByWithAggregationInput[]
+    by: SeekEventScalarFieldEnum[] | SeekEventScalarFieldEnum
+    having?: SeekEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeekEventCountAggregateInputType | true
+    _avg?: SeekEventAvgAggregateInputType
+    _sum?: SeekEventSumAggregateInputType
+    _min?: SeekEventMinAggregateInputType
+    _max?: SeekEventMaxAggregateInputType
+  }
+
+  export type SeekEventGroupByOutputType = {
+    id: string
+    trackId: string
+    timestamp: number
+    userId: string
+    createdAt: Date
+    _count: SeekEventCountAggregateOutputType | null
+    _avg: SeekEventAvgAggregateOutputType | null
+    _sum: SeekEventSumAggregateOutputType | null
+    _min: SeekEventMinAggregateOutputType | null
+    _max: SeekEventMaxAggregateOutputType | null
+  }
+
+  type GetSeekEventGroupByPayload<T extends SeekEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeekEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeekEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeekEventGroupByOutputType[P]>
+            : GetScalarType<T[P], SeekEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SeekEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    trackId?: boolean
+    timestamp?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seekEvent"]>
+
+  export type SeekEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    trackId?: boolean
+    timestamp?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seekEvent"]>
+
+  export type SeekEventSelectScalar = {
+    id?: boolean
+    trackId?: boolean
+    timestamp?: boolean
+    userId?: boolean
+    createdAt?: boolean
+  }
+
+  export type SeekEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+  export type SeekEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+
+  export type $SeekEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SeekEvent"
+    objects: {
+      track: Prisma.$TrackPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      trackId: string
+      timestamp: number
+      userId: string
+      createdAt: Date
+    }, ExtArgs["result"]["seekEvent"]>
+    composites: {}
+  }
+
+  type SeekEventGetPayload<S extends boolean | null | undefined | SeekEventDefaultArgs> = $Result.GetResult<Prisma.$SeekEventPayload, S>
+
+  type SeekEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SeekEventFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SeekEventCountAggregateInputType | true
+    }
+
+  export interface SeekEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SeekEvent'], meta: { name: 'SeekEvent' } }
+    /**
+     * Find zero or one SeekEvent that matches the filter.
+     * @param {SeekEventFindUniqueArgs} args - Arguments to find a SeekEvent
+     * @example
+     * // Get one SeekEvent
+     * const seekEvent = await prisma.seekEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SeekEventFindUniqueArgs>(args: SelectSubset<T, SeekEventFindUniqueArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SeekEvent that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SeekEventFindUniqueOrThrowArgs} args - Arguments to find a SeekEvent
+     * @example
+     * // Get one SeekEvent
+     * const seekEvent = await prisma.seekEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SeekEventFindUniqueOrThrowArgs>(args: SelectSubset<T, SeekEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SeekEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventFindFirstArgs} args - Arguments to find a SeekEvent
+     * @example
+     * // Get one SeekEvent
+     * const seekEvent = await prisma.seekEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SeekEventFindFirstArgs>(args?: SelectSubset<T, SeekEventFindFirstArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SeekEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventFindFirstOrThrowArgs} args - Arguments to find a SeekEvent
+     * @example
+     * // Get one SeekEvent
+     * const seekEvent = await prisma.seekEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SeekEventFindFirstOrThrowArgs>(args?: SelectSubset<T, SeekEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SeekEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SeekEvents
+     * const seekEvents = await prisma.seekEvent.findMany()
+     * 
+     * // Get first 10 SeekEvents
+     * const seekEvents = await prisma.seekEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seekEventWithIdOnly = await prisma.seekEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SeekEventFindManyArgs>(args?: SelectSubset<T, SeekEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SeekEvent.
+     * @param {SeekEventCreateArgs} args - Arguments to create a SeekEvent.
+     * @example
+     * // Create one SeekEvent
+     * const SeekEvent = await prisma.seekEvent.create({
+     *   data: {
+     *     // ... data to create a SeekEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends SeekEventCreateArgs>(args: SelectSubset<T, SeekEventCreateArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SeekEvents.
+     * @param {SeekEventCreateManyArgs} args - Arguments to create many SeekEvents.
+     * @example
+     * // Create many SeekEvents
+     * const seekEvent = await prisma.seekEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SeekEventCreateManyArgs>(args?: SelectSubset<T, SeekEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SeekEvents and returns the data saved in the database.
+     * @param {SeekEventCreateManyAndReturnArgs} args - Arguments to create many SeekEvents.
+     * @example
+     * // Create many SeekEvents
+     * const seekEvent = await prisma.seekEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SeekEvents and only return the `id`
+     * const seekEventWithIdOnly = await prisma.seekEvent.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SeekEventCreateManyAndReturnArgs>(args?: SelectSubset<T, SeekEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SeekEvent.
+     * @param {SeekEventDeleteArgs} args - Arguments to delete one SeekEvent.
+     * @example
+     * // Delete one SeekEvent
+     * const SeekEvent = await prisma.seekEvent.delete({
+     *   where: {
+     *     // ... filter to delete one SeekEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SeekEventDeleteArgs>(args: SelectSubset<T, SeekEventDeleteArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SeekEvent.
+     * @param {SeekEventUpdateArgs} args - Arguments to update one SeekEvent.
+     * @example
+     * // Update one SeekEvent
+     * const seekEvent = await prisma.seekEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SeekEventUpdateArgs>(args: SelectSubset<T, SeekEventUpdateArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SeekEvents.
+     * @param {SeekEventDeleteManyArgs} args - Arguments to filter SeekEvents to delete.
+     * @example
+     * // Delete a few SeekEvents
+     * const { count } = await prisma.seekEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SeekEventDeleteManyArgs>(args?: SelectSubset<T, SeekEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SeekEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SeekEvents
+     * const seekEvent = await prisma.seekEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SeekEventUpdateManyArgs>(args: SelectSubset<T, SeekEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SeekEvent.
+     * @param {SeekEventUpsertArgs} args - Arguments to update or create a SeekEvent.
+     * @example
+     * // Update or create a SeekEvent
+     * const seekEvent = await prisma.seekEvent.upsert({
+     *   create: {
+     *     // ... data to create a SeekEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SeekEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SeekEventUpsertArgs>(args: SelectSubset<T, SeekEventUpsertArgs<ExtArgs>>): Prisma__SeekEventClient<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SeekEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventCountArgs} args - Arguments to filter SeekEvents to count.
+     * @example
+     * // Count the number of SeekEvents
+     * const count = await prisma.seekEvent.count({
+     *   where: {
+     *     // ... the filter for the SeekEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends SeekEventCountArgs>(
+      args?: Subset<T, SeekEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeekEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SeekEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeekEventAggregateArgs>(args: Subset<T, SeekEventAggregateArgs>): Prisma.PrismaPromise<GetSeekEventAggregateType<T>>
+
+    /**
+     * Group by SeekEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeekEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SeekEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SeekEventGroupByArgs['orderBy'] }
+        : { orderBy?: SeekEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SeekEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeekEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SeekEvent model
+   */
+  readonly fields: SeekEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SeekEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SeekEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    track<T extends TrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackDefaultArgs<ExtArgs>>): Prisma__TrackClient<$Result.GetResult<Prisma.$TrackPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SeekEvent model
+   */ 
+  interface SeekEventFieldRefs {
+    readonly id: FieldRef<"SeekEvent", 'String'>
+    readonly trackId: FieldRef<"SeekEvent", 'String'>
+    readonly timestamp: FieldRef<"SeekEvent", 'Float'>
+    readonly userId: FieldRef<"SeekEvent", 'String'>
+    readonly createdAt: FieldRef<"SeekEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SeekEvent findUnique
+   */
+  export type SeekEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter, which SeekEvent to fetch.
+     */
+    where: SeekEventWhereUniqueInput
+  }
+
+  /**
+   * SeekEvent findUniqueOrThrow
+   */
+  export type SeekEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter, which SeekEvent to fetch.
+     */
+    where: SeekEventWhereUniqueInput
+  }
+
+  /**
+   * SeekEvent findFirst
+   */
+  export type SeekEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter, which SeekEvent to fetch.
+     */
+    where?: SeekEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeekEvents to fetch.
+     */
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeekEvents.
+     */
+    cursor?: SeekEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeekEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeekEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeekEvents.
+     */
+    distinct?: SeekEventScalarFieldEnum | SeekEventScalarFieldEnum[]
+  }
+
+  /**
+   * SeekEvent findFirstOrThrow
+   */
+  export type SeekEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter, which SeekEvent to fetch.
+     */
+    where?: SeekEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeekEvents to fetch.
+     */
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeekEvents.
+     */
+    cursor?: SeekEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeekEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeekEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeekEvents.
+     */
+    distinct?: SeekEventScalarFieldEnum | SeekEventScalarFieldEnum[]
+  }
+
+  /**
+   * SeekEvent findMany
+   */
+  export type SeekEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter, which SeekEvents to fetch.
+     */
+    where?: SeekEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeekEvents to fetch.
+     */
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SeekEvents.
+     */
+    cursor?: SeekEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeekEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeekEvents.
+     */
+    skip?: number
+    distinct?: SeekEventScalarFieldEnum | SeekEventScalarFieldEnum[]
+  }
+
+  /**
+   * SeekEvent create
+   */
+  export type SeekEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SeekEvent.
+     */
+    data: XOR<SeekEventCreateInput, SeekEventUncheckedCreateInput>
+  }
+
+  /**
+   * SeekEvent createMany
+   */
+  export type SeekEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SeekEvents.
+     */
+    data: SeekEventCreateManyInput | SeekEventCreateManyInput[]
+  }
+
+  /**
+   * SeekEvent createManyAndReturn
+   */
+  export type SeekEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SeekEvents.
+     */
+    data: SeekEventCreateManyInput | SeekEventCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SeekEvent update
+   */
+  export type SeekEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SeekEvent.
+     */
+    data: XOR<SeekEventUpdateInput, SeekEventUncheckedUpdateInput>
+    /**
+     * Choose, which SeekEvent to update.
+     */
+    where: SeekEventWhereUniqueInput
+  }
+
+  /**
+   * SeekEvent updateMany
+   */
+  export type SeekEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SeekEvents.
+     */
+    data: XOR<SeekEventUpdateManyMutationInput, SeekEventUncheckedUpdateManyInput>
+    /**
+     * Filter which SeekEvents to update
+     */
+    where?: SeekEventWhereInput
+  }
+
+  /**
+   * SeekEvent upsert
+   */
+  export type SeekEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SeekEvent to update in case it exists.
+     */
+    where: SeekEventWhereUniqueInput
+    /**
+     * In case the SeekEvent found by the `where` argument doesn't exist, create a new SeekEvent with this data.
+     */
+    create: XOR<SeekEventCreateInput, SeekEventUncheckedCreateInput>
+    /**
+     * In case the SeekEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SeekEventUpdateInput, SeekEventUncheckedUpdateInput>
+  }
+
+  /**
+   * SeekEvent delete
+   */
+  export type SeekEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    /**
+     * Filter which SeekEvent to delete.
+     */
+    where: SeekEventWhereUniqueInput
+  }
+
+  /**
+   * SeekEvent deleteMany
+   */
+  export type SeekEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeekEvents to delete
+     */
+    where?: SeekEventWhereInput
+  }
+
+  /**
+   * SeekEvent without action
+   */
+  export type SeekEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ListeningRoom
+   */
+
+  export type AggregateListeningRoom = {
+    _count: ListeningRoomCountAggregateOutputType | null
+    _avg: ListeningRoomAvgAggregateOutputType | null
+    _sum: ListeningRoomSumAggregateOutputType | null
+    _min: ListeningRoomMinAggregateOutputType | null
+    _max: ListeningRoomMaxAggregateOutputType | null
+  }
+
+  export type ListeningRoomAvgAggregateOutputType = {
+    currentTime: number | null
+  }
+
+  export type ListeningRoomSumAggregateOutputType = {
+    currentTime: number | null
+  }
+
+  export type ListeningRoomMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    hostId: string | null
+    trackId: string | null
+    isPlaying: boolean | null
+    currentTime: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ListeningRoomMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    hostId: string | null
+    trackId: string | null
+    isPlaying: boolean | null
+    currentTime: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ListeningRoomCountAggregateOutputType = {
+    id: number
+    name: number
+    hostId: number
+    trackId: number
+    isPlaying: number
+    currentTime: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ListeningRoomAvgAggregateInputType = {
+    currentTime?: true
+  }
+
+  export type ListeningRoomSumAggregateInputType = {
+    currentTime?: true
+  }
+
+  export type ListeningRoomMinAggregateInputType = {
+    id?: true
+    name?: true
+    hostId?: true
+    trackId?: true
+    isPlaying?: true
+    currentTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ListeningRoomMaxAggregateInputType = {
+    id?: true
+    name?: true
+    hostId?: true
+    trackId?: true
+    isPlaying?: true
+    currentTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ListeningRoomCountAggregateInputType = {
+    id?: true
+    name?: true
+    hostId?: true
+    trackId?: true
+    isPlaying?: true
+    currentTime?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ListeningRoomAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListeningRoom to aggregate.
+     */
+    where?: ListeningRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListeningRooms to fetch.
+     */
+    orderBy?: ListeningRoomOrderByWithRelationInput | ListeningRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ListeningRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListeningRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListeningRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ListeningRooms
+    **/
+    _count?: true | ListeningRoomCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ListeningRoomAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ListeningRoomSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListeningRoomMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListeningRoomMaxAggregateInputType
+  }
+
+  export type GetListeningRoomAggregateType<T extends ListeningRoomAggregateArgs> = {
+        [P in keyof T & keyof AggregateListeningRoom]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateListeningRoom[P]>
+      : GetScalarType<T[P], AggregateListeningRoom[P]>
+  }
+
+
+
+
+  export type ListeningRoomGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListeningRoomWhereInput
+    orderBy?: ListeningRoomOrderByWithAggregationInput | ListeningRoomOrderByWithAggregationInput[]
+    by: ListeningRoomScalarFieldEnum[] | ListeningRoomScalarFieldEnum
+    having?: ListeningRoomScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListeningRoomCountAggregateInputType | true
+    _avg?: ListeningRoomAvgAggregateInputType
+    _sum?: ListeningRoomSumAggregateInputType
+    _min?: ListeningRoomMinAggregateInputType
+    _max?: ListeningRoomMaxAggregateInputType
+  }
+
+  export type ListeningRoomGroupByOutputType = {
+    id: string
+    name: string
+    hostId: string
+    trackId: string | null
+    isPlaying: boolean
+    currentTime: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ListeningRoomCountAggregateOutputType | null
+    _avg: ListeningRoomAvgAggregateOutputType | null
+    _sum: ListeningRoomSumAggregateOutputType | null
+    _min: ListeningRoomMinAggregateOutputType | null
+    _max: ListeningRoomMaxAggregateOutputType | null
+  }
+
+  type GetListeningRoomGroupByPayload<T extends ListeningRoomGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ListeningRoomGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListeningRoomGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListeningRoomGroupByOutputType[P]>
+            : GetScalarType<T[P], ListeningRoomGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListeningRoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    hostId?: boolean
+    trackId?: boolean
+    isPlaying?: boolean
+    currentTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["listeningRoom"]>
+
+  export type ListeningRoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    hostId?: boolean
+    trackId?: boolean
+    isPlaying?: boolean
+    currentTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["listeningRoom"]>
+
+  export type ListeningRoomSelectScalar = {
+    id?: boolean
+    name?: boolean
+    hostId?: boolean
+    trackId?: boolean
+    isPlaying?: boolean
+    currentTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $ListeningRoomPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ListeningRoom"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      hostId: string
+      trackId: string | null
+      isPlaying: boolean
+      currentTime: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["listeningRoom"]>
+    composites: {}
+  }
+
+  type ListeningRoomGetPayload<S extends boolean | null | undefined | ListeningRoomDefaultArgs> = $Result.GetResult<Prisma.$ListeningRoomPayload, S>
+
+  type ListeningRoomCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ListeningRoomFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ListeningRoomCountAggregateInputType | true
+    }
+
+  export interface ListeningRoomDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ListeningRoom'], meta: { name: 'ListeningRoom' } }
+    /**
+     * Find zero or one ListeningRoom that matches the filter.
+     * @param {ListeningRoomFindUniqueArgs} args - Arguments to find a ListeningRoom
+     * @example
+     * // Get one ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ListeningRoomFindUniqueArgs>(args: SelectSubset<T, ListeningRoomFindUniqueArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ListeningRoom that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ListeningRoomFindUniqueOrThrowArgs} args - Arguments to find a ListeningRoom
+     * @example
+     * // Get one ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ListeningRoomFindUniqueOrThrowArgs>(args: SelectSubset<T, ListeningRoomFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ListeningRoom that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomFindFirstArgs} args - Arguments to find a ListeningRoom
+     * @example
+     * // Get one ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ListeningRoomFindFirstArgs>(args?: SelectSubset<T, ListeningRoomFindFirstArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ListeningRoom that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomFindFirstOrThrowArgs} args - Arguments to find a ListeningRoom
+     * @example
+     * // Get one ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ListeningRoomFindFirstOrThrowArgs>(args?: SelectSubset<T, ListeningRoomFindFirstOrThrowArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ListeningRooms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ListeningRooms
+     * const listeningRooms = await prisma.listeningRoom.findMany()
+     * 
+     * // Get first 10 ListeningRooms
+     * const listeningRooms = await prisma.listeningRoom.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const listeningRoomWithIdOnly = await prisma.listeningRoom.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ListeningRoomFindManyArgs>(args?: SelectSubset<T, ListeningRoomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ListeningRoom.
+     * @param {ListeningRoomCreateArgs} args - Arguments to create a ListeningRoom.
+     * @example
+     * // Create one ListeningRoom
+     * const ListeningRoom = await prisma.listeningRoom.create({
+     *   data: {
+     *     // ... data to create a ListeningRoom
+     *   }
+     * })
+     * 
+     */
+    create<T extends ListeningRoomCreateArgs>(args: SelectSubset<T, ListeningRoomCreateArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ListeningRooms.
+     * @param {ListeningRoomCreateManyArgs} args - Arguments to create many ListeningRooms.
+     * @example
+     * // Create many ListeningRooms
+     * const listeningRoom = await prisma.listeningRoom.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ListeningRoomCreateManyArgs>(args?: SelectSubset<T, ListeningRoomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ListeningRooms and returns the data saved in the database.
+     * @param {ListeningRoomCreateManyAndReturnArgs} args - Arguments to create many ListeningRooms.
+     * @example
+     * // Create many ListeningRooms
+     * const listeningRoom = await prisma.listeningRoom.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ListeningRooms and only return the `id`
+     * const listeningRoomWithIdOnly = await prisma.listeningRoom.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ListeningRoomCreateManyAndReturnArgs>(args?: SelectSubset<T, ListeningRoomCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ListeningRoom.
+     * @param {ListeningRoomDeleteArgs} args - Arguments to delete one ListeningRoom.
+     * @example
+     * // Delete one ListeningRoom
+     * const ListeningRoom = await prisma.listeningRoom.delete({
+     *   where: {
+     *     // ... filter to delete one ListeningRoom
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ListeningRoomDeleteArgs>(args: SelectSubset<T, ListeningRoomDeleteArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ListeningRoom.
+     * @param {ListeningRoomUpdateArgs} args - Arguments to update one ListeningRoom.
+     * @example
+     * // Update one ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ListeningRoomUpdateArgs>(args: SelectSubset<T, ListeningRoomUpdateArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ListeningRooms.
+     * @param {ListeningRoomDeleteManyArgs} args - Arguments to filter ListeningRooms to delete.
+     * @example
+     * // Delete a few ListeningRooms
+     * const { count } = await prisma.listeningRoom.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ListeningRoomDeleteManyArgs>(args?: SelectSubset<T, ListeningRoomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListeningRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ListeningRooms
+     * const listeningRoom = await prisma.listeningRoom.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ListeningRoomUpdateManyArgs>(args: SelectSubset<T, ListeningRoomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ListeningRoom.
+     * @param {ListeningRoomUpsertArgs} args - Arguments to update or create a ListeningRoom.
+     * @example
+     * // Update or create a ListeningRoom
+     * const listeningRoom = await prisma.listeningRoom.upsert({
+     *   create: {
+     *     // ... data to create a ListeningRoom
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ListeningRoom we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ListeningRoomUpsertArgs>(args: SelectSubset<T, ListeningRoomUpsertArgs<ExtArgs>>): Prisma__ListeningRoomClient<$Result.GetResult<Prisma.$ListeningRoomPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ListeningRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomCountArgs} args - Arguments to filter ListeningRooms to count.
+     * @example
+     * // Count the number of ListeningRooms
+     * const count = await prisma.listeningRoom.count({
+     *   where: {
+     *     // ... the filter for the ListeningRooms we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListeningRoomCountArgs>(
+      args?: Subset<T, ListeningRoomCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListeningRoomCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ListeningRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListeningRoomAggregateArgs>(args: Subset<T, ListeningRoomAggregateArgs>): Prisma.PrismaPromise<GetListeningRoomAggregateType<T>>
+
+    /**
+     * Group by ListeningRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListeningRoomGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListeningRoomGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListeningRoomGroupByArgs['orderBy'] }
+        : { orderBy?: ListeningRoomGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListeningRoomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListeningRoomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ListeningRoom model
+   */
+  readonly fields: ListeningRoomFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ListeningRoom.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ListeningRoomClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ListeningRoom model
+   */ 
+  interface ListeningRoomFieldRefs {
+    readonly id: FieldRef<"ListeningRoom", 'String'>
+    readonly name: FieldRef<"ListeningRoom", 'String'>
+    readonly hostId: FieldRef<"ListeningRoom", 'String'>
+    readonly trackId: FieldRef<"ListeningRoom", 'String'>
+    readonly isPlaying: FieldRef<"ListeningRoom", 'Boolean'>
+    readonly currentTime: FieldRef<"ListeningRoom", 'Float'>
+    readonly createdAt: FieldRef<"ListeningRoom", 'DateTime'>
+    readonly updatedAt: FieldRef<"ListeningRoom", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ListeningRoom findUnique
+   */
+  export type ListeningRoomFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter, which ListeningRoom to fetch.
+     */
+    where: ListeningRoomWhereUniqueInput
+  }
+
+  /**
+   * ListeningRoom findUniqueOrThrow
+   */
+  export type ListeningRoomFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter, which ListeningRoom to fetch.
+     */
+    where: ListeningRoomWhereUniqueInput
+  }
+
+  /**
+   * ListeningRoom findFirst
+   */
+  export type ListeningRoomFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter, which ListeningRoom to fetch.
+     */
+    where?: ListeningRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListeningRooms to fetch.
+     */
+    orderBy?: ListeningRoomOrderByWithRelationInput | ListeningRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListeningRooms.
+     */
+    cursor?: ListeningRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListeningRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListeningRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListeningRooms.
+     */
+    distinct?: ListeningRoomScalarFieldEnum | ListeningRoomScalarFieldEnum[]
+  }
+
+  /**
+   * ListeningRoom findFirstOrThrow
+   */
+  export type ListeningRoomFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter, which ListeningRoom to fetch.
+     */
+    where?: ListeningRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListeningRooms to fetch.
+     */
+    orderBy?: ListeningRoomOrderByWithRelationInput | ListeningRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListeningRooms.
+     */
+    cursor?: ListeningRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListeningRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListeningRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListeningRooms.
+     */
+    distinct?: ListeningRoomScalarFieldEnum | ListeningRoomScalarFieldEnum[]
+  }
+
+  /**
+   * ListeningRoom findMany
+   */
+  export type ListeningRoomFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter, which ListeningRooms to fetch.
+     */
+    where?: ListeningRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListeningRooms to fetch.
+     */
+    orderBy?: ListeningRoomOrderByWithRelationInput | ListeningRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ListeningRooms.
+     */
+    cursor?: ListeningRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListeningRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListeningRooms.
+     */
+    skip?: number
+    distinct?: ListeningRoomScalarFieldEnum | ListeningRoomScalarFieldEnum[]
+  }
+
+  /**
+   * ListeningRoom create
+   */
+  export type ListeningRoomCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ListeningRoom.
+     */
+    data: XOR<ListeningRoomCreateInput, ListeningRoomUncheckedCreateInput>
+  }
+
+  /**
+   * ListeningRoom createMany
+   */
+  export type ListeningRoomCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ListeningRooms.
+     */
+    data: ListeningRoomCreateManyInput | ListeningRoomCreateManyInput[]
+  }
+
+  /**
+   * ListeningRoom createManyAndReturn
+   */
+  export type ListeningRoomCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ListeningRooms.
+     */
+    data: ListeningRoomCreateManyInput | ListeningRoomCreateManyInput[]
+  }
+
+  /**
+   * ListeningRoom update
+   */
+  export type ListeningRoomUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ListeningRoom.
+     */
+    data: XOR<ListeningRoomUpdateInput, ListeningRoomUncheckedUpdateInput>
+    /**
+     * Choose, which ListeningRoom to update.
+     */
+    where: ListeningRoomWhereUniqueInput
+  }
+
+  /**
+   * ListeningRoom updateMany
+   */
+  export type ListeningRoomUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ListeningRooms.
+     */
+    data: XOR<ListeningRoomUpdateManyMutationInput, ListeningRoomUncheckedUpdateManyInput>
+    /**
+     * Filter which ListeningRooms to update
+     */
+    where?: ListeningRoomWhereInput
+  }
+
+  /**
+   * ListeningRoom upsert
+   */
+  export type ListeningRoomUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ListeningRoom to update in case it exists.
+     */
+    where: ListeningRoomWhereUniqueInput
+    /**
+     * In case the ListeningRoom found by the `where` argument doesn't exist, create a new ListeningRoom with this data.
+     */
+    create: XOR<ListeningRoomCreateInput, ListeningRoomUncheckedCreateInput>
+    /**
+     * In case the ListeningRoom was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ListeningRoomUpdateInput, ListeningRoomUncheckedUpdateInput>
+  }
+
+  /**
+   * ListeningRoom delete
+   */
+  export type ListeningRoomDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+    /**
+     * Filter which ListeningRoom to delete.
+     */
+    where: ListeningRoomWhereUniqueInput
+  }
+
+  /**
+   * ListeningRoom deleteMany
+   */
+  export type ListeningRoomDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListeningRooms to delete
+     */
+    where?: ListeningRoomWhereInput
+  }
+
+  /**
+   * ListeningRoom without action
+   */
+  export type ListeningRoomDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListeningRoom
+     */
+    select?: ListeningRoomSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -6565,6 +10815,53 @@ export namespace Prisma {
   };
 
   export type PlaylistTrackScalarFieldEnum = (typeof PlaylistTrackScalarFieldEnum)[keyof typeof PlaylistTrackScalarFieldEnum]
+
+
+  export const PlaylistCollaboratorScalarFieldEnum: {
+    id: 'id',
+    playlistId: 'playlistId',
+    userId: 'userId',
+    role: 'role',
+    joinedAt: 'joinedAt'
+  };
+
+  export type PlaylistCollaboratorScalarFieldEnum = (typeof PlaylistCollaboratorScalarFieldEnum)[keyof typeof PlaylistCollaboratorScalarFieldEnum]
+
+
+  export const PlayHistoryScalarFieldEnum: {
+    id: 'id',
+    trackId: 'trackId',
+    userId: 'userId',
+    duration: 'duration',
+    playedAt: 'playedAt'
+  };
+
+  export type PlayHistoryScalarFieldEnum = (typeof PlayHistoryScalarFieldEnum)[keyof typeof PlayHistoryScalarFieldEnum]
+
+
+  export const SeekEventScalarFieldEnum: {
+    id: 'id',
+    trackId: 'trackId',
+    timestamp: 'timestamp',
+    userId: 'userId',
+    createdAt: 'createdAt'
+  };
+
+  export type SeekEventScalarFieldEnum = (typeof SeekEventScalarFieldEnum)[keyof typeof SeekEventScalarFieldEnum]
+
+
+  export const ListeningRoomScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    hostId: 'hostId',
+    trackId: 'trackId',
+    isPlaying: 'isPlaying',
+    currentTime: 'currentTime',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ListeningRoomScalarFieldEnum = (typeof ListeningRoomScalarFieldEnum)[keyof typeof ListeningRoomScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -6792,6 +11089,8 @@ export namespace Prisma {
     artist?: XOR<ArtistRelationFilter, ArtistWhereInput>
     album?: XOR<AlbumNullableRelationFilter, AlbumWhereInput> | null
     playlistTracks?: PlaylistTrackListRelationFilter
+    playHistory?: PlayHistoryListRelationFilter
+    seekEvents?: SeekEventListRelationFilter
   }
 
   export type TrackOrderByWithRelationInput = {
@@ -6818,6 +11117,8 @@ export namespace Prisma {
     artist?: ArtistOrderByWithRelationInput
     album?: AlbumOrderByWithRelationInput
     playlistTracks?: PlaylistTrackOrderByRelationAggregateInput
+    playHistory?: PlayHistoryOrderByRelationAggregateInput
+    seekEvents?: SeekEventOrderByRelationAggregateInput
   }
 
   export type TrackWhereUniqueInput = Prisma.AtLeast<{
@@ -6847,6 +11148,8 @@ export namespace Prisma {
     artist?: XOR<ArtistRelationFilter, ArtistWhereInput>
     album?: XOR<AlbumNullableRelationFilter, AlbumWhereInput> | null
     playlistTracks?: PlaylistTrackListRelationFilter
+    playHistory?: PlayHistoryListRelationFilter
+    seekEvents?: SeekEventListRelationFilter
   }, "id" | "filePath">
 
   export type TrackOrderByWithAggregationInput = {
@@ -6914,6 +11217,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
     tracks?: PlaylistTrackListRelationFilter
+    collaborators?: PlaylistCollaboratorListRelationFilter
   }
 
   export type PlaylistOrderByWithRelationInput = {
@@ -6924,6 +11228,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tracks?: PlaylistTrackOrderByRelationAggregateInput
+    collaborators?: PlaylistCollaboratorOrderByRelationAggregateInput
   }
 
   export type PlaylistWhereUniqueInput = Prisma.AtLeast<{
@@ -6937,6 +11242,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
     tracks?: PlaylistTrackListRelationFilter
+    collaborators?: PlaylistCollaboratorListRelationFilter
   }, "id" | "name">
 
   export type PlaylistOrderByWithAggregationInput = {
@@ -7022,6 +11328,245 @@ export namespace Prisma {
     trackId?: StringWithAggregatesFilter<"PlaylistTrack"> | string
     position?: IntWithAggregatesFilter<"PlaylistTrack"> | number
     addedAt?: DateTimeWithAggregatesFilter<"PlaylistTrack"> | Date | string
+  }
+
+  export type PlaylistCollaboratorWhereInput = {
+    AND?: PlaylistCollaboratorWhereInput | PlaylistCollaboratorWhereInput[]
+    OR?: PlaylistCollaboratorWhereInput[]
+    NOT?: PlaylistCollaboratorWhereInput | PlaylistCollaboratorWhereInput[]
+    id?: StringFilter<"PlaylistCollaborator"> | string
+    playlistId?: StringFilter<"PlaylistCollaborator"> | string
+    userId?: StringFilter<"PlaylistCollaborator"> | string
+    role?: StringFilter<"PlaylistCollaborator"> | string
+    joinedAt?: DateTimeFilter<"PlaylistCollaborator"> | Date | string
+    playlist?: XOR<PlaylistRelationFilter, PlaylistWhereInput>
+  }
+
+  export type PlaylistCollaboratorOrderByWithRelationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    joinedAt?: SortOrder
+    playlist?: PlaylistOrderByWithRelationInput
+  }
+
+  export type PlaylistCollaboratorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    playlistId_userId?: PlaylistCollaboratorPlaylistIdUserIdCompoundUniqueInput
+    AND?: PlaylistCollaboratorWhereInput | PlaylistCollaboratorWhereInput[]
+    OR?: PlaylistCollaboratorWhereInput[]
+    NOT?: PlaylistCollaboratorWhereInput | PlaylistCollaboratorWhereInput[]
+    playlistId?: StringFilter<"PlaylistCollaborator"> | string
+    userId?: StringFilter<"PlaylistCollaborator"> | string
+    role?: StringFilter<"PlaylistCollaborator"> | string
+    joinedAt?: DateTimeFilter<"PlaylistCollaborator"> | Date | string
+    playlist?: XOR<PlaylistRelationFilter, PlaylistWhereInput>
+  }, "id" | "playlistId_userId">
+
+  export type PlaylistCollaboratorOrderByWithAggregationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    joinedAt?: SortOrder
+    _count?: PlaylistCollaboratorCountOrderByAggregateInput
+    _max?: PlaylistCollaboratorMaxOrderByAggregateInput
+    _min?: PlaylistCollaboratorMinOrderByAggregateInput
+  }
+
+  export type PlaylistCollaboratorScalarWhereWithAggregatesInput = {
+    AND?: PlaylistCollaboratorScalarWhereWithAggregatesInput | PlaylistCollaboratorScalarWhereWithAggregatesInput[]
+    OR?: PlaylistCollaboratorScalarWhereWithAggregatesInput[]
+    NOT?: PlaylistCollaboratorScalarWhereWithAggregatesInput | PlaylistCollaboratorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PlaylistCollaborator"> | string
+    playlistId?: StringWithAggregatesFilter<"PlaylistCollaborator"> | string
+    userId?: StringWithAggregatesFilter<"PlaylistCollaborator"> | string
+    role?: StringWithAggregatesFilter<"PlaylistCollaborator"> | string
+    joinedAt?: DateTimeWithAggregatesFilter<"PlaylistCollaborator"> | Date | string
+  }
+
+  export type PlayHistoryWhereInput = {
+    AND?: PlayHistoryWhereInput | PlayHistoryWhereInput[]
+    OR?: PlayHistoryWhereInput[]
+    NOT?: PlayHistoryWhereInput | PlayHistoryWhereInput[]
+    id?: StringFilter<"PlayHistory"> | string
+    trackId?: StringFilter<"PlayHistory"> | string
+    userId?: StringFilter<"PlayHistory"> | string
+    duration?: FloatFilter<"PlayHistory"> | number
+    playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }
+
+  export type PlayHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    userId?: SortOrder
+    duration?: SortOrder
+    playedAt?: SortOrder
+    track?: TrackOrderByWithRelationInput
+  }
+
+  export type PlayHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PlayHistoryWhereInput | PlayHistoryWhereInput[]
+    OR?: PlayHistoryWhereInput[]
+    NOT?: PlayHistoryWhereInput | PlayHistoryWhereInput[]
+    trackId?: StringFilter<"PlayHistory"> | string
+    userId?: StringFilter<"PlayHistory"> | string
+    duration?: FloatFilter<"PlayHistory"> | number
+    playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }, "id">
+
+  export type PlayHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    userId?: SortOrder
+    duration?: SortOrder
+    playedAt?: SortOrder
+    _count?: PlayHistoryCountOrderByAggregateInput
+    _avg?: PlayHistoryAvgOrderByAggregateInput
+    _max?: PlayHistoryMaxOrderByAggregateInput
+    _min?: PlayHistoryMinOrderByAggregateInput
+    _sum?: PlayHistorySumOrderByAggregateInput
+  }
+
+  export type PlayHistoryScalarWhereWithAggregatesInput = {
+    AND?: PlayHistoryScalarWhereWithAggregatesInput | PlayHistoryScalarWhereWithAggregatesInput[]
+    OR?: PlayHistoryScalarWhereWithAggregatesInput[]
+    NOT?: PlayHistoryScalarWhereWithAggregatesInput | PlayHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PlayHistory"> | string
+    trackId?: StringWithAggregatesFilter<"PlayHistory"> | string
+    userId?: StringWithAggregatesFilter<"PlayHistory"> | string
+    duration?: FloatWithAggregatesFilter<"PlayHistory"> | number
+    playedAt?: DateTimeWithAggregatesFilter<"PlayHistory"> | Date | string
+  }
+
+  export type SeekEventWhereInput = {
+    AND?: SeekEventWhereInput | SeekEventWhereInput[]
+    OR?: SeekEventWhereInput[]
+    NOT?: SeekEventWhereInput | SeekEventWhereInput[]
+    id?: StringFilter<"SeekEvent"> | string
+    trackId?: StringFilter<"SeekEvent"> | string
+    timestamp?: FloatFilter<"SeekEvent"> | number
+    userId?: StringFilter<"SeekEvent"> | string
+    createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }
+
+  export type SeekEventOrderByWithRelationInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    timestamp?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    track?: TrackOrderByWithRelationInput
+  }
+
+  export type SeekEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SeekEventWhereInput | SeekEventWhereInput[]
+    OR?: SeekEventWhereInput[]
+    NOT?: SeekEventWhereInput | SeekEventWhereInput[]
+    trackId?: StringFilter<"SeekEvent"> | string
+    timestamp?: FloatFilter<"SeekEvent"> | number
+    userId?: StringFilter<"SeekEvent"> | string
+    createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }, "id">
+
+  export type SeekEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    timestamp?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    _count?: SeekEventCountOrderByAggregateInput
+    _avg?: SeekEventAvgOrderByAggregateInput
+    _max?: SeekEventMaxOrderByAggregateInput
+    _min?: SeekEventMinOrderByAggregateInput
+    _sum?: SeekEventSumOrderByAggregateInput
+  }
+
+  export type SeekEventScalarWhereWithAggregatesInput = {
+    AND?: SeekEventScalarWhereWithAggregatesInput | SeekEventScalarWhereWithAggregatesInput[]
+    OR?: SeekEventScalarWhereWithAggregatesInput[]
+    NOT?: SeekEventScalarWhereWithAggregatesInput | SeekEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SeekEvent"> | string
+    trackId?: StringWithAggregatesFilter<"SeekEvent"> | string
+    timestamp?: FloatWithAggregatesFilter<"SeekEvent"> | number
+    userId?: StringWithAggregatesFilter<"SeekEvent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SeekEvent"> | Date | string
+  }
+
+  export type ListeningRoomWhereInput = {
+    AND?: ListeningRoomWhereInput | ListeningRoomWhereInput[]
+    OR?: ListeningRoomWhereInput[]
+    NOT?: ListeningRoomWhereInput | ListeningRoomWhereInput[]
+    id?: StringFilter<"ListeningRoom"> | string
+    name?: StringFilter<"ListeningRoom"> | string
+    hostId?: StringFilter<"ListeningRoom"> | string
+    trackId?: StringNullableFilter<"ListeningRoom"> | string | null
+    isPlaying?: BoolFilter<"ListeningRoom"> | boolean
+    currentTime?: FloatFilter<"ListeningRoom"> | number
+    createdAt?: DateTimeFilter<"ListeningRoom"> | Date | string
+    updatedAt?: DateTimeFilter<"ListeningRoom"> | Date | string
+  }
+
+  export type ListeningRoomOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    hostId?: SortOrder
+    trackId?: SortOrderInput | SortOrder
+    isPlaying?: SortOrder
+    currentTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListeningRoomWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ListeningRoomWhereInput | ListeningRoomWhereInput[]
+    OR?: ListeningRoomWhereInput[]
+    NOT?: ListeningRoomWhereInput | ListeningRoomWhereInput[]
+    name?: StringFilter<"ListeningRoom"> | string
+    hostId?: StringFilter<"ListeningRoom"> | string
+    trackId?: StringNullableFilter<"ListeningRoom"> | string | null
+    isPlaying?: BoolFilter<"ListeningRoom"> | boolean
+    currentTime?: FloatFilter<"ListeningRoom"> | number
+    createdAt?: DateTimeFilter<"ListeningRoom"> | Date | string
+    updatedAt?: DateTimeFilter<"ListeningRoom"> | Date | string
+  }, "id">
+
+  export type ListeningRoomOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    hostId?: SortOrder
+    trackId?: SortOrderInput | SortOrder
+    isPlaying?: SortOrder
+    currentTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ListeningRoomCountOrderByAggregateInput
+    _avg?: ListeningRoomAvgOrderByAggregateInput
+    _max?: ListeningRoomMaxOrderByAggregateInput
+    _min?: ListeningRoomMinOrderByAggregateInput
+    _sum?: ListeningRoomSumOrderByAggregateInput
+  }
+
+  export type ListeningRoomScalarWhereWithAggregatesInput = {
+    AND?: ListeningRoomScalarWhereWithAggregatesInput | ListeningRoomScalarWhereWithAggregatesInput[]
+    OR?: ListeningRoomScalarWhereWithAggregatesInput[]
+    NOT?: ListeningRoomScalarWhereWithAggregatesInput | ListeningRoomScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ListeningRoom"> | string
+    name?: StringWithAggregatesFilter<"ListeningRoom"> | string
+    hostId?: StringWithAggregatesFilter<"ListeningRoom"> | string
+    trackId?: StringNullableWithAggregatesFilter<"ListeningRoom"> | string | null
+    isPlaying?: BoolWithAggregatesFilter<"ListeningRoom"> | boolean
+    currentTime?: FloatWithAggregatesFilter<"ListeningRoom"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ListeningRoom"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ListeningRoom"> | Date | string
   }
 
   export type ArtistCreateInput = {
@@ -7197,6 +11742,8 @@ export namespace Prisma {
     artist: ArtistCreateNestedOneWithoutTracksInput
     album?: AlbumCreateNestedOneWithoutTracksInput
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateInput = {
@@ -7221,6 +11768,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUpdateInput = {
@@ -7245,6 +11794,8 @@ export namespace Prisma {
     artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
     album?: AlbumUpdateOneWithoutTracksNestedInput
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateInput = {
@@ -7269,6 +11820,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackCreateManyInput = {
@@ -7346,6 +11899,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tracks?: PlaylistTrackCreateNestedManyWithoutPlaylistInput
+    collaborators?: PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput
   }
 
   export type PlaylistUncheckedCreateInput = {
@@ -7356,6 +11910,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tracks?: PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput
+    collaborators?: PlaylistCollaboratorUncheckedCreateNestedManyWithoutPlaylistInput
   }
 
   export type PlaylistUpdateInput = {
@@ -7366,6 +11921,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tracks?: PlaylistTrackUpdateManyWithoutPlaylistNestedInput
+    collaborators?: PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput
   }
 
   export type PlaylistUncheckedUpdateInput = {
@@ -7376,6 +11932,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tracks?: PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput
+    collaborators?: PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistNestedInput
   }
 
   export type PlaylistCreateManyInput = {
@@ -7457,6 +12014,248 @@ export namespace Prisma {
     trackId?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorCreateInput = {
+    id?: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
+    playlist: PlaylistCreateNestedOneWithoutCollaboratorsInput
+  }
+
+  export type PlaylistCollaboratorUncheckedCreateInput = {
+    id?: string
+    playlistId: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
+  }
+
+  export type PlaylistCollaboratorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlist?: PlaylistUpdateOneRequiredWithoutCollaboratorsNestedInput
+  }
+
+  export type PlaylistCollaboratorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorCreateManyInput = {
+    id?: string
+    playlistId: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
+  }
+
+  export type PlaylistCollaboratorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryCreateInput = {
+    id?: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+    track: TrackCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type PlayHistoryUncheckedCreateInput = {
+    id?: string
+    trackId: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type PlayHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    track?: TrackUpdateOneRequiredWithoutPlayHistoryNestedInput
+  }
+
+  export type PlayHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryCreateManyInput = {
+    id?: string
+    trackId: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type PlayHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventCreateInput = {
+    id?: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+    track: TrackCreateNestedOneWithoutSeekEventsInput
+  }
+
+  export type SeekEventUncheckedCreateInput = {
+    id?: string
+    trackId: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+  }
+
+  export type SeekEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    track?: TrackUpdateOneRequiredWithoutSeekEventsNestedInput
+  }
+
+  export type SeekEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventCreateManyInput = {
+    id?: string
+    trackId: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+  }
+
+  export type SeekEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListeningRoomCreateInput = {
+    id?: string
+    name: string
+    hostId: string
+    trackId?: string | null
+    isPlaying?: boolean
+    currentTime?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListeningRoomUncheckedCreateInput = {
+    id?: string
+    name: string
+    hostId: string
+    trackId?: string | null
+    isPlaying?: boolean
+    currentTime?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListeningRoomUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    trackId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPlaying?: BoolFieldUpdateOperationsInput | boolean
+    currentTime?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListeningRoomUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    trackId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPlaying?: BoolFieldUpdateOperationsInput | boolean
+    currentTime?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListeningRoomCreateManyInput = {
+    id?: string
+    name: string
+    hostId: string
+    trackId?: string | null
+    isPlaying?: boolean
+    currentTime?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListeningRoomUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    trackId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPlaying?: BoolFieldUpdateOperationsInput | boolean
+    currentTime?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListeningRoomUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    trackId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPlaying?: BoolFieldUpdateOperationsInput | boolean
+    currentTime?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -7727,7 +12526,27 @@ export namespace Prisma {
     none?: PlaylistTrackWhereInput
   }
 
+  export type PlayHistoryListRelationFilter = {
+    every?: PlayHistoryWhereInput
+    some?: PlayHistoryWhereInput
+    none?: PlayHistoryWhereInput
+  }
+
+  export type SeekEventListRelationFilter = {
+    every?: SeekEventWhereInput
+    some?: SeekEventWhereInput
+    none?: SeekEventWhereInput
+  }
+
   export type PlaylistTrackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlayHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SeekEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7876,6 +12695,16 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type PlaylistCollaboratorListRelationFilter = {
+    every?: PlaylistCollaboratorWhereInput
+    some?: PlaylistCollaboratorWhereInput
+    none?: PlaylistCollaboratorWhereInput
+  }
+
+  export type PlaylistCollaboratorOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PlaylistCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -7948,6 +12777,167 @@ export namespace Prisma {
 
   export type PlaylistTrackSumOrderByAggregateInput = {
     position?: SortOrder
+  }
+
+  export type PlaylistCollaboratorPlaylistIdUserIdCompoundUniqueInput = {
+    playlistId: string
+    userId: string
+  }
+
+  export type PlaylistCollaboratorCountOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type PlaylistCollaboratorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type PlaylistCollaboratorMinOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type PlayHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    userId?: SortOrder
+    duration?: SortOrder
+    playedAt?: SortOrder
+  }
+
+  export type PlayHistoryAvgOrderByAggregateInput = {
+    duration?: SortOrder
+  }
+
+  export type PlayHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    userId?: SortOrder
+    duration?: SortOrder
+    playedAt?: SortOrder
+  }
+
+  export type PlayHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    userId?: SortOrder
+    duration?: SortOrder
+    playedAt?: SortOrder
+  }
+
+  export type PlayHistorySumOrderByAggregateInput = {
+    duration?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type SeekEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    timestamp?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeekEventAvgOrderByAggregateInput = {
+    timestamp?: SortOrder
+  }
+
+  export type SeekEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    timestamp?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeekEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    trackId?: SortOrder
+    timestamp?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeekEventSumOrderByAggregateInput = {
+    timestamp?: SortOrder
+  }
+
+  export type ListeningRoomCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    hostId?: SortOrder
+    trackId?: SortOrder
+    isPlaying?: SortOrder
+    currentTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListeningRoomAvgOrderByAggregateInput = {
+    currentTime?: SortOrder
+  }
+
+  export type ListeningRoomMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    hostId?: SortOrder
+    trackId?: SortOrder
+    isPlaying?: SortOrder
+    currentTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListeningRoomMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    hostId?: SortOrder
+    trackId?: SortOrder
+    isPlaying?: SortOrder
+    currentTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListeningRoomSumOrderByAggregateInput = {
+    currentTime?: SortOrder
   }
 
   export type AlbumCreateNestedManyWithoutArtistInput = {
@@ -8129,11 +13119,39 @@ export namespace Prisma {
     connect?: PlaylistTrackWhereUniqueInput | PlaylistTrackWhereUniqueInput[]
   }
 
+  export type PlayHistoryCreateNestedManyWithoutTrackInput = {
+    create?: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput> | PlayHistoryCreateWithoutTrackInput[] | PlayHistoryUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutTrackInput | PlayHistoryCreateOrConnectWithoutTrackInput[]
+    createMany?: PlayHistoryCreateManyTrackInputEnvelope
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+  }
+
+  export type SeekEventCreateNestedManyWithoutTrackInput = {
+    create?: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput> | SeekEventCreateWithoutTrackInput[] | SeekEventUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutTrackInput | SeekEventCreateOrConnectWithoutTrackInput[]
+    createMany?: SeekEventCreateManyTrackInputEnvelope
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+  }
+
   export type PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput = {
     create?: XOR<PlaylistTrackCreateWithoutTrackInput, PlaylistTrackUncheckedCreateWithoutTrackInput> | PlaylistTrackCreateWithoutTrackInput[] | PlaylistTrackUncheckedCreateWithoutTrackInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutTrackInput | PlaylistTrackCreateOrConnectWithoutTrackInput[]
     createMany?: PlaylistTrackCreateManyTrackInputEnvelope
     connect?: PlaylistTrackWhereUniqueInput | PlaylistTrackWhereUniqueInput[]
+  }
+
+  export type PlayHistoryUncheckedCreateNestedManyWithoutTrackInput = {
+    create?: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput> | PlayHistoryCreateWithoutTrackInput[] | PlayHistoryUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutTrackInput | PlayHistoryCreateOrConnectWithoutTrackInput[]
+    createMany?: PlayHistoryCreateManyTrackInputEnvelope
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+  }
+
+  export type SeekEventUncheckedCreateNestedManyWithoutTrackInput = {
+    create?: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput> | SeekEventCreateWithoutTrackInput[] | SeekEventUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutTrackInput | SeekEventCreateOrConnectWithoutTrackInput[]
+    createMany?: SeekEventCreateManyTrackInputEnvelope
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -8192,6 +13210,34 @@ export namespace Prisma {
     deleteMany?: PlaylistTrackScalarWhereInput | PlaylistTrackScalarWhereInput[]
   }
 
+  export type PlayHistoryUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput> | PlayHistoryCreateWithoutTrackInput[] | PlayHistoryUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutTrackInput | PlayHistoryCreateOrConnectWithoutTrackInput[]
+    upsert?: PlayHistoryUpsertWithWhereUniqueWithoutTrackInput | PlayHistoryUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: PlayHistoryCreateManyTrackInputEnvelope
+    set?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    disconnect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    delete?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    update?: PlayHistoryUpdateWithWhereUniqueWithoutTrackInput | PlayHistoryUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: PlayHistoryUpdateManyWithWhereWithoutTrackInput | PlayHistoryUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+  }
+
+  export type SeekEventUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput> | SeekEventCreateWithoutTrackInput[] | SeekEventUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutTrackInput | SeekEventCreateOrConnectWithoutTrackInput[]
+    upsert?: SeekEventUpsertWithWhereUniqueWithoutTrackInput | SeekEventUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: SeekEventCreateManyTrackInputEnvelope
+    set?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    disconnect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    delete?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    update?: SeekEventUpdateWithWhereUniqueWithoutTrackInput | SeekEventUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: SeekEventUpdateManyWithWhereWithoutTrackInput | SeekEventUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+  }
+
   export type PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput = {
     create?: XOR<PlaylistTrackCreateWithoutTrackInput, PlaylistTrackUncheckedCreateWithoutTrackInput> | PlaylistTrackCreateWithoutTrackInput[] | PlaylistTrackUncheckedCreateWithoutTrackInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutTrackInput | PlaylistTrackCreateOrConnectWithoutTrackInput[]
@@ -8206,6 +13252,34 @@ export namespace Prisma {
     deleteMany?: PlaylistTrackScalarWhereInput | PlaylistTrackScalarWhereInput[]
   }
 
+  export type PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput> | PlayHistoryCreateWithoutTrackInput[] | PlayHistoryUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutTrackInput | PlayHistoryCreateOrConnectWithoutTrackInput[]
+    upsert?: PlayHistoryUpsertWithWhereUniqueWithoutTrackInput | PlayHistoryUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: PlayHistoryCreateManyTrackInputEnvelope
+    set?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    disconnect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    delete?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    update?: PlayHistoryUpdateWithWhereUniqueWithoutTrackInput | PlayHistoryUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: PlayHistoryUpdateManyWithWhereWithoutTrackInput | PlayHistoryUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+  }
+
+  export type SeekEventUncheckedUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput> | SeekEventCreateWithoutTrackInput[] | SeekEventUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutTrackInput | SeekEventCreateOrConnectWithoutTrackInput[]
+    upsert?: SeekEventUpsertWithWhereUniqueWithoutTrackInput | SeekEventUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: SeekEventCreateManyTrackInputEnvelope
+    set?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    disconnect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    delete?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    update?: SeekEventUpdateWithWhereUniqueWithoutTrackInput | SeekEventUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: SeekEventUpdateManyWithWhereWithoutTrackInput | SeekEventUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+  }
+
   export type PlaylistTrackCreateNestedManyWithoutPlaylistInput = {
     create?: XOR<PlaylistTrackCreateWithoutPlaylistInput, PlaylistTrackUncheckedCreateWithoutPlaylistInput> | PlaylistTrackCreateWithoutPlaylistInput[] | PlaylistTrackUncheckedCreateWithoutPlaylistInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutPlaylistInput | PlaylistTrackCreateOrConnectWithoutPlaylistInput[]
@@ -8213,11 +13287,25 @@ export namespace Prisma {
     connect?: PlaylistTrackWhereUniqueInput | PlaylistTrackWhereUniqueInput[]
   }
 
+  export type PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput = {
+    create?: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput> | PlaylistCollaboratorCreateWithoutPlaylistInput[] | PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput[]
+    connectOrCreate?: PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput | PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput[]
+    createMany?: PlaylistCollaboratorCreateManyPlaylistInputEnvelope
+    connect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+  }
+
   export type PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput = {
     create?: XOR<PlaylistTrackCreateWithoutPlaylistInput, PlaylistTrackUncheckedCreateWithoutPlaylistInput> | PlaylistTrackCreateWithoutPlaylistInput[] | PlaylistTrackUncheckedCreateWithoutPlaylistInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutPlaylistInput | PlaylistTrackCreateOrConnectWithoutPlaylistInput[]
     createMany?: PlaylistTrackCreateManyPlaylistInputEnvelope
     connect?: PlaylistTrackWhereUniqueInput | PlaylistTrackWhereUniqueInput[]
+  }
+
+  export type PlaylistCollaboratorUncheckedCreateNestedManyWithoutPlaylistInput = {
+    create?: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput> | PlaylistCollaboratorCreateWithoutPlaylistInput[] | PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput[]
+    connectOrCreate?: PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput | PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput[]
+    createMany?: PlaylistCollaboratorCreateManyPlaylistInputEnvelope
+    connect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
   }
 
   export type PlaylistTrackUpdateManyWithoutPlaylistNestedInput = {
@@ -8234,6 +13322,20 @@ export namespace Prisma {
     deleteMany?: PlaylistTrackScalarWhereInput | PlaylistTrackScalarWhereInput[]
   }
 
+  export type PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput = {
+    create?: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput> | PlaylistCollaboratorCreateWithoutPlaylistInput[] | PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput[]
+    connectOrCreate?: PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput | PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput[]
+    upsert?: PlaylistCollaboratorUpsertWithWhereUniqueWithoutPlaylistInput | PlaylistCollaboratorUpsertWithWhereUniqueWithoutPlaylistInput[]
+    createMany?: PlaylistCollaboratorCreateManyPlaylistInputEnvelope
+    set?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    disconnect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    delete?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    connect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    update?: PlaylistCollaboratorUpdateWithWhereUniqueWithoutPlaylistInput | PlaylistCollaboratorUpdateWithWhereUniqueWithoutPlaylistInput[]
+    updateMany?: PlaylistCollaboratorUpdateManyWithWhereWithoutPlaylistInput | PlaylistCollaboratorUpdateManyWithWhereWithoutPlaylistInput[]
+    deleteMany?: PlaylistCollaboratorScalarWhereInput | PlaylistCollaboratorScalarWhereInput[]
+  }
+
   export type PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput = {
     create?: XOR<PlaylistTrackCreateWithoutPlaylistInput, PlaylistTrackUncheckedCreateWithoutPlaylistInput> | PlaylistTrackCreateWithoutPlaylistInput[] | PlaylistTrackUncheckedCreateWithoutPlaylistInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutPlaylistInput | PlaylistTrackCreateOrConnectWithoutPlaylistInput[]
@@ -8246,6 +13348,20 @@ export namespace Prisma {
     update?: PlaylistTrackUpdateWithWhereUniqueWithoutPlaylistInput | PlaylistTrackUpdateWithWhereUniqueWithoutPlaylistInput[]
     updateMany?: PlaylistTrackUpdateManyWithWhereWithoutPlaylistInput | PlaylistTrackUpdateManyWithWhereWithoutPlaylistInput[]
     deleteMany?: PlaylistTrackScalarWhereInput | PlaylistTrackScalarWhereInput[]
+  }
+
+  export type PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistNestedInput = {
+    create?: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput> | PlaylistCollaboratorCreateWithoutPlaylistInput[] | PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput[]
+    connectOrCreate?: PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput | PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput[]
+    upsert?: PlaylistCollaboratorUpsertWithWhereUniqueWithoutPlaylistInput | PlaylistCollaboratorUpsertWithWhereUniqueWithoutPlaylistInput[]
+    createMany?: PlaylistCollaboratorCreateManyPlaylistInputEnvelope
+    set?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    disconnect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    delete?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    connect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+    update?: PlaylistCollaboratorUpdateWithWhereUniqueWithoutPlaylistInput | PlaylistCollaboratorUpdateWithWhereUniqueWithoutPlaylistInput[]
+    updateMany?: PlaylistCollaboratorUpdateManyWithWhereWithoutPlaylistInput | PlaylistCollaboratorUpdateManyWithWhereWithoutPlaylistInput[]
+    deleteMany?: PlaylistCollaboratorScalarWhereInput | PlaylistCollaboratorScalarWhereInput[]
   }
 
   export type PlaylistCreateNestedOneWithoutTracksInput = {
@@ -8274,6 +13390,56 @@ export namespace Prisma {
     upsert?: TrackUpsertWithoutPlaylistTracksInput
     connect?: TrackWhereUniqueInput
     update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutPlaylistTracksInput, TrackUpdateWithoutPlaylistTracksInput>, TrackUncheckedUpdateWithoutPlaylistTracksInput>
+  }
+
+  export type PlaylistCreateNestedOneWithoutCollaboratorsInput = {
+    create?: XOR<PlaylistCreateWithoutCollaboratorsInput, PlaylistUncheckedCreateWithoutCollaboratorsInput>
+    connectOrCreate?: PlaylistCreateOrConnectWithoutCollaboratorsInput
+    connect?: PlaylistWhereUniqueInput
+  }
+
+  export type PlaylistUpdateOneRequiredWithoutCollaboratorsNestedInput = {
+    create?: XOR<PlaylistCreateWithoutCollaboratorsInput, PlaylistUncheckedCreateWithoutCollaboratorsInput>
+    connectOrCreate?: PlaylistCreateOrConnectWithoutCollaboratorsInput
+    upsert?: PlaylistUpsertWithoutCollaboratorsInput
+    connect?: PlaylistWhereUniqueInput
+    update?: XOR<XOR<PlaylistUpdateToOneWithWhereWithoutCollaboratorsInput, PlaylistUpdateWithoutCollaboratorsInput>, PlaylistUncheckedUpdateWithoutCollaboratorsInput>
+  }
+
+  export type TrackCreateNestedOneWithoutPlayHistoryInput = {
+    create?: XOR<TrackCreateWithoutPlayHistoryInput, TrackUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutPlayHistoryInput
+    connect?: TrackWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type TrackUpdateOneRequiredWithoutPlayHistoryNestedInput = {
+    create?: XOR<TrackCreateWithoutPlayHistoryInput, TrackUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutPlayHistoryInput
+    upsert?: TrackUpsertWithoutPlayHistoryInput
+    connect?: TrackWhereUniqueInput
+    update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutPlayHistoryInput, TrackUpdateWithoutPlayHistoryInput>, TrackUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type TrackCreateNestedOneWithoutSeekEventsInput = {
+    create?: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutSeekEventsInput
+    connect?: TrackWhereUniqueInput
+  }
+
+  export type TrackUpdateOneRequiredWithoutSeekEventsNestedInput = {
+    create?: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutSeekEventsInput
+    upsert?: TrackUpsertWithoutSeekEventsInput
+    connect?: TrackWhereUniqueInput
+    update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutSeekEventsInput, TrackUpdateWithoutSeekEventsInput>, TrackUncheckedUpdateWithoutSeekEventsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -8493,6 +13659,22 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type AlbumCreateWithoutArtistInput = {
     id?: string
     title: string
@@ -8547,6 +13729,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     album?: AlbumCreateNestedOneWithoutTracksInput
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutArtistInput = {
@@ -8570,6 +13754,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutArtistInput = {
@@ -8698,6 +13884,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     artist: ArtistCreateNestedOneWithoutTracksInput
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutAlbumInput = {
@@ -8721,6 +13909,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutAlbumInput = {
@@ -8852,6 +14042,52 @@ export namespace Prisma {
     data: PlaylistTrackCreateManyTrackInput | PlaylistTrackCreateManyTrackInput[]
   }
 
+  export type PlayHistoryCreateWithoutTrackInput = {
+    id?: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type PlayHistoryUncheckedCreateWithoutTrackInput = {
+    id?: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type PlayHistoryCreateOrConnectWithoutTrackInput = {
+    where: PlayHistoryWhereUniqueInput
+    create: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput>
+  }
+
+  export type PlayHistoryCreateManyTrackInputEnvelope = {
+    data: PlayHistoryCreateManyTrackInput | PlayHistoryCreateManyTrackInput[]
+  }
+
+  export type SeekEventCreateWithoutTrackInput = {
+    id?: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+  }
+
+  export type SeekEventUncheckedCreateWithoutTrackInput = {
+    id?: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+  }
+
+  export type SeekEventCreateOrConnectWithoutTrackInput = {
+    where: SeekEventWhereUniqueInput
+    create: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput>
+  }
+
+  export type SeekEventCreateManyTrackInputEnvelope = {
+    data: SeekEventCreateManyTrackInput | SeekEventCreateManyTrackInput[]
+  }
+
   export type ArtistUpsertWithoutTracksInput = {
     update: XOR<ArtistUpdateWithoutTracksInput, ArtistUncheckedUpdateWithoutTracksInput>
     create: XOR<ArtistCreateWithoutTracksInput, ArtistUncheckedCreateWithoutTracksInput>
@@ -8943,6 +14179,60 @@ export namespace Prisma {
     addedAt?: DateTimeFilter<"PlaylistTrack"> | Date | string
   }
 
+  export type PlayHistoryUpsertWithWhereUniqueWithoutTrackInput = {
+    where: PlayHistoryWhereUniqueInput
+    update: XOR<PlayHistoryUpdateWithoutTrackInput, PlayHistoryUncheckedUpdateWithoutTrackInput>
+    create: XOR<PlayHistoryCreateWithoutTrackInput, PlayHistoryUncheckedCreateWithoutTrackInput>
+  }
+
+  export type PlayHistoryUpdateWithWhereUniqueWithoutTrackInput = {
+    where: PlayHistoryWhereUniqueInput
+    data: XOR<PlayHistoryUpdateWithoutTrackInput, PlayHistoryUncheckedUpdateWithoutTrackInput>
+  }
+
+  export type PlayHistoryUpdateManyWithWhereWithoutTrackInput = {
+    where: PlayHistoryScalarWhereInput
+    data: XOR<PlayHistoryUpdateManyMutationInput, PlayHistoryUncheckedUpdateManyWithoutTrackInput>
+  }
+
+  export type PlayHistoryScalarWhereInput = {
+    AND?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+    OR?: PlayHistoryScalarWhereInput[]
+    NOT?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+    id?: StringFilter<"PlayHistory"> | string
+    trackId?: StringFilter<"PlayHistory"> | string
+    userId?: StringFilter<"PlayHistory"> | string
+    duration?: FloatFilter<"PlayHistory"> | number
+    playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
+  }
+
+  export type SeekEventUpsertWithWhereUniqueWithoutTrackInput = {
+    where: SeekEventWhereUniqueInput
+    update: XOR<SeekEventUpdateWithoutTrackInput, SeekEventUncheckedUpdateWithoutTrackInput>
+    create: XOR<SeekEventCreateWithoutTrackInput, SeekEventUncheckedCreateWithoutTrackInput>
+  }
+
+  export type SeekEventUpdateWithWhereUniqueWithoutTrackInput = {
+    where: SeekEventWhereUniqueInput
+    data: XOR<SeekEventUpdateWithoutTrackInput, SeekEventUncheckedUpdateWithoutTrackInput>
+  }
+
+  export type SeekEventUpdateManyWithWhereWithoutTrackInput = {
+    where: SeekEventScalarWhereInput
+    data: XOR<SeekEventUpdateManyMutationInput, SeekEventUncheckedUpdateManyWithoutTrackInput>
+  }
+
+  export type SeekEventScalarWhereInput = {
+    AND?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+    OR?: SeekEventScalarWhereInput[]
+    NOT?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+    id?: StringFilter<"SeekEvent"> | string
+    trackId?: StringFilter<"SeekEvent"> | string
+    timestamp?: FloatFilter<"SeekEvent"> | number
+    userId?: StringFilter<"SeekEvent"> | string
+    createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
+  }
+
   export type PlaylistTrackCreateWithoutPlaylistInput = {
     id?: string
     position: number
@@ -8966,6 +14256,29 @@ export namespace Prisma {
     data: PlaylistTrackCreateManyPlaylistInput | PlaylistTrackCreateManyPlaylistInput[]
   }
 
+  export type PlaylistCollaboratorCreateWithoutPlaylistInput = {
+    id?: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
+  }
+
+  export type PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput = {
+    id?: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
+  }
+
+  export type PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput = {
+    where: PlaylistCollaboratorWhereUniqueInput
+    create: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput>
+  }
+
+  export type PlaylistCollaboratorCreateManyPlaylistInputEnvelope = {
+    data: PlaylistCollaboratorCreateManyPlaylistInput | PlaylistCollaboratorCreateManyPlaylistInput[]
+  }
+
   export type PlaylistTrackUpsertWithWhereUniqueWithoutPlaylistInput = {
     where: PlaylistTrackWhereUniqueInput
     update: XOR<PlaylistTrackUpdateWithoutPlaylistInput, PlaylistTrackUncheckedUpdateWithoutPlaylistInput>
@@ -8982,6 +14295,33 @@ export namespace Prisma {
     data: XOR<PlaylistTrackUpdateManyMutationInput, PlaylistTrackUncheckedUpdateManyWithoutPlaylistInput>
   }
 
+  export type PlaylistCollaboratorUpsertWithWhereUniqueWithoutPlaylistInput = {
+    where: PlaylistCollaboratorWhereUniqueInput
+    update: XOR<PlaylistCollaboratorUpdateWithoutPlaylistInput, PlaylistCollaboratorUncheckedUpdateWithoutPlaylistInput>
+    create: XOR<PlaylistCollaboratorCreateWithoutPlaylistInput, PlaylistCollaboratorUncheckedCreateWithoutPlaylistInput>
+  }
+
+  export type PlaylistCollaboratorUpdateWithWhereUniqueWithoutPlaylistInput = {
+    where: PlaylistCollaboratorWhereUniqueInput
+    data: XOR<PlaylistCollaboratorUpdateWithoutPlaylistInput, PlaylistCollaboratorUncheckedUpdateWithoutPlaylistInput>
+  }
+
+  export type PlaylistCollaboratorUpdateManyWithWhereWithoutPlaylistInput = {
+    where: PlaylistCollaboratorScalarWhereInput
+    data: XOR<PlaylistCollaboratorUpdateManyMutationInput, PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistInput>
+  }
+
+  export type PlaylistCollaboratorScalarWhereInput = {
+    AND?: PlaylistCollaboratorScalarWhereInput | PlaylistCollaboratorScalarWhereInput[]
+    OR?: PlaylistCollaboratorScalarWhereInput[]
+    NOT?: PlaylistCollaboratorScalarWhereInput | PlaylistCollaboratorScalarWhereInput[]
+    id?: StringFilter<"PlaylistCollaborator"> | string
+    playlistId?: StringFilter<"PlaylistCollaborator"> | string
+    userId?: StringFilter<"PlaylistCollaborator"> | string
+    role?: StringFilter<"PlaylistCollaborator"> | string
+    joinedAt?: DateTimeFilter<"PlaylistCollaborator"> | Date | string
+  }
+
   export type PlaylistCreateWithoutTracksInput = {
     id?: string
     name: string
@@ -8989,6 +14329,7 @@ export namespace Prisma {
     coverPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    collaborators?: PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput
   }
 
   export type PlaylistUncheckedCreateWithoutTracksInput = {
@@ -8998,6 +14339,7 @@ export namespace Prisma {
     coverPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    collaborators?: PlaylistCollaboratorUncheckedCreateNestedManyWithoutPlaylistInput
   }
 
   export type PlaylistCreateOrConnectWithoutTracksInput = {
@@ -9026,6 +14368,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     artist: ArtistCreateNestedOneWithoutTracksInput
     album?: AlbumCreateNestedOneWithoutTracksInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutPlaylistTracksInput = {
@@ -9049,6 +14393,8 @@ export namespace Prisma {
     lastPlayed?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutPlaylistTracksInput = {
@@ -9074,6 +14420,7 @@ export namespace Prisma {
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collaborators?: PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput
   }
 
   export type PlaylistUncheckedUpdateWithoutTracksInput = {
@@ -9083,6 +14430,7 @@ export namespace Prisma {
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collaborators?: PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistNestedInput
   }
 
   export type TrackUpsertWithoutPlaylistTracksInput = {
@@ -9117,6 +14465,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
     album?: AlbumUpdateOneWithoutTracksNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutPlaylistTracksInput = {
@@ -9140,6 +14490,296 @@ export namespace Prisma {
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+  }
+
+  export type PlaylistCreateWithoutCollaboratorsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    coverPath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tracks?: PlaylistTrackCreateNestedManyWithoutPlaylistInput
+  }
+
+  export type PlaylistUncheckedCreateWithoutCollaboratorsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    coverPath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tracks?: PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput
+  }
+
+  export type PlaylistCreateOrConnectWithoutCollaboratorsInput = {
+    where: PlaylistWhereUniqueInput
+    create: XOR<PlaylistCreateWithoutCollaboratorsInput, PlaylistUncheckedCreateWithoutCollaboratorsInput>
+  }
+
+  export type PlaylistUpsertWithoutCollaboratorsInput = {
+    update: XOR<PlaylistUpdateWithoutCollaboratorsInput, PlaylistUncheckedUpdateWithoutCollaboratorsInput>
+    create: XOR<PlaylistCreateWithoutCollaboratorsInput, PlaylistUncheckedCreateWithoutCollaboratorsInput>
+    where?: PlaylistWhereInput
+  }
+
+  export type PlaylistUpdateToOneWithWhereWithoutCollaboratorsInput = {
+    where?: PlaylistWhereInput
+    data: XOR<PlaylistUpdateWithoutCollaboratorsInput, PlaylistUncheckedUpdateWithoutCollaboratorsInput>
+  }
+
+  export type PlaylistUpdateWithoutCollaboratorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tracks?: PlaylistTrackUpdateManyWithoutPlaylistNestedInput
+  }
+
+  export type PlaylistUncheckedUpdateWithoutCollaboratorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tracks?: PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput
+  }
+
+  export type TrackCreateWithoutPlayHistoryInput = {
+    id?: string
+    title: string
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    isLiked?: boolean
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    artist: ArtistCreateNestedOneWithoutTracksInput
+    album?: AlbumCreateNestedOneWithoutTracksInput
+    playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackUncheckedCreateWithoutPlayHistoryInput = {
+    id?: string
+    title: string
+    artistId: string
+    albumId?: string | null
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    isLiked?: boolean
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackCreateOrConnectWithoutPlayHistoryInput = {
+    where: TrackWhereUniqueInput
+    create: XOR<TrackCreateWithoutPlayHistoryInput, TrackUncheckedCreateWithoutPlayHistoryInput>
+  }
+
+  export type TrackUpsertWithoutPlayHistoryInput = {
+    update: XOR<TrackUpdateWithoutPlayHistoryInput, TrackUncheckedUpdateWithoutPlayHistoryInput>
+    create: XOR<TrackCreateWithoutPlayHistoryInput, TrackUncheckedCreateWithoutPlayHistoryInput>
+    where?: TrackWhereInput
+  }
+
+  export type TrackUpdateToOneWithWhereWithoutPlayHistoryInput = {
+    where?: TrackWhereInput
+    data: XOR<TrackUpdateWithoutPlayHistoryInput, TrackUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type TrackUpdateWithoutPlayHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
+    album?: AlbumUpdateOneWithoutTracksNestedInput
+    playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+  }
+
+  export type TrackUncheckedUpdateWithoutPlayHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    artistId?: StringFieldUpdateOperationsInput | string
+    albumId?: NullableStringFieldUpdateOperationsInput | string | null
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+  }
+
+  export type TrackCreateWithoutSeekEventsInput = {
+    id?: string
+    title: string
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    isLiked?: boolean
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    artist: ArtistCreateNestedOneWithoutTracksInput
+    album?: AlbumCreateNestedOneWithoutTracksInput
+    playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackUncheckedCreateWithoutSeekEventsInput = {
+    id?: string
+    title: string
+    artistId: string
+    albumId?: string | null
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    isLiked?: boolean
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackCreateOrConnectWithoutSeekEventsInput = {
+    where: TrackWhereUniqueInput
+    create: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
+  }
+
+  export type TrackUpsertWithoutSeekEventsInput = {
+    update: XOR<TrackUpdateWithoutSeekEventsInput, TrackUncheckedUpdateWithoutSeekEventsInput>
+    create: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
+    where?: TrackWhereInput
+  }
+
+  export type TrackUpdateToOneWithWhereWithoutSeekEventsInput = {
+    where?: TrackWhereInput
+    data: XOR<TrackUpdateWithoutSeekEventsInput, TrackUncheckedUpdateWithoutSeekEventsInput>
+  }
+
+  export type TrackUpdateWithoutSeekEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
+    album?: AlbumUpdateOneWithoutTracksNestedInput
+    playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+  }
+
+  export type TrackUncheckedUpdateWithoutSeekEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    artistId?: StringFieldUpdateOperationsInput | string
+    albumId?: NullableStringFieldUpdateOperationsInput | string | null
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    isLiked?: BoolFieldUpdateOperationsInput | boolean
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type AlbumCreateManyArtistInput = {
@@ -9231,6 +14871,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     album?: AlbumUpdateOneWithoutTracksNestedInput
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutArtistInput = {
@@ -9254,6 +14896,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateManyWithoutArtistInput = {
@@ -9321,6 +14965,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutAlbumInput = {
@@ -9344,6 +14990,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateManyWithoutAlbumInput = {
@@ -9375,6 +15023,20 @@ export namespace Prisma {
     addedAt?: Date | string
   }
 
+  export type PlayHistoryCreateManyTrackInput = {
+    id?: string
+    userId?: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type SeekEventCreateManyTrackInput = {
+    id?: string
+    timestamp: number
+    userId?: string
+    createdAt?: Date | string
+  }
+
   export type PlaylistTrackUpdateWithoutTrackInput = {
     id?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
@@ -9396,11 +15058,60 @@ export namespace Prisma {
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PlayHistoryUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryUncheckedUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryUncheckedUpdateManyWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUncheckedUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUncheckedUpdateManyWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PlaylistTrackCreateManyPlaylistInput = {
     id?: string
     trackId: string
     position: number
     addedAt?: Date | string
+  }
+
+  export type PlaylistCollaboratorCreateManyPlaylistInput = {
+    id?: string
+    userId: string
+    role?: string
+    joinedAt?: Date | string
   }
 
   export type PlaylistTrackUpdateWithoutPlaylistInput = {
@@ -9422,6 +15133,27 @@ export namespace Prisma {
     trackId?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorUpdateWithoutPlaylistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorUncheckedUpdateWithoutPlaylistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
@@ -9465,6 +15197,22 @@ export namespace Prisma {
      * @deprecated Use PlaylistTrackDefaultArgs instead
      */
     export type PlaylistTrackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PlaylistTrackDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PlaylistCollaboratorDefaultArgs instead
+     */
+    export type PlaylistCollaboratorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PlaylistCollaboratorDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PlayHistoryDefaultArgs instead
+     */
+    export type PlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PlayHistoryDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SeekEventDefaultArgs instead
+     */
+    export type SeekEventArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SeekEventDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ListeningRoomDefaultArgs instead
+     */
+    export type ListeningRoomArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ListeningRoomDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

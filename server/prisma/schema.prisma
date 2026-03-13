@@ -118,6 +118,8 @@ model Track {
   lastPlayed  DateTime?
 
   playlistTracks PlaylistTrack[]
+  playHistory    PlayHistory[]
+  seekEvents     SeekEvent[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -141,6 +143,7 @@ model Playlist {
   coverPath   String?
 
   tracks      PlaylistTrack[]
+  collaborators PlaylistCollaborator[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -165,4 +168,71 @@ model PlaylistTrack {
   @@unique([playlistId, trackId])
   // Ordered fetch: SELECT * FROM PlaylistTrack WHERE playlistId=? ORDER BY position
   @@index([playlistId, position])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  PlaylistCollaborator (Feature: Collaborative Playlists / Blend)
+//  Allows multiple users to add tracks to the same playlist.
+//  Each collaborator is identified by a userId string.
+// ─────────────────────────────────────────────────────────────
+model PlaylistCollaborator {
+  id         String   @id @default(cuid())
+  playlistId String
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  userId     String
+  role       String   @default("editor") // "owner" | "editor"
+  joinedAt   DateTime @default(now())
+
+  @@unique([playlistId, userId])
+  @@index([playlistId])
+  @@index([userId])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  PlayHistory (Feature: Apple Music Replay / Monthly Stats)
+//  Records every listen longer than 30 seconds for statistics
+//  and year-in-review style summaries.
+// ─────────────────────────────────────────────────────────────
+model PlayHistory {
+  id        String   @id @default(cuid())
+  trackId   String
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  userId    String   @default("default")
+  duration  Float    // How many seconds the user actually listened
+  playedAt  DateTime @default(now())
+
+  @@index([trackId])
+  @@index([userId, playedAt])
+  @@index([playedAt])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SeekEvent (Feature: Track Heatmap / Replay Drops)
+//  Records each seek (rewind/fast-forward) action to build
+//  a heatmap showing popular moments in a track.
+// ─────────────────────────────────────────────────────────────
+model SeekEvent {
+  id        String   @id @default(cuid())
+  trackId   String
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  timestamp Float    // The timecode (in seconds) the user seeked to
+  userId    String   @default("default")
+  createdAt DateTime @default(now())
+
+  @@index([trackId])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  ListeningRoom (Feature: Listening Party / SharePlay)
+//  Synchronized playback rooms for social listening.
+// ─────────────────────────────────────────────────────────────
+model ListeningRoom {
+  id        String   @id @default(cuid())
+  name      String
+  hostId    String
+  trackId   String?
+  isPlaying Boolean  @default(false)
+  currentTime Float  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

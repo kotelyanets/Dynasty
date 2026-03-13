@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { TrackRow } from '@/components/TrackRow';
-import { useSearch } from '@/hooks/useSearch';
+import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { useAlbums } from '@/hooks/useAlbums';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { useVoiceSearch } from '@/hooks/useVoiceSearch';
@@ -12,7 +12,7 @@ interface SearchProps {
 
 export function Search({ onNavigate }: SearchProps) {
   const [query, setQuery] = useState('');
-  const { data: results, loading } = useSearch(query);
+  const { data: results, loading } = useFuzzySearch(query);
   const { data: albums } = useAlbums();
   const { isLiked, toggleLike } = useLikedTracks();
 

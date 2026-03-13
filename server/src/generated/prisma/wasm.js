@@ -179,6 +179,41 @@ exports.Prisma.PlaylistTrackScalarFieldEnum = {
   addedAt: 'addedAt'
 };
 
+exports.Prisma.PlaylistCollaboratorScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  userId: 'userId',
+  role: 'role',
+  joinedAt: 'joinedAt'
+};
+
+exports.Prisma.PlayHistoryScalarFieldEnum = {
+  id: 'id',
+  trackId: 'trackId',
+  userId: 'userId',
+  duration: 'duration',
+  playedAt: 'playedAt'
+};
+
+exports.Prisma.SeekEventScalarFieldEnum = {
+  id: 'id',
+  trackId: 'trackId',
+  timestamp: 'timestamp',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ListeningRoomScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  hostId: 'hostId',
+  trackId: 'trackId',
+  isPlaying: 'isPlaying',
+  currentTime: 'currentTime',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -195,7 +230,11 @@ exports.Prisma.ModelName = {
   Album: 'Album',
   Track: 'Track',
   Playlist: 'Playlist',
-  PlaylistTrack: 'PlaylistTrack'
+  PlaylistTrack: 'PlaylistTrack',
+  PlaylistCollaborator: 'PlaylistCollaborator',
+  PlayHistory: 'PlayHistory',
+  SeekEvent: 'SeekEvent',
+  ListeningRoom: 'ListeningRoom'
 };
 
 /**
