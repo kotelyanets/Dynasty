@@ -119,6 +119,10 @@ function mapTrack(t: ApiTrack): Track {
     // Resolve relative cover URL to absolute using the API base
     coverUrl: t.coverUrl.startsWith('http') ? t.coverUrl : `${BASE_URL}${t.coverUrl}`,
     audioUrl: t.audioUrl.startsWith('http') ? t.audioUrl : `${BASE_URL}${t.audioUrl}`,
+    // Pass through quality metadata
+    bitrate: t.bitrate,
+    sampleRate: t.sampleRate,
+    codec: t.codec,
   };
 }
 
@@ -338,6 +342,22 @@ export const api = {
    */
   streamUrl(trackId: string): string {
     return IS_DEMO ? '' : `${BASE_URL}/api/stream/${trackId}`;
+  },
+
+  // ── Lyrics ────────────────────────────────────────────────
+  /**
+   * Fetches raw LRC text for a track. Returns null if not found.
+   */
+  async getLyrics(trackId: string): Promise<string | null> {
+    if (IS_DEMO) return null;
+    try {
+      const url = `${BASE_URL}/api/lyrics/${trackId}`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      return await res.text();
+    } catch {
+      return null;
+    }
   },
 };
 
