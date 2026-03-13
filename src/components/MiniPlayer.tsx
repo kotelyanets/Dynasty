@@ -1,10 +1,8 @@
 import { usePlayer } from '@/context/PlayerContext';
-import { useLikedTracks } from '@/hooks/useLikedTracks';
-import { Play, Pause, SkipForward, Loader2, Heart } from 'lucide-react';
+import { Play, Pause, SkipForward, Loader2 } from 'lucide-react';
 
 export function MiniPlayer() {
   const { state, togglePlay, next, showNowPlaying } = usePlayer();
-  const { isLiked, toggleLike } = useLikedTracks();
   const { currentTrack, isPlaying, currentTime, duration, buffered, bufferingState } = state;
 
   if (!currentTrack) return null;
@@ -18,7 +16,7 @@ export function MiniPlayer() {
     <div className="px-3 pb-2 pt-1">
       <div
         className="relative rounded-[18px] overflow-hidden shadow-2xl cursor-pointer active:scale-[0.985] transition-transform duration-150 ease-out"
-        onClick={() => showNowPlaying(true)}
+        onClick={() => { haptic(); showNowPlaying(true); }}
         role="button"
         aria-label={`Now playing: ${currentTrack.title} by ${currentTrack.artist}. Tap to expand.`}
         style={{
@@ -37,13 +35,17 @@ export function MiniPlayer() {
         <div className="absolute inset-0 bg-black/25" />
 
         <div className="relative flex items-center gap-3 px-3 py-3">
-          {/* Album art */}
-          <div className="w-12 h-12 rounded-[10px] overflow-hidden flex-shrink-0 shadow-xl relative">
+          {/* Album art — shared element via layoutId */}
+          <motion.div
+            layoutId="player-album-art"
+            className="w-12 h-12 rounded-[10px] overflow-hidden flex-shrink-0 shadow-xl relative"
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+          >
             <img src={currentTrack.coverUrl} alt={currentTrack.album} className="w-full h-full object-cover" />
             {hasError && (
               <div className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             )}
-          </div>
+          </motion.div>
 
           {/* Track info */}
           <div className="flex-1 min-w-0">
@@ -54,40 +56,27 @@ export function MiniPlayer() {
           </div>
 
           {/* Controls — stopPropagation so tapping them won't open NowPlaying */}
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
             <button
-              onClick={() => toggleLike(currentTrack.id)}
-              className="w-10 h-10 flex items-center justify-center active:scale-90 active:opacity-60 transition-all duration-150"
-              aria-label={isLiked(currentTrack.id) ? 'Remove from Liked' : 'Add to Liked'}
-            >
-              <Heart
-                size={20}
-                strokeWidth={1.75}
-                fill={isLiked(currentTrack.id) ? '#fc3c44' : 'none'}
-                className={isLiked(currentTrack.id) ? 'text-[#fc3c44]' : 'text-white/70'}
-              />
-            </button>
-
-            <button
-              onClick={togglePlay}
+              onClick={() => { haptic(); togglePlay(); }}
               className="w-11 h-11 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
               {isStalled ? (
-                <Loader2 size={24} className="animate-spin text-white/70" />
+                <Loader2 size={22} className="animate-spin text-white/70" />
               ) : isPlaying ? (
-                <Pause size={26} fill="white" strokeWidth={0} />
+                <Pause size={24} fill="white" strokeWidth={0} />
               ) : (
-                <Play size={26} fill="white" strokeWidth={0} />
+                <Play size={24} fill="white" strokeWidth={0} />
               )}
             </button>
 
             <button
-              onClick={next}
+              onClick={() => { haptic(); next(); }}
               className="w-10 h-10 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label="Next track"
             >
-              <SkipForward size={22} fill="white" strokeWidth={0} />
+              <SkipForward size={20} fill="white" strokeWidth={0} />
             </button>
           </div>
         </div>

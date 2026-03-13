@@ -21,12 +21,14 @@ export interface Track {
    * Leave undefined to stay in "demo mode" (progress simulated).
    */
   audioUrl?: string;
-  /**
-   * Integrated loudness in LUFS (EBU R128) measured by FFmpeg.
-   * Used for automatic volume normalization between tracks.
-   * Null when FFmpeg was not available during the scan.
-   */
-  loudnessLufs?: number | null;
+
+  // ── Technical audio metadata (for quality badges) ──────────
+  /** Bitrate in kbps (e.g. 320 for MP3, 1411 for CD FLAC) */
+  bitrate?: number;
+  /** Sample rate in Hz (e.g. 44100, 96000) */
+  sampleRate?: number;
+  /** Codec name (e.g. "FLAC", "MPEG 1 Layer 3") */
+  codec?: string;
 }
 
 export interface Album {
@@ -117,6 +119,7 @@ export interface PlayerStoreActions {
   playQueueIndex: (index: number) => void;
   addToQueue: (tracks: Track[]) => void;
   clearQueue: () => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
 
   // ── transport ──────────────────────────────────────────────
   play: () => void;
@@ -183,7 +186,9 @@ export interface ApiTrack {
   year: number;
   coverUrl: string;   // e.g. /api/cover/:trackId
   audioUrl: string;   // e.g. /api/stream/:trackId
-  loudnessLufs?: number | null;
+  bitrate?: number;   // kbps
+  sampleRate?: number; // Hz
+  codec?: string;     // e.g. "FLAC", "MPEG 1 Layer 3"
 }
 
 export interface ApiAlbum {
