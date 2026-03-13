@@ -15,12 +15,13 @@ import { useOfflineCache } from '@/hooks/useOfflineCache';
 import { useToast } from '@/context/ToastContext';
 import { audioProcessor } from '@/audio/AudioProcessor';
 import { LyricsMesh } from '@/components/LyricsMesh';
+import { LyricsView } from '@/components/LyricsView';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
-  Mic, MicOff, Headphones,
+  Mic, MicOff, Headphones, Quote,
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
@@ -604,7 +605,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             }`}
             aria-label={showLyrics ? 'Hide lyrics' : 'Show lyrics'}
           >
-            <Mic2 size={22} />
+            <Quote size={22} />
           </button>
 
           <button
@@ -707,6 +708,16 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             )}
           </div>
         </BottomSheet>
+
+        {/* ── Full-screen lyrics overlay ── */}
+        {showLyrics && currentTrack && (
+          <LyricsView
+            trackId={currentTrack.id}
+            currentTime={currentTime}
+            coverUrl={currentTrack.coverUrl}
+            onClose={() => setShowLyrics(false)}
+          />
+        )}
       </div>
     </div>
   );
