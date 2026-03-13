@@ -108,6 +108,17 @@ export interface PlayerStoreState {
   shuffle: boolean;
   repeat: RepeatMode;
 
+  // ── crossfade & autoplay ────────────────────────────────────
+  crossfadeEnabled: boolean;
+  /** Crossfade overlap duration in seconds (default 5). */
+  crossfadeDuration: number;
+  /** When true, auto-fetch similar tracks when the queue runs out. */
+  autoplayInfinity: boolean;
+  /** Internal flag — true while a crossfade transition is in progress. */
+  _isCrossfading: boolean;
+  /** Internal flag — true when infinity mode needs more tracks. */
+  _awaitingAutoplay: boolean;
+
   // ── UI state ────────────────────────────────────────────────
   showNowPlaying: boolean;
   errorMessage: string | null;
@@ -115,7 +126,7 @@ export interface PlayerStoreState {
 
 export interface PlayerStoreActions {
   // ── queue management ───────────────────────────────────────
-  playTrack: (track: Track, queue?: Track[], index?: number) => void;
+  playTrack: (track: Track, queue?: Track[], index?: number, options?: { skipAudioLoad?: boolean }) => void;
   playQueueIndex: (index: number) => void;
   addToQueue: (tracks: Track[]) => void;
   clearQueue: () => void;
@@ -136,6 +147,9 @@ export interface PlayerStoreActions {
   // ── modes ───────────────────────────────────────────────────
   toggleShuffle: () => void;
   toggleRepeat: () => void;
+  toggleCrossfade: () => void;
+  setCrossfadeDuration: (seconds: number) => void;
+  toggleAutoplayInfinity: () => void;
 
   // ── UI ─────────────────────────────────────────────────────
   setShowNowPlaying: (show: boolean) => void;
@@ -147,6 +161,8 @@ export interface PlayerStoreActions {
   _setBufferingState: (s: BufferingState) => void;
   _setIsPlaying: (v: boolean) => void;
   _setError: (msg: string | null) => void;
+  _setIsCrossfading: (v: boolean) => void;
+  _setAwaitingAutoplay: (v: boolean) => void;
 }
 
 export type PlayerStore = PlayerStoreState & PlayerStoreActions;

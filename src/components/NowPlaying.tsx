@@ -78,7 +78,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
 
   const {
     currentTrack, isPlaying, currentTime, duration,
-    shuffle, repeat, showNowPlaying: visible,
+    shuffle, repeat, autoplayInfinity, showNowPlaying: visible,
     buffered, bufferingState, volume, isMuted,
     errorMessage,
   } = state;

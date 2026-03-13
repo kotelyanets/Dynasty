@@ -90,6 +90,7 @@ export function useAudioEngine() {
 
     // ── ended ───────────────────────────────────────────────
     const onEnded = () => {
+      if (store()._isCrossfading) return;
       store()._setIsPlaying(false);
       // Notify sleep timer
       useSleepTimerStore.getState()._onTrackEnd();

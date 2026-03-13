@@ -22,6 +22,12 @@ import type {
   RepeatMode,
   PlayerStore,
 } from '@/types/music';
+import {
+  initAudioPipeline,
+  ensureContextResumed,
+  setMasterVolume,
+  setMasterMuted,
+} from '@/audio/audioContext';
 
 // ─────────────────────────────────────────────────────────────
 //  Singleton audio element
@@ -112,6 +118,11 @@ export const usePlayerStore = create<PlayerStore>()(
     isMuted: false,
     shuffle: false,
     repeat: 'off',
+    crossfadeEnabled: false,
+    crossfadeDuration: 5,
+    autoplayInfinity: false,
+    _isCrossfading: false,
+    _awaitingAutoplay: false,
     showNowPlaying: false,
     errorMessage: null,
 
@@ -136,11 +147,15 @@ export const usePlayerStore = create<PlayerStore>()(
     _setError: (msg) =>
       set({ errorMessage: msg, bufferingState: msg ? 'error' : 'idle' }),
 
+    _setIsCrossfading: (v) => set({ _isCrossfading: v }),
+
+    _setAwaitingAutoplay: (v) => set({ _awaitingAutoplay: v }),
+
     // ─────────────────────────────────────────────────────────
     //  Track loading
     // ─────────────────────────────────────────────────────────
 
-    playTrack: (track, queue, index) => {
+    playTrack: (track, queue, index, options) => {
       const resolvedQueue = queue ?? [track];
       const resolvedIndex = index ?? resolvedQueue.findIndex((t) => t.id === track.id);
       const finalIndex = resolvedIndex < 0 ? 0 : resolvedIndex;
@@ -158,11 +173,17 @@ export const usePlayerStore = create<PlayerStore>()(
       });
 
       if (track.audioUrl) {
-        // Real audio — hand off to the HTMLAudioElement
-        stopDemoPlayback();
-        audioEl.src = track.audioUrl;
-        audioEl.load();
-        // play() is called by useAudioEngine once canplay fires
+        // Initialise Web Audio pipeline on the first real play (user gesture).
+        initAudioPipeline(audioEl);
+        ensureContextResumed();
+
+        if (!options?.skipAudioLoad) {
+          // Real audio — hand off to the HTMLAudioElement
+          stopDemoPlayback();
+          audioEl.src = track.audioUrl;
+          audioEl.load();
+          // play() is called by useAudioEngine once canplay fires
+        }
       } else {
         // Demo mode — no real file, simulate progress
         audioEl.src = '';
@@ -211,6 +232,7 @@ export const usePlayerStore = create<PlayerStore>()(
       if (!currentTrack) return;
 
       if (currentTrack.audioUrl) {
+        ensureContextResumed();
         // Real audio: the promise returned by play() must be handled to
         // avoid the "play() interrupted by a new load request" DOMException
         const p = audioEl.play();
@@ -243,8 +265,12 @@ export const usePlayerStore = create<PlayerStore>()(
     },
 
     next: () => {
-      const { queue, queueIndex, repeat, shuffle, shuffleHistory, currentTrack } = get();
+      const { queue, queueIndex, repeat, shuffle, shuffleHistory, currentTrack, _isCrossfading } = get();
       if (queue.length === 0 || !currentTrack) return;
+
+      // During an active crossfade, the transition is handled by useCrossfade.
+      // Don't advance the queue a second time.
+      if (_isCrossfading) return;
 
       if (repeat === 'one') {
         // Replay the same track from the start
@@ -265,6 +291,10 @@ export const usePlayerStore = create<PlayerStore>()(
           if (repeat === 'all') {
             nextIndex = 0;
             newHistory = [];
+          } else if (get().autoplayInfinity) {
+            // Signal that we need more tracks from the autoplay hook
+            set({ _awaitingAutoplay: true });
+            return;
           } else {
             // End of queue
             get()._setIsPlaying(false);
@@ -322,18 +352,18 @@ export const usePlayerStore = create<PlayerStore>()(
 
     setVolume: (v) => {
       const clamped = Math.max(0, Math.min(1, v));
-      audioEl.volume = clamped;
+      setMasterVolume(clamped, audioEl);
       set({ volume: clamped, isMuted: clamped === 0 });
     },
 
     toggleMute: () => {
       const { isMuted, volume } = get();
       if (isMuted) {
-        audioEl.muted = false;
-        audioEl.volume = volume || 0.8;
+        const vol = volume || 0.8;
+        setMasterMuted(false, audioEl, vol);
         set({ isMuted: false });
       } else {
-        audioEl.muted = true;
+        setMasterMuted(true, audioEl, 0);
         set({ isMuted: true });
       }
     },
@@ -351,6 +381,15 @@ export const usePlayerStore = create<PlayerStore>()(
         repeat: order[(order.indexOf(s.repeat) + 1) % order.length],
       }));
     },
+
+    toggleCrossfade: () =>
+      set((s) => ({ crossfadeEnabled: !s.crossfadeEnabled })),
+
+    setCrossfadeDuration: (seconds) =>
+      set({ crossfadeDuration: Math.max(1, Math.min(12, seconds)) }),
+
+    toggleAutoplayInfinity: () =>
+      set((s) => ({ autoplayInfinity: !s.autoplayInfinity, _awaitingAutoplay: false })),
 
     // ─────────────────────────────────────────────────────────
     //  UI
