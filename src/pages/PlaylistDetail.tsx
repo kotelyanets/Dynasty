@@ -156,12 +156,27 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
             <span className="text-4xl">🎵</span>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white">{playlist.name}</h1>
+        <h1 className="text-2xl font-bold text-white" style={{
+          fontSize: playlist.name.length > 30 ? '1.25rem' : playlist.name.length > 20 ? '1.5rem' : '1.75rem',
+          lineHeight: 1.2,
+        }}>{playlist.name}</h1>
         {playlist.description && (
-          <p className="text-sm text-white/60 mt-1">{playlist.description}</p>
+          <p className="text-white/60 mt-1" style={{
+            fontSize: (playlist.description?.length ?? 0) > 100 ? '0.75rem' : (playlist.description?.length ?? 0) > 50 ? '0.8125rem' : '0.875rem',
+            lineHeight: 1.5,
+          }}>{playlist.description}</p>
         )}
         <p className="text-xs text-white/40 mt-1">
           {playlist.trackIds.length} song{playlist.trackIds.length !== 1 ? 's' : ''}
+          {playlist.createdAt && (() => {
+            const updated = new Date(playlist.createdAt);
+            const now = new Date();
+            const diffDays = Math.floor((now.getTime() - updated.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) return ' · Updated today';
+            if (diffDays === 1) return ' · Updated yesterday';
+            if (diffDays < 7) return ` · Updated ${diffDays} days ago`;
+            return '';
+          })()}
         </p>
 
         {/* Actions */}

@@ -39,6 +39,9 @@ interface PlayerState {
   autoplayInfinity: boolean;
   showNowPlaying: boolean;
   errorMessage: string | null; // ← NEW
+  playHistory: Track[];        // ← NEW: recently played tracks
+  karaokeEnabled: boolean;     // ← NEW: vocal removal
+  spatialAudioEnabled: boolean; // ← NEW: stereo widening
 }
 
 interface PlayerContextType {
@@ -107,6 +110,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     autoplayInfinity: storeState.autoplayInfinity,
     showNowPlaying: storeState.showNowPlaying,
     errorMessage: storeState.errorMessage,
+    playHistory: storeState.playHistory,
+    karaokeEnabled: storeState.karaokeEnabled,
+    spatialAudioEnabled: storeState.spatialAudioEnabled,
   };
 
   return (

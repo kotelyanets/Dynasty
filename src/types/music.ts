@@ -94,6 +94,8 @@ export interface PlayerStoreState {
    * "previous" works correctly instead of picking a new random track.
    */
   shuffleHistory: number[];
+  /** Recently played tracks (most recent first) */
+  playHistory: Track[];
 
   // ── playback state ─────────────────────────────────────────
   isPlaying: boolean;
@@ -150,6 +152,10 @@ export interface PlayerStoreActions {
   toggleCrossfade: () => void;
   setCrossfadeDuration: (seconds: number) => void;
   toggleAutoplayInfinity: () => void;
+
+  // ── audio effects ──────────────────────────────────────────
+  toggleKaraoke: () => void;
+  toggleSpatialAudio: () => void;
 
   // ── UI ─────────────────────────────────────────────────────
   setShowNowPlaying: (show: boolean) => void;

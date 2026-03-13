@@ -109,6 +109,7 @@ export const usePlayerStore = create<PlayerStore>()(
     queue: [],
     queueIndex: -1,
     shuffleHistory: [],
+    playHistory: [],
     isPlaying: false,
     currentTime: 0,
     duration: 0,
@@ -160,11 +161,18 @@ export const usePlayerStore = create<PlayerStore>()(
       const resolvedIndex = index ?? resolvedQueue.findIndex((t) => t.id === track.id);
       const finalIndex = resolvedIndex < 0 ? 0 : resolvedIndex;
 
+      // Push the previous track to play history
+      const { currentTrack, playHistory } = get();
+      const newHistory = currentTrack
+        ? [currentTrack, ...playHistory.filter((t) => t.id !== currentTrack.id)].slice(0, 50)
+        : playHistory;
+
       set({
         currentTrack: track,
         queue: resolvedQueue,
         queueIndex: finalIndex,
         shuffleHistory: [],
+        playHistory: newHistory,
         currentTime: 0,
         duration: track.duration,
         bufferingState: track.audioUrl ? 'loading' : 'ready',
@@ -390,6 +398,20 @@ export const usePlayerStore = create<PlayerStore>()(
 
     toggleAutoplayInfinity: () =>
       set((s) => ({ autoplayInfinity: !s.autoplayInfinity, _awaitingAutoplay: false })),
+
+    // ─────────────────────────────────────────────────────────
+    //  Audio effects
+    // ─────────────────────────────────────────────────────────
+
+    toggleKaraoke: () => {
+      const enabled = audioProcessor.toggleKaraoke();
+      set({ karaokeEnabled: enabled });
+    },
+
+    toggleSpatialAudio: () => {
+      const enabled = audioProcessor.toggleSpatialAudio();
+      set({ spatialAudioEnabled: enabled });
+    },
 
     // ─────────────────────────────────────────────────────────
     //  UI

@@ -12,11 +12,15 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { useOfflineCache } from '@/hooks/useOfflineCache';
+import { useToast } from '@/context/ToastContext';
+import { audioProcessor } from '@/audio/AudioProcessor';
+import { LyricsMesh } from '@/components/LyricsMesh';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
+  Mic, MicOff, Headphones,
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
@@ -75,12 +79,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
   const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
+  const { showToast } = useToast();
 
   const {
     currentTrack, isPlaying, currentTime, duration,
     shuffle, repeat, autoplayInfinity, showNowPlaying: visible,
     buffered, bufferingState, volume, isMuted,
-    errorMessage,
+    errorMessage, playHistory, karaokeEnabled, spatialAudioEnabled,
   } = state;
 
   // ── Scrubber drag state ─────────────────────────────────
@@ -110,6 +115,13 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const touchStartX             = useRef(0);
   const isPullDragging          = useRef(false);
   const containerRef            = useRef<HTMLDivElement>(null);
+
+  // ── Rubber-band scrubber state ─────────────────────────
+  const [scrubStretchY, setScrubStretchY] = useState(0);
+  const scrubStartY = useRef(0);
+
+  // ── Lyrics mesh toggle ─────────────────────────────────
+  const [showLyricsMesh, setShowLyricsMesh] = useState(false);
 
   useEffect(() => {
     setIsSeeking(false);
@@ -155,16 +167,29 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     isDragging.current = true;
     setIsSeeking(true);
     setSeekTime(getSeekTimeFromEvent(e));
+    // Track vertical position for rubber-band effect
+    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+    scrubStartY.current = clientY;
+    setScrubStretchY(0);
   };
   const handleScrubMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!isDragging.current) return;
     setSeekTime(getSeekTimeFromEvent(e));
+    // Calculate vertical stretch for rubber-band effect
+    const clientY = 'touches' in e
+      ? (e as React.TouchEvent).touches[0]?.clientY ?? 0
+      : (e as React.MouseEvent).clientY;
+    const deltaY = clientY - scrubStartY.current;
+    // Apply diminishing returns (rubber-band feel)
+    const stretch = Math.sign(deltaY) * Math.min(Math.abs(deltaY) * 0.4, 40);
+    setScrubStretchY(stretch);
   };
   const handleScrubEnd = () => {
     if (isDragging.current) {
       isDragging.current = false;
       seek(seekTime);
       setIsSeeking(false);
+      setScrubStretchY(0);
     }
   };
 
@@ -214,6 +239,46 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     const s = secs % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
+
+  // ── Ensure AudioProcessor is initialized on first interaction ──
+  const ensureAudioInit = useCallback(() => {
+    if (!audioProcessor.isInitialized) {
+      audioProcessor.init();
+    }
+    audioProcessor.resume();
+  }, []);
+
+  const handleToggleKaraoke = useCallback(() => {
+    ensureAudioInit();
+    toggleKaraoke();
+    showToast({
+      icon: 'music',
+      title: !karaokeEnabled ? 'Karaoke Mode On' : 'Karaoke Mode Off',
+    });
+  }, [ensureAudioInit, toggleKaraoke, karaokeEnabled, showToast]);
+
+  const handleToggleSpatial = useCallback(() => {
+    ensureAudioInit();
+    toggleSpatialAudio();
+    showToast({
+      icon: 'music',
+      title: !spatialAudioEnabled ? 'Spatial Audio On' : 'Spatial Audio Off',
+    });
+  }, [ensureAudioInit, toggleSpatialAudio, spatialAudioEnabled, showToast]);
+
+  const handleToggleLike = useCallback(() => {
+    const wasLiked = liked;
+    toggleLike(currentTrack.id);
+    showToast({
+      icon: 'heart',
+      title: wasLiked ? 'Removed from Liked' : 'Added to Liked Tracks',
+    });
+  }, [liked, toggleLike, currentTrack.id, showToast]);
+
+  // Rubber-band scrubber transform
+  const scrubberScaleY = scrubStretchY !== 0
+    ? Math.max(0.3, 1 - Math.abs(scrubStretchY) / 100)
+    : 1;
 
   return (
     <div
@@ -382,8 +447,11 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </div>
         )}
 
-        {/* ── Scrubber ── */}
-        <div className="mb-5">
+        {/* ── Scrubber (rubber-band) ── */}
+        <div className="mb-5" style={{
+          transform: `translateY(${scrubStretchY}px) scaleY(${scrubberScaleY})`,
+          transition: isSeeking ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+        }}>
           <div
             ref={progressRef}
             className="relative h-10 flex items-center cursor-pointer touch-none select-none"
@@ -465,7 +533,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
           </button>
         </div>
 
-        {/* ── Shuffle / Repeat row ── */}
+        {/* ── Shuffle / Repeat / Effects row ── */}
         <div className="flex items-center justify-between px-2 mb-6">
           <button
             onClick={toggleShuffle}
@@ -590,8 +658,10 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 onClick={async () => {
                   if (isDownloaded(currentTrack.id)) {
                     await removeDownload(currentTrack);
+                    showToast({ icon: 'remove', title: 'Download Removed' });
                   } else {
                     await downloadTrack(currentTrack);
+                    showToast({ icon: 'download', title: 'Downloaded' });
                   }
                   setShowMoreMenu(false);
                 }}

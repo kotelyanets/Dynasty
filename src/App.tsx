@@ -39,6 +39,7 @@
 
 import { useState, useCallback } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
+import { ToastProvider } from '@/context/ToastContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
 import { useMediaSession } from '@/hooks/useMediaSession';
 import { MiniPlayer } from '@/components/MiniPlayer';
@@ -219,7 +220,9 @@ function AppContent() {
 export function App() {
   return (
     <PlayerProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </PlayerProvider>
   );
 }
