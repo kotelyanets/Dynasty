@@ -41,6 +41,7 @@ import { useState, useCallback } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
 import { useMediaSession } from '@/hooks/useMediaSession';
+import { useSnippetFromUrl } from '@/hooks/useSnippetSharing';
 import { MiniPlayer } from '@/components/MiniPlayer';
 import { NowPlaying } from '@/components/NowPlaying';
 import { Home } from '@/pages/Home';
@@ -74,6 +75,9 @@ function AppContent() {
   // This subscribes to store changes and keeps the OS lock-screen
   // controls (artwork, title, play/pause, seek) in sync.
   useMediaSession();
+
+  // ── Read ?t= and ?track= from URL for snippet sharing ──
+  useSnippetFromUrl();
 
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 

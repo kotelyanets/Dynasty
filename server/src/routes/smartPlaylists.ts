@@ -103,9 +103,9 @@ function buildWhereClause(rules: SmartPlaylistRule[]): Record<string, unknown> {
   }
 
   // All rules must match (AND logic)
-  return conditions.length === 1
-    ? conditions[0]
-    : { AND: conditions };
+  if (conditions.length === 0) return {};
+  if (conditions.length === 1) return conditions[0]!;
+  return { AND: conditions };
 }
 
 function buildCondition(rule: SmartPlaylistRule): Record<string, unknown> | null {
