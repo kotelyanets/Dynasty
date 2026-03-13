@@ -24,7 +24,7 @@ const albumRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     const albums = (await db.album.findMany({
       where: {
         ...(artistId && { artistId }),
-        ...(genre    && { genre: { equals: genre, mode: 'insensitive' } }),
+        ...(genre    && { genre }),
         ...(year     && { year: parseInt(year, 10) }),
       },
       orderBy: [{ year: 'desc' }, { title: 'asc' }],

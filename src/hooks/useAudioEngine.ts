@@ -31,7 +31,7 @@
 import { useEffect, useRef } from 'react';
 import { audioEl, usePlayerStore } from '@/store/playerStore';
 import { ensureAudioPipeline, setNormalizationGain, resetNormalizationGain } from '@/audio/audioNodes';
-import { ensureContextResumed } from '@/audio/audioContext';
+import { ensureContextResumed, isAudioPipelineReady } from '@/audio/audioContext';
 import { useSleepTimerStore } from '@/store/sleepTimerStore';
 
 /** Target loudness for normalization (Spotify / Apple Music standard). */
@@ -129,11 +129,17 @@ export function useAudioEngine() {
     };
 
     // ── Resume AudioContext on first user interaction (No Sound on PC fix) ─
+    // Don't remove the listener until the AudioContext actually exists and is
+    // running, otherwise an early click before playTrack() creates the context
+    // would discard the listener permanently.
     const resumeOnInteraction = () => {
       ensureContextResumed();
-      document.removeEventListener('click', resumeOnInteraction);
-      document.removeEventListener('touchstart', resumeOnInteraction);
-      document.removeEventListener('keydown', resumeOnInteraction);
+      // Only stop listening once the pipeline is initialised and running
+      if (isAudioPipelineReady()) {
+        document.removeEventListener('click', resumeOnInteraction);
+        document.removeEventListener('touchstart', resumeOnInteraction);
+        document.removeEventListener('keydown', resumeOnInteraction);
+      }
     };
     document.addEventListener('click', resumeOnInteraction);
     document.addEventListener('touchstart', resumeOnInteraction);

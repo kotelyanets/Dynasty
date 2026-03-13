@@ -100,6 +100,7 @@ async function ensureCatalog(): Promise<typeof catalogCache> {
       api.getArtists(),
     ]);
     catalogCache = { tracks, albums, artists };
+    console.log('[FuzzySearch] Catalog loaded:', tracks.length, 'tracks,', albums.length, 'albums,', artists.length, 'artists');
     catalogVersion++;
   } catch {
     catalogCache = { tracks: [], albums: [], artists: [] };

@@ -132,9 +132,9 @@ function buildCondition(rule: SmartPlaylistRule): Record<string, unknown> | null
 function buildStringFilter(operator: string, value: string): Record<string, unknown> {
   switch (operator) {
     case 'equals':
-      return { equals: value, mode: 'insensitive' };
+      return { equals: value };
     case 'contains':
-      return { contains: value, mode: 'insensitive' };
+      return { contains: value };
     default:
       return { equals: value };
   }
