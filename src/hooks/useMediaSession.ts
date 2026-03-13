@@ -23,6 +23,23 @@ import type { Track } from '@/types/music';
 //  Internal helpers
 // ─────────────────────────────────────────────────────────────
 
+/**
+ * Build a cover-art URL optimized for the requested pixel size.
+ * If the URL points to our own `/covers/` static path, rewrite it
+ * to `/api/covers/<filename>?w=<size>&h=<size>&format=jpeg&q=90`
+ * so the sharp-based resize endpoint delivers a properly-sized JPEG.
+ * iOS prefers JPEG for lock-screen / Control Center artwork.
+ */
+function artworkSrc(coverUrl: string, size: number): string {
+  const coversPrefix = '/covers/';
+  const idx = coverUrl.indexOf(coversPrefix);
+  if (idx === -1) return coverUrl; // external URL — use as-is
+
+  const base = coverUrl.slice(0, idx);
+  const filename = coverUrl.slice(idx + coversPrefix.length);
+  return `${base}/api/covers/${filename}?w=${size}&h=${size}&format=jpeg&q=90`;
+}
+
 function updateMetadata(track: Track) {
   if (!('mediaSession' in navigator)) return;
 
@@ -33,11 +50,14 @@ function updateMetadata(track: Track) {
     artwork: [
       // Provide multiple sizes; iOS picks the best fit for
       // lock screen / Control Center / CarPlay.
-      { src: track.coverUrl, sizes: '96x96',   type: 'image/jpeg' },
-      { src: track.coverUrl, sizes: '128x128', type: 'image/jpeg' },
-      { src: track.coverUrl, sizes: '192x192', type: 'image/jpeg' },
-      { src: track.coverUrl, sizes: '256x256', type: 'image/jpeg' },
-      { src: track.coverUrl, sizes: '512x512', type: 'image/jpeg' },
+      { src: artworkSrc(track.coverUrl, 96),   sizes: '96x96',     type: 'image/jpeg' },
+      { src: artworkSrc(track.coverUrl, 128),  sizes: '128x128',   type: 'image/jpeg' },
+      { src: artworkSrc(track.coverUrl, 192),  sizes: '192x192',   type: 'image/jpeg' },
+      { src: artworkSrc(track.coverUrl, 256),  sizes: '256x256',   type: 'image/jpeg' },
+      { src: artworkSrc(track.coverUrl, 512),  sizes: '512x512',   type: 'image/jpeg' },
+      // 1024×1024 for the iOS 16+ full-screen lock screen player
+      // (tap-to-expand album art).
+      { src: artworkSrc(track.coverUrl, 1024), sizes: '1024x1024', type: 'image/jpeg' },
     ],
   });
 }
