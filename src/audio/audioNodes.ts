@@ -4,7 +4,7 @@
  * Web Audio API pipeline for EQ and volume normalization.
  *
  * Chain:
- *   audioEl → MediaElementSource → BiquadFilter[0..9] → GainNode (normalization) → destination
+ *   audioEl → MediaElementSource → BiquadFilter[0..9] → GainNode (normalization) → StereoPannerNode (head tracking) → destination
  *
  * The AudioContext is created lazily on the first user gesture
  * (required by iOS Safari's autoplay policy). Once created, the
@@ -26,6 +26,7 @@ let audioCtx: AudioContext | null = null;
 let sourceNode: MediaElementAudioSourceNode | null = null;
 let eqFilters: BiquadFilterNode[] = [];
 let normGain: GainNode | null = null;
+let stereoPanner: StereoPannerNode | null = null;
 let _initialized = false;
 
 /**
@@ -72,14 +73,19 @@ export function ensureAudioPipeline(): boolean {
     normGain = audioCtx.createGain();
     normGain.gain.value = 1.0;
 
-    // Wire the chain: source → EQ[0] → ... → EQ[9] → normGain → destination
+    // Stereo panner node (for head-tracking spatial audio)
+    stereoPanner = audioCtx.createStereoPanner();
+    stereoPanner.pan.value = 0;
+
+    // Wire the chain: source → EQ[0] → ... → EQ[9] → normGain → stereoPanner → destination
     let prev: AudioNode = sourceNode;
     for (const filter of eqFilters) {
       prev.connect(filter);
       prev = filter;
     }
     prev.connect(normGain);
-    normGain.connect(audioCtx.destination);
+    normGain.connect(stereoPanner);
+    stereoPanner.connect(audioCtx.destination);
 
     _initialized = true;
     return true;
@@ -142,4 +148,18 @@ export function resetNormalizationGain(): void {
 /** Get the AudioContext (for advanced use). */
 export function getAudioContext(): AudioContext | null {
   return audioCtx;
+}
+
+/**
+ * Set the stereo pan value for head-tracking spatial audio.
+ * @param value Pan value from -1 (full left) to 1 (full right)
+ */
+export function setStereoPan(value: number): void {
+  if (!stereoPanner) return;
+  stereoPanner.pan.value = Math.max(-1, Math.min(1, value));
+}
+
+/** Get the current StereoPannerNode (for head-tracking). */
+export function getStereoPanner(): StereoPannerNode | null {
+  return stereoPanner;
 }
