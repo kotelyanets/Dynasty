@@ -37,7 +37,7 @@
  *    Both values account for safe area — see comments inline below.
  */
 
-import { useState, useCallback, Component, type ReactNode, type ErrorInfo } from 'react';
+import { useState, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from 'react';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
@@ -141,6 +141,13 @@ function AppContent() {
 
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 
+  // ── Safety: reset to 'home' if a detail view loses its ID ──
+  useEffect(() => {
+    if (DETAIL_VIEWS.includes(nav.view) && !nav.id) {
+      setNav({ view: 'home', history: [] });
+    }
+  }, [nav.view, nav.id]);
+
   // Read directly from Zustand (bypasses context) for a single
   // boolean check — avoids re-rendering the entire tree on every
   // time-update tick.
@@ -200,7 +207,7 @@ function AppContent() {
         <div
           style={{
             paddingBottom: hasTrack
-              ? 'calc(136px + max(env(safe-area-inset-bottom, 0px), 6px))'
+              ? 'calc(160px + max(env(safe-area-inset-bottom, 0px), 6px))'
               : 'calc(52px + max(env(safe-area-inset-bottom, 0px), 6px))',
           }}
         >
@@ -231,13 +238,13 @@ function AppContent() {
         </ErrorBoundary>
       </main>
 
-      {/* ── Fixed bottom: floating mini player + tab bar ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40">
-        {/* Floating glass mini player card */}
-        <LayoutGroup>
-          {hasTrack && !showNowPlaying && <MiniPlayer />}
-        </LayoutGroup>
+      {/* ── Floating mini player (above tab bar) ── */}
+      <LayoutGroup>
+        {hasTrack && !showNowPlaying && <MiniPlayer />}
+      </LayoutGroup>
 
+      {/* ── Fixed bottom: tab bar ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40">
         {/* Tab bar
             SAFE-AREA GUARANTEE: paddingBottom uses max(env(safe-area-inset-bottom, 0px), 6px)
             so the iPhone home-indicator swipe area is always cleared.

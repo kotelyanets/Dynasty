@@ -12,7 +12,7 @@ interface SearchProps {
 
 export function Search({ onNavigate }: SearchProps) {
   const [query, setQuery] = useState('');
-  const { data: results, loading } = useFuzzySearch(query);
+  const { data: results, loading, error } = useFuzzySearch(query);
   const { data: albums } = useAlbums();
   const { isLiked, toggleLike } = useLikedTracks();
 
@@ -122,7 +122,14 @@ export function Search({ onNavigate }: SearchProps) {
         </div>
       )}
 
-      {query.trim() && !loading && !hasResults && (
+      {query.trim() && !loading && error && (
+        <div className="px-5 mt-12 text-center">
+          <p className="text-white/60 text-[17px] font-semibold">Search unavailable</p>
+          <p className="text-white/35 text-[14px] mt-1.5">Please try again later</p>
+        </div>
+      )}
+
+      {query.trim() && !loading && !hasResults && !error && (
         <div className="px-5 mt-12 text-center">
           <p className="text-white/60 text-[17px] font-semibold">No results for "{query}"</p>
           <p className="text-white/35 text-[14px] mt-1.5">Try a different search term</p>

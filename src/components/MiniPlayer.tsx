@@ -58,7 +58,10 @@ export function MiniPlayer() {
   const hasError   = bufferingState === 'error';
 
   return (
-    <div className="px-3 pb-2 pt-1">
+    <div
+      className="fixed left-0 right-0 z-50 px-3 pb-2 pt-1"
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)' }}
+    >
       {/* Gesture capture layer for horizontal swipe (next/prev track) */}
       <div {...bind()} style={{ touchAction: 'pan-y' }}>
         <motion.div
