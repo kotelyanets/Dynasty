@@ -13,7 +13,7 @@
  *   6. Global error hook — consistent JSON error responses
  */
 
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { type FastifyInstance, type FastifyError } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -200,7 +200,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   });
 
   // ── Global error handler ──────────────────────────────────
-  server.setErrorHandler(async (error, request, reply) => {
+  server.setErrorHandler(async (error: FastifyError, request, reply) => {
     server.log.error({ err: error, url: request.url }, 'Unhandled error');
 
     const statusCode = error.statusCode ?? 500;
