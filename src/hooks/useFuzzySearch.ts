@@ -164,7 +164,6 @@ export function useFuzzySearch(query: string): UseFuzzySearchResult {
 
         // 2. Backend found nothing — try fuzzy search on local catalog
         const catalog = await ensureCatalog();
-        catalogRef.current = catalog;
 
         if (!mounted) return;
 
