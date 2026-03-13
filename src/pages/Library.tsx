@@ -14,7 +14,8 @@ import type { Playlist } from '@/types/music';
 import { useTracks } from '@/hooks/useTracks';
 import { useAlbums } from '@/hooks/useAlbums';
 import { useArtists } from '@/hooks/useArtists';
-import { Music, Disc3, Mic2, ListMusic, Plus, Trash2, ChevronRight, Loader2, Heart, ChevronLeft } from 'lucide-react';
+import { Music, Disc3, Mic2, ListMusic, Plus, Trash2, ChevronRight, Loader2, Heart, ChevronLeft, Download } from 'lucide-react';
+import { useOfflineCache } from '@/hooks/useOfflineCache';
 
 interface LibraryProps {
   onNavigate: (view: string, id?: string) => void;
@@ -27,7 +28,7 @@ interface LibraryProps {
   initialGenre?: string | null;
 }
 
-type Tab = 'songs' | 'albums' | 'artists' | 'playlists';
+type Tab = 'songs' | 'albums' | 'artists' | 'playlists' | 'downloaded';
 type SongSort = 'default' | 'az' | 'duration';
 
 export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) {
@@ -45,6 +46,7 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const { data: tracks, loading: tracksLoading, error: tracksError } = useTracks();
   const { data: albums, loading: albumsLoading, error: albumsError } = useAlbums();
   const { data: artists, loading: artistsLoading, error: artistsError } = useArtists();
+  const { downloadedIds, getDownloadedTracks } = useOfflineCache();
 
   // Load playlists whenever the Playlists tab is active
   useEffect(() => {
@@ -111,11 +113,17 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
     [playlists, likedPlaylistId],
   );
 
+  const downloadedTracks = useMemo(
+    () => getDownloadedTracks(),
+    [downloadedIds, getDownloadedTracks],
+  );
+
   const tabs: { id: Tab; label: string; icon: typeof Music }[] = [
-    { id: 'songs',     label: 'Songs',     icon: Music },
-    { id: 'albums',    label: 'Albums',    icon: Disc3 },
-    { id: 'artists',   label: 'Artists',   icon: Mic2 },
-    { id: 'playlists', label: 'Playlists', icon: ListMusic },
+    { id: 'songs',      label: 'Songs',      icon: Music },
+    { id: 'albums',     label: 'Albums',     icon: Disc3 },
+    { id: 'artists',    label: 'Artists',    icon: Mic2 },
+    { id: 'playlists',  label: 'Playlists',  icon: ListMusic },
+    { id: 'downloaded', label: 'Downloaded', icon: Download },
   ];
 
   const handleCreatePlaylist = async () => {
@@ -435,6 +443,40 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
                 <div className="text-center mt-6">
                   <p className="text-white/35 text-[14px]">Tap "New Playlist" to create a playlist</p>
                 </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Downloaded View ── */}
+          {activeTab === 'downloaded' && (
+            <div>
+              <div className="px-5 pb-2">
+                <h1 className="text-[34px] font-bold text-white">Downloaded</h1>
+              </div>
+              {downloadedTracks.length === 0 ? (
+                <div className="px-5 py-16 text-center">
+                  <Download size={48} className="mx-auto text-white/20 mb-4" />
+                  <p className="text-white/50 text-[15px] font-medium">No Downloaded Tracks</p>
+                  <p className="text-white/30 text-[13px] mt-1">
+                    Tap ••• on any track and choose "Download" to listen offline
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="px-5 py-2">
+                    <p className="text-[13px] text-white/40">
+                      {downloadedTracks.length} song{downloadedTracks.length !== 1 ? 's' : ''} available offline
+                    </p>
+                  </div>
+                  <div className="px-1">
+                    <VirtualTrackList
+                      tracks={downloadedTracks}
+                      queue={downloadedTracks}
+                      showCover
+                      showArtist
+                    />
+                  </div>
+                </>
               )}
             </div>
           )}

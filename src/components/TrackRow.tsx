@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useOfflineCache } from '@/hooks/useOfflineCache';
+import { useToast } from '@/context/ToastContext';
 import { Track, Playlist } from '@/types/music';
 import { Play, Pause, MoreHorizontal, Heart, Download, Loader2, CheckCircle2 } from 'lucide-react';
 import { api, addTrackToPlaylist, getStoredLikedPlaylistId } from '@/services/api';
@@ -31,6 +32,7 @@ export function TrackRow({
 }: TrackRowProps) {
   const { state, playTrack, togglePlay, formatTime } = usePlayer();
   const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
+  const { showToast } = useToast();
   const isActive  = state.currentTrack?.id === track.id;
   const isPlaying = isActive && state.isPlaying;
   const [showMenu, setShowMenu] = useState(false);
@@ -163,8 +165,10 @@ export function TrackRow({
               onClick={async () => {
                 if (isDownloaded(track.id)) {
                   await removeDownload(track);
+                  showToast({ icon: 'remove', title: 'Download Removed' });
                 } else {
-                  await downloadTrack(track);
+                  const ok = await downloadTrack(track);
+                  showToast({ icon: ok ? 'download' : 'remove', title: ok ? 'Downloaded' : 'Download failed. Check your connection.' });
                 }
                 setShowMenu(false);
               }}

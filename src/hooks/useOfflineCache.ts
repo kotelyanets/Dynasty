@@ -30,7 +30,7 @@ const META_KEY = 'vault_offline_tracks';
 // ─────────────────────────────────────────────────────────────
 
 interface OfflineMeta {
-  [trackId: string]: { title: string; artist: string };
+  [trackId: string]: { title: string; artist: string; track?: Track };
 }
 
 function loadMeta(): OfflineMeta {
@@ -127,7 +127,7 @@ export function useOfflineCache() {
       });
 
       const meta = loadMeta();
-      meta[track.id] = { title: track.title, artist: track.artist };
+      meta[track.id] = { title: track.title, artist: track.artist, track };
       saveMeta(meta);
 
       return true;
@@ -186,11 +186,26 @@ export function useOfflineCache() {
     [downloading],
   );
 
+  // ── Get full Track objects for all downloaded tracks ─────
+
+  const getDownloadedTracks = useCallback((): Track[] => {
+    const meta = loadMeta();
+    const tracks: Track[] = [];
+    for (const id of downloadedIds) {
+      const stored = meta[id]?.track;
+      if (stored) {
+        tracks.push(stored);
+      }
+    }
+    return tracks;
+  }, [downloadedIds]);
+
   return {
     downloadTrack,
     removeDownload,
     isDownloaded,
     isDownloading,
     downloadedIds,
+    getDownloadedTracks,
   };
 }

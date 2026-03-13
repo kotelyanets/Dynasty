@@ -9,19 +9,31 @@
  */
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useDrag } from '@use-gesture/react';
+import {
+  DndContext, closestCenter, PointerSensor, TouchSensor,
+  useSensor, useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext, useSortable, verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { usePlayer } from '@/context/PlayerContext';
+import { usePlayerStore } from '@/store/playerStore';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { useOfflineCache } from '@/hooks/useOfflineCache';
 import { useToast } from '@/context/ToastContext';
 import { audioProcessor } from '@/audio/AudioProcessor';
 import { LyricsMesh } from '@/components/LyricsMesh';
+import { LyricsView } from '@/components/LyricsView';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
-  Mic, Mic2, MicOff, Headphones, GripVertical,
+  Mic, Mic2, MicOff, Headphones, Quote, GripVertical,
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
@@ -87,6 +99,8 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     toggleShuffle, toggleRepeat, showNowPlaying,
     formatTime, setVolume, toggleMute, reorderQueue,
   } = usePlayer();
+  const toggleKaraoke = usePlayerStore((s) => s.toggleKaraoke);
+  const toggleSpatialAudio = usePlayerStore((s) => s.toggleSpatialAudio);
   const { isLiked, toggleLike } = useLikedTracks();
   const { isDownloaded, isDownloading, downloadTrack, removeDownload } = useOfflineCache();
   const { showToast } = useToast();
@@ -118,13 +132,46 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     'rgb(30, 30, 40)', 'rgb(60, 30, 80)', 'rgb(20, 50, 80)', 'rgb(50, 20, 60)',
   ]);
 
-  // ── Pull-to-dismiss state ───────────────────────────────
-  const [dragY, setDragY]       = useState(0);
-  const [isDismissing, setIsDismissing] = useState(false);
-  const touchStartY             = useRef(0);
-  const touchStartX             = useRef(0);
-  const isPullDragging          = useRef(false);
-  const containerRef            = useRef<HTMLDivElement>(null);
+  // ── Pull-to-dismiss (framer-motion + @use-gesture) ──────
+  const dismissY = useMotionValue(0);
+  const dismissOpacity = useTransform(dismissY, [0, 400], [1, 0.3]);
+  const dismissScale = useTransform(dismissY, [0, 400], [1, 0.92]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const DISMISS_THRESHOLD = 120;
+  const VELOCITY_THRESHOLD = 0.5;
+
+  const bindDismiss = useDrag(
+    ({ down, movement: [, my], velocity: [, vy], direction: [, dy] }) => {
+      // Only allow dragging downward
+      if (my < 0) { dismissY.set(0); return; }
+
+      if (down) {
+        dismissY.set(my);
+      } else {
+        const flicked = vy > VELOCITY_THRESHOLD && dy > 0;
+        const pastThreshold = my > DISMISS_THRESHOLD;
+
+        if (pastThreshold || flicked) {
+          // Dismiss — animate down and close
+          haptic();
+          animate(dismissY, window.innerHeight, {
+            type: 'spring',
+            damping: 30,
+            stiffness: 300,
+            onComplete: () => {
+              showNowPlaying(false);
+              dismissY.set(0);
+            },
+          });
+        } else {
+          // Spring back
+          animate(dismissY, 0, { type: 'spring', damping: 25, stiffness: 200 });
+        }
+      }
+    },
+    { axis: 'y', pointer: { touch: true }, filterTaps: true },
+  );
 
   // ── Rubber-band scrubber state ─────────────────────────
   const [scrubStretchY, setScrubStretchY] = useState(0);
@@ -226,23 +273,6 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
   const liked = isLiked(currentTrack.id);
   const qualityBadges = getQualityBadges(currentTrack);
 
-  // Pull-to-dismiss transform
-  const dismissTransform = isDismissing
-    ? 'translateY(100%)'
-    : dragY > 0
-      ? `translateY(${dragY}px)`
-      : undefined;
-
-  const dismissTransition = isDismissing
-    ? 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)'
-    : dragY > 0
-      ? 'none'
-      : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
-
-  const dismissOpacity = dragY > 0
-    ? Math.max(0.3, 1 - dragY / 400)
-    : 1;
-
   // ── Sleep timer display ─────────────────────────────────
   const formatSleepTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -292,18 +322,22 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
 
   return (
     <div
+      {...bindDismiss()}
       ref={containerRef}
-      className="fixed inset-0 z-50 flex flex-col"
-      style={{
-        animation: dragY === 0 && !isDismissing ? 'slideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' : undefined,
-        transform: dismissTransform,
-        transition: dismissTransition,
-        opacity: dismissOpacity,
-      }}
-      onTouchStart={handlePullStart}
-      onTouchMove={handlePullMove}
-      onTouchEnd={handlePullEnd}
+      className="fixed inset-0 z-50"
+      style={{ touchAction: 'pan-x' }}
     >
+      <motion.div
+        className="w-full h-full flex flex-col"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        style={{
+          y: dismissY,
+          opacity: dismissOpacity,
+          scale: dismissScale,
+        }}
+      >
       {/* ── Animated mesh gradient background ── */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Animated color blobs */}
@@ -339,12 +373,10 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/70 to-transparent" />
       </div>
 
-      {/* ── Pull indicator (visible during drag) ── */}
-      {dragY > 10 && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50">
-          <div className="w-10 h-1 rounded-full bg-white/40" />
-        </div>
-      )}
+      {/* ── Pull indicator (always visible as grab handle) ── */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50">
+        <div className="w-10 h-1 rounded-full bg-white/40" />
+      </div>
 
       {/* ── Scrollable content ── */}
       <div
@@ -435,6 +467,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 />
               </button>
             </div>
+          </div>
         </div>
 
         {/* ── Error banner ── */}
@@ -614,7 +647,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             }`}
             aria-label={showLyrics ? 'Hide lyrics' : 'Show lyrics'}
           >
-            <Mic2 size={22} />
+            <Quote size={22} />
           </button>
 
           <button
@@ -717,7 +750,18 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
             )}
           </div>
         </BottomSheet>
+
+        {/* ── Full-screen lyrics overlay ── */}
+        {showLyrics && currentTrack && (
+          <LyricsView
+            trackId={currentTrack.id}
+            currentTime={currentTime}
+            coverUrl={currentTrack.coverUrl}
+            onClose={() => setShowLyrics(false)}
+          />
+        )}
       </div>
+      </motion.div>
     </div>
   );
 }
@@ -734,17 +778,21 @@ function SortableQueueItem({ id, track, isActive }: { id: string; track: Track; 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.6 : 1,
-    zIndex: isDragging ? 10 : 0,
+    zIndex: isDragging ? 50 : 0,
   };
 
   return (
-    <div
+    <motion.div
       ref={setNodeRef}
       style={style}
+      animate={isDragging
+        ? { scale: 1.05, boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }
+        : { scale: 1, boxShadow: '0 0px 0px rgba(0,0,0,0)' }
+      }
+      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       className={`flex items-center gap-3 px-2 py-2.5 rounded-xl ${
         isActive ? 'bg-white/[0.09]' : ''
-      }`}
+      } ${isDragging ? 'bg-white/[0.12]' : ''}`}
     >
       <img
         src={track.coverUrl}
@@ -767,6 +815,6 @@ function SortableQueueItem({ id, track, isActive }: { id: string; track: Track; 
       >
         <GripVertical size={18} />
       </button>
-    </div>
+    </motion.div>
   );
 }
