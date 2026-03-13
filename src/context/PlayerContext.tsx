@@ -53,6 +53,7 @@ interface PlayerContextType {
   toggleRepeat: () => void;
   showNowPlaying: (show: boolean) => void;
   addToQueue: (tracks: Track[]) => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
   formatTime: (seconds: number) => string;
 }
 
@@ -116,6 +117,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         toggleRepeat: storeState.toggleRepeat,
         showNowPlaying: showNowPlayingFn,
         addToQueue: storeState.addToQueue,
+        reorderQueue: storeState.reorderQueue,
         formatTime,
       }}
     >

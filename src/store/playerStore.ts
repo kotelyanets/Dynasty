@@ -182,6 +182,26 @@ export const usePlayerStore = create<PlayerStore>()(
     clearQueue: () =>
       set({ queue: [], queueIndex: -1, currentTrack: null, isPlaying: false }),
 
+    reorderQueue: (fromIndex, toIndex) => {
+      const { queue, queueIndex } = get();
+      if (fromIndex === toIndex) return;
+      if (fromIndex < 0 || fromIndex >= queue.length) return;
+      if (toIndex < 0 || toIndex >= queue.length) return;
+      const newQueue = [...queue];
+      const [moved] = newQueue.splice(fromIndex, 1);
+      newQueue.splice(toIndex, 0, moved);
+      // Update queueIndex to keep pointing at the currently playing track
+      let newIndex = queueIndex;
+      if (queueIndex === fromIndex) {
+        newIndex = toIndex;
+      } else if (fromIndex < queueIndex && toIndex >= queueIndex) {
+        newIndex = queueIndex - 1;
+      } else if (fromIndex > queueIndex && toIndex <= queueIndex) {
+        newIndex = queueIndex + 1;
+      }
+      set({ queue: newQueue, queueIndex: newIndex });
+    },
+
     // ─────────────────────────────────────────────────────────
     //  Transport
     // ─────────────────────────────────────────────────────────

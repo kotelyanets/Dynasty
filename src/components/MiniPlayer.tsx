@@ -16,7 +16,7 @@ export function MiniPlayer() {
     <div className="px-3 pb-2 pt-1">
       <div
         className="relative rounded-[18px] overflow-hidden shadow-2xl cursor-pointer active:scale-[0.985] transition-transform duration-150 ease-out"
-        onClick={() => showNowPlaying(true)}
+        onClick={() => { haptic(); showNowPlaying(true); }}
         role="button"
         aria-label={`Now playing: ${currentTrack.title} by ${currentTrack.artist}. Tap to expand.`}
         style={{
@@ -35,13 +35,17 @@ export function MiniPlayer() {
         <div className="absolute inset-0 bg-black/25" />
 
         <div className="relative flex items-center gap-3 px-3 py-3">
-          {/* Album art */}
-          <div className="w-12 h-12 rounded-[10px] overflow-hidden flex-shrink-0 shadow-xl relative">
+          {/* Album art — shared element via layoutId */}
+          <motion.div
+            layoutId="player-album-art"
+            className="w-12 h-12 rounded-[10px] overflow-hidden flex-shrink-0 shadow-xl relative"
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+          >
             <img src={currentTrack.coverUrl} alt={currentTrack.album} className="w-full h-full object-cover" />
             {hasError && (
               <div className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             )}
-          </div>
+          </motion.div>
 
           {/* Track info */}
           <div className="flex-1 min-w-0">
@@ -54,7 +58,7 @@ export function MiniPlayer() {
           {/* Controls — stopPropagation so tapping them won't open NowPlaying */}
           <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
             <button
-              onClick={togglePlay}
+              onClick={() => { haptic(); togglePlay(); }}
               className="w-11 h-11 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
@@ -68,7 +72,7 @@ export function MiniPlayer() {
             </button>
 
             <button
-              onClick={next}
+              onClick={() => { haptic(); next(); }}
               className="w-10 h-10 flex items-center justify-center text-white active:scale-90 active:opacity-60 transition-all duration-150"
               aria-label="Next track"
             >

@@ -4,6 +4,8 @@ import { useOfflineCache } from '@/hooks/useOfflineCache';
 import { Track, Playlist } from '@/types/music';
 import { Play, Pause, MoreHorizontal, Heart, Download, Loader2, CheckCircle2 } from 'lucide-react';
 import { api, addTrackToPlaylist, getStoredLikedPlaylistId } from '@/services/api';
+import { BottomSheet } from '@/components/BottomSheet';
+import { haptic } from '@/utils/haptics';
 
 interface TrackRowProps {
   track: Track;
@@ -35,6 +37,7 @@ export function TrackRow({
   const [menuPlaylists, setMenuPlaylists] = useState<Playlist[] | null>(null);
 
   const handleClick = () => {
+    haptic();
     if (isActive) {
       togglePlay();
     } else {
@@ -101,6 +104,7 @@ export function TrackRow({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            haptic();
             onToggleLike(track.id);
           }}
           className="text-white/25 active:text-[#fc3c44] flex-shrink-0 p-1 active:scale-90 transition-all"
@@ -119,9 +123,9 @@ export function TrackRow({
       <button
         onClick={async (e) => {
           e.stopPropagation();
-          const next = !showMenu;
-          setShowMenu(next);
-          if (next && menuPlaylists === null) {
+          haptic();
+          setShowMenu(true);
+          if (menuPlaylists === null) {
             const all = await api.getPlaylists();
             const likedId = getStoredLikedPlaylistId();
             setMenuPlaylists(
@@ -135,23 +139,23 @@ export function TrackRow({
         <MoreHorizontal size={16} />
       </button>
 
-      {/* Context menu */}
-      {showMenu && (
-        <div
-          className="absolute right-3 top-full mt-1 z-30 rounded-[14px] overflow-hidden shadow-2xl py-1 min-w-[180px]"
-          style={{ background: 'rgba(30,30,32,0.98)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)' }}
-          onClick={(e) => e.stopPropagation()}
-        >
+      {/* Context menu bottom sheet */}
+      <BottomSheet open={showMenu} onClose={() => setShowMenu(false)} title={track.title}>
+        <div className="px-2 pb-4" onClick={(e) => e.stopPropagation()}>
           {onToggleLike && (
-            <button
-              onClick={() => {
-                onToggleLike(track.id);
-                setShowMenu(false);
-              }}
-              className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] border-b border-white/[0.06]"
-            >
-              {isLiked ? 'Remove from Liked' : 'Add to Liked'}
-            </button>
+            <>
+              <button
+                onClick={() => {
+                  haptic();
+                  onToggleLike(track.id);
+                  setShowMenu(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left text-[15px] text-white/90 active:bg-white/10 rounded-xl"
+              >
+                {isLiked ? 'Remove from Liked' : 'Add to Liked'}
+              </button>
+              <div className="mx-4 border-b border-white/[0.08]" />
+            </>
           )}
           {/* Download for offline */}
           {track.audioUrl && (
@@ -187,17 +191,18 @@ export function TrackRow({
           )}
           {menuPlaylists && menuPlaylists.length > 0 && (
             <>
-              <div className="px-4 pt-2 pb-1 text-[11px] text-white/35 uppercase tracking-wider">
+              <div className="px-4 pt-3 pb-1 text-[11px] text-white/35 uppercase tracking-wider">
                 Add to Playlist
               </div>
               {menuPlaylists.map((pl) => (
                 <button
                   key={pl.id}
                   onClick={() => {
+                    haptic();
                     void addTrackToPlaylist(pl.id, track.id);
                     setShowMenu(false);
                   }}
-                  className="w-full px-4 py-2.5 text-left text-[14px] text-white/85 active:bg-white/[0.08] last:border-0 border-b border-white/[0.06]"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left text-[15px] text-white/90 active:bg-white/10 rounded-xl"
                 >
                   {pl.name}
                 </button>
@@ -205,12 +210,12 @@ export function TrackRow({
             </>
           )}
           {!onToggleLike && menuPlaylists !== null && menuPlaylists.length === 0 && (
-            <div className="px-4 py-2.5 text-[13px] text-white/40">
+            <div className="px-4 py-3 text-[13px] text-white/40">
               No playlists yet
             </div>
           )}
         </div>
-      )}
+      </BottomSheet>
     </button>
   );
 }
