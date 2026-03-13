@@ -483,3 +483,56 @@ export async function removeTrackFromPlaylist(playlistId: string, trackId: strin
     method: 'DELETE',
   });
 }
+
+// ─────────────────────────────────────────────────────────────
+//  Play History & Stats (Feature 6)
+// ─────────────────────────────────────────────────────────────
+
+export async function recordPlayHistory(trackId: string, duration: number): Promise<void> {
+  if (IS_DEMO || duration < 30) return;
+  await apiFetch('/api/play-history', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trackId, duration: Math.round(duration) }),
+  }).catch(() => {});
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Seek Events & Heatmap (Feature 7)
+// ─────────────────────────────────────────────────────────────
+
+export async function recordSeekEvent(trackId: string, timestamp: number): Promise<void> {
+  if (IS_DEMO) return;
+  await apiFetch('/api/seek-events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trackId, timestamp }),
+  }).catch(() => {});
+}
+
+export async function getTrackHeatmap(trackId: string, buckets = 50): Promise<number[]> {
+  if (IS_DEMO) return new Array(buckets).fill(0);
+  const res = await apiFetch(`/api/seek-events/${trackId}/heatmap?buckets=${buckets}`);
+  const data = await res.json();
+  return data.buckets ?? [];
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Collaborative Playlists (Feature 4)
+// ─────────────────────────────────────────────────────────────
+
+export async function addCollaborator(playlistId: string, userId: string, role = 'editor'): Promise<void> {
+  if (IS_DEMO) return;
+  await apiFetch(`/api/playlists/${playlistId}/collaborators`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, role }),
+  });
+}
+
+export async function removeCollaborator(playlistId: string, userId: string): Promise<void> {
+  if (IS_DEMO) return;
+  await apiFetch(`/api/playlists/${playlistId}/collaborators/${userId}`, {
+    method: 'DELETE',
+  });
+}

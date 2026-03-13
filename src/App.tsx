@@ -43,6 +43,10 @@ import { ToastProvider } from '@/context/ToastContext';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
 import { useMediaSession } from '@/hooks/useMediaSession';
 import { useSnippetFromUrl } from '@/hooks/useSnippetSharing';
+import { usePlayHistory } from '@/hooks/usePlayHistory';
+import { useSeekTracking } from '@/hooks/useSeekTracking';
+import { useGaplessPlayback } from '@/hooks/useGaplessPlayback';
+import { useDynamicTheme } from '@/hooks/useDynamicTheme';
 import { MiniPlayer } from '@/components/MiniPlayer';
 import { NowPlaying } from '@/components/NowPlaying';
 import { Home } from '@/pages/Home';
@@ -79,6 +83,18 @@ function AppContent() {
 
   // ── Read ?t= and ?track= from URL for snippet sharing ──
   useSnippetFromUrl();
+
+  // ── Record play history for stats (Feature 6) ─────────────
+  usePlayHistory();
+
+  // ── Track seek events for heatmap (Feature 7) ─────────────
+  useSeekTracking();
+
+  // ── Pre-load next track for gapless playback (Feature 8) ──
+  useGaplessPlayback();
+
+  // ── Dynamic theme colors from album art (Feature 10) ──────
+  useDynamicTheme();
 
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 

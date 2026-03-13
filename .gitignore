@@ -5,6 +5,7 @@ dist/
 .vscode/
 Music/
 *.db
+*.db-journal
 *.log
 build-personal-music-pwa*/
 *.so.node

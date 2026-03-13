@@ -33,10 +33,19 @@ import {
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
-  Mic, MicOff, Headphones, Quote, GripVertical,
+  Mic, Mic2, MicOff, Headphones, Quote, GripVertical,
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
+import {
+  DndContext, closestCenter,
+  useSensor, useSensors, PointerSensor, TouchSensor,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext, verticalListSortingStrategy, useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Track } from '@/types/music';
 
 interface NowPlayingProps {
@@ -426,6 +435,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 className="w-full h-full object-cover"
               />
             </motion.div>
+          </div>
 
             {/* ── Track info row ── */}
             <div className="flex items-start justify-between gap-3 mb-2">
@@ -445,7 +455,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
               </div>
 
               <button
-                onClick={() => toggleLike(currentTrack.id)}
+                onClick={() => { haptic(); toggleLike(currentTrack.id); }}
                 className="pt-1 active:scale-90 transition-transform flex-shrink-0"
                 aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
               >

@@ -33,9 +33,14 @@ import lyricsRoutes   from './routes/lyrics';
 import pushRoutes     from './routes/push';
 import smartPlaylistRoutes from './routes/smartPlaylists';
 import coverRoutes    from './routes/covers';
+import collaborateRoutes   from './routes/collaborate';
+import playHistoryRoutes   from './routes/playHistory';
+import seekEventRoutes     from './routes/seekEvents';
+import ogTagRoutes         from './routes/ogTags';
 
 // Services
 import { startWatcher, stopWatcher } from './services/watcher';
+import { initListeningParty } from './services/listeningParty';
 
 // ─────────────────────────────────────────────────────────────
 //  Build the Fastify instance
@@ -143,6 +148,10 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(pushRoutes,     { prefix: '/api' });
   await server.register(smartPlaylistRoutes, { prefix: '/api' });
   await server.register(coverRoutes,         { prefix: '/api' });
+  await server.register(collaborateRoutes,   { prefix: '/api' });
+  await server.register(playHistoryRoutes,   { prefix: '/api' });
+  await server.register(seekEventRoutes,     { prefix: '/api' });
+  await server.register(ogTagRoutes);
 
   // ── Frontend static assets (Vite build) ───────────────────
   //
@@ -218,6 +227,9 @@ async function start(): Promise<void> {
       port: config.port,
       host: config.host,    // 0.0.0.0 = accessible on local network
     });
+
+    // ── Initialize Socket.io for Listening Party ────────────
+    initListeningParty(server.server);
 
     console.log('\n');
     console.log('╔══════════════════════════════════════════════╗');
