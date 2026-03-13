@@ -16,6 +16,7 @@
 
 import { useEffect, useRef } from 'react';
 import { audioEl, usePlayerStore } from '@/store/playerStore';
+import type { Track } from '@/types/music';
 import {
   crossfadeEl,
   isAudioPipelineReady,
@@ -108,8 +109,8 @@ export function useCrossfade() {
 
   function startCrossfade(
     fadeDuration: number,
-    nextTrack: { audioUrl: string; [k: string]: unknown },
-    queue: unknown[],
+    nextTrack: Track,
+    queue: Track[],
     nextIndex: number,
   ) {
     ensureContextResumed();
@@ -156,8 +157,8 @@ export function useCrossfade() {
   }
 
   function commitCrossfade(
-    nextTrack: { audioUrl: string; [k: string]: unknown },
-    queue: unknown[],
+    nextTrack: Track,
+    queue: Track[],
     nextIndex: number,
     useWebAudio: boolean,
     mainGain: GainNode | null,
@@ -191,12 +192,7 @@ export function useCrossfade() {
       }
 
       // Update store metadata (skip audio load since audioEl is already playing)
-      store.playTrack(
-        nextTrack as Parameters<typeof store.playTrack>[0],
-        queue as Parameters<typeof store.playTrack>[1],
-        nextIndex,
-        { skipAudioLoad: true },
-      );
+      store.playTrack(nextTrack, queue, nextIndex, { skipAudioLoad: true });
 
       store._setIsCrossfading(false);
       fading.current = false;
