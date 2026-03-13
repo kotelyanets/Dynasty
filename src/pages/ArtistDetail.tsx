@@ -1,3 +1,4 @@
+import { useRef, useCallback, useEffect, useState } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useArtistDetail } from '@/hooks/useArtistDetail';
 import { TrackRow } from '@/components/TrackRow';
@@ -43,6 +44,39 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
   const allArtistTracks = artist.albums.flatMap((a) => a.tracks);
   const topTracks = allArtistTracks.slice(0, 5);
 
+  // ── Parallax state ─────────────────────────────────────
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [heroScale, setHeroScale] = useState(1);
+  const [heroBlur, setHeroBlur] = useState(0);
+  const [heroOpacity, setHeroOpacity] = useState(1);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollY = el.scrollTop;
+    if (scrollY < 0) {
+      // Overscroll (pull down) — zoom in
+      const scale = 1 + Math.abs(scrollY) / 300;
+      setHeroScale(Math.min(scale, 1.5));
+      setHeroBlur(0);
+      setHeroOpacity(1);
+    } else {
+      // Scroll down — blur and fade
+      setHeroScale(1);
+      const blur = Math.min(scrollY / 30, 20);
+      const opacity = Math.max(1 - scrollY / 400, 0.3);
+      setHeroBlur(blur);
+      setHeroOpacity(opacity);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
   const handlePlayAll = () => {
     if (allArtistTracks.length > 0) playTrack(allArtistTracks[0], allArtistTracks, 0);
   };
@@ -53,7 +87,7 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
   };
 
   return (
-    <div className="pb-4">
+    <div ref={scrollRef} className="pb-4 h-full overflow-y-auto overscroll-y-contain">
       {/* Back button */}
       <div className="fixed top-0 left-0 right-0 z-30 px-2 pt-14 pb-2 bg-gradient-to-b from-black/70 to-transparent">
         <button
@@ -67,13 +101,23 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
 
       {/* Artist Header */}
       <div className="relative pt-0">
-        {/* Background image */}
-        <div className="absolute inset-0 h-[300px] overflow-hidden">
+        {/* Background image with parallax */}
+        <div
+          className="absolute inset-0 h-[300px] overflow-hidden"
+          style={{ position: 'sticky', top: 0, zIndex: 0 }}
+        >
           <img
             src={artist.imageUrl}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-[filter] duration-100"
             alt=""
             aria-hidden="true"
+            style={{
+              transform: `scale(${heroScale})`,
+              filter: `blur(${heroBlur}px)`,
+              opacity: heroOpacity,
+              transformOrigin: 'center center',
+              willChange: 'transform, filter, opacity',
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black" />
         </div>

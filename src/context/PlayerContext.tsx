@@ -36,6 +36,9 @@ interface PlayerState {
   repeat: RepeatMode;
   showNowPlaying: boolean;
   errorMessage: string | null; // ← NEW
+  playHistory: Track[];        // ← NEW: recently played tracks
+  karaokeEnabled: boolean;     // ← NEW: vocal removal
+  spatialAudioEnabled: boolean; // ← NEW: stereo widening
 }
 
 interface PlayerContextType {
@@ -51,6 +54,8 @@ interface PlayerContextType {
   toggleMute: () => void;   // ← NEW
   toggleShuffle: () => void;
   toggleRepeat: () => void;
+  toggleKaraoke: () => void;       // ← NEW
+  toggleSpatialAudio: () => void;  // ← NEW
   showNowPlaying: (show: boolean) => void;
   addToQueue: (tracks: Track[]) => void;
   formatTime: (seconds: number) => string;
@@ -97,6 +102,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     repeat: storeState.repeat,
     showNowPlaying: storeState.showNowPlaying,
     errorMessage: storeState.errorMessage,
+    playHistory: storeState.playHistory,
+    karaokeEnabled: storeState.karaokeEnabled,
+    spatialAudioEnabled: storeState.spatialAudioEnabled,
   };
 
   return (
@@ -114,6 +122,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         toggleMute: storeState.toggleMute,
         toggleShuffle: storeState.toggleShuffle,
         toggleRepeat: storeState.toggleRepeat,
+        toggleKaraoke: storeState.toggleKaraoke,
+        toggleSpatialAudio: storeState.toggleSpatialAudio,
         showNowPlaying: showNowPlayingFn,
         addToQueue: storeState.addToQueue,
         formatTime,
