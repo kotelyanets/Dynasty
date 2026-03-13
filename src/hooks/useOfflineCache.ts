@@ -192,8 +192,9 @@ export function useOfflineCache() {
     const meta = loadMeta();
     const tracks: Track[] = [];
     for (const id of downloadedIds) {
-      if (meta[id]?.track) {
-        tracks.push(meta[id].track);
+      const stored = meta[id]?.track;
+      if (stored) {
+        tracks.push(stored);
       }
     }
     return tracks;

@@ -115,8 +115,7 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
 
   const downloadedTracks = useMemo(
     () => getDownloadedTracks(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [downloadedIds],
+    [downloadedIds, getDownloadedTracks],
   );
 
   const tabs: { id: Tab; label: string; icon: typeof Music }[] = [

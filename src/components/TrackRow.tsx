@@ -168,7 +168,7 @@ export function TrackRow({
                   showToast({ icon: 'remove', title: 'Download Removed' });
                 } else {
                   const ok = await downloadTrack(track);
-                  showToast({ icon: ok ? 'download' : 'remove', title: ok ? 'Downloaded' : 'Download Failed' });
+                  showToast({ icon: ok ? 'download' : 'remove', title: ok ? 'Downloaded' : 'Download failed. Check your connection.' });
                 }
                 setShowMenu(false);
               }}
