@@ -18,6 +18,7 @@
 
 import { FastifyInstance } from 'fastify';
 import db from '../db';
+import { smartPlaylistPreviewSchema } from '../validation';
 
 interface SmartPlaylistRule {
   field: 'genre' | 'artist' | 'duration' | 'year' | 'playCount' | 'title';
@@ -25,23 +26,16 @@ interface SmartPlaylistRule {
   value: string | number;
 }
 
-interface SmartPlaylistRequest {
-  rules: SmartPlaylistRule[];
-  limit?: number;
-  orderBy?: 'title' | 'duration' | 'playCount' | 'year';
-  orderDir?: 'asc' | 'desc';
-}
-
 export default async function smartPlaylistRoutes(server: FastifyInstance) {
   // ── POST /smart-playlists/preview ─────────────────────────
-  server.post<{ Body: SmartPlaylistRequest }>(
+  server.post(
     '/smart-playlists/preview',
     async (request, reply) => {
-      const { rules, limit = 100, orderBy = 'title', orderDir = 'asc' } = request.body;
-
-      if (!rules || !Array.isArray(rules) || rules.length === 0) {
-        return reply.status(400).send({ error: 'At least one rule is required' });
+      const parsed = smartPlaylistPreviewSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
       }
+      const { rules, limit = 100, orderBy = 'title', orderDir = 'asc' } = parsed.data;
 
       try {
         // Build Prisma where clause from rules

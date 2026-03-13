@@ -6,13 +6,17 @@
  * Plugin registration order matters:
  *   1. CORS              — must come before all routes so preflight
  *                          OPTIONS requests get the right headers.
- *   2. Static files      — serves /covers/* from public/covers/
- *   3. Route plugins     — register under /api prefix
- *   4. Global error hook — consistent JSON error responses
+ *   2. Helmet            — security headers (CSP, XSS, clickjacking)
+ *   3. Rate Limit        — 100 req/min per IP, protects from DDoS/spam
+ *   4. Static files      — serves /covers/* from public/covers/
+ *   5. Route plugins     — register under /api prefix
+ *   6. Global error hook — consistent JSON error responses
  */
 
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import fs from 'fs';
@@ -28,6 +32,7 @@ import playlistRoutes from './routes/playlists';
 import lyricsRoutes   from './routes/lyrics';
 import pushRoutes     from './routes/push';
 import smartPlaylistRoutes from './routes/smartPlaylists';
+import coverRoutes    from './routes/covers';
 
 // Services
 import { startWatcher, stopWatcher } from './services/watcher';
@@ -82,6 +87,38 @@ export async function buildServer(): Promise<FastifyInstance> {
     maxAge:       86_400,    // Cache preflight for 24 hours
   });
 
+  // ── Security Headers (Helmet) ──────────────────────────────
+  // Adds CSP, X-Frame-Options, X-Content-Type-Options, etc.
+  // Configured to allow audio/image loading required by the PWA.
+  await server.register(helmet, {
+    contentSecurityPolicy: config.isDev
+      ? false                      // Disable CSP in dev (Vite injects inline scripts)
+      : {
+          directives: {
+            defaultSrc:  ["'self'"],
+            scriptSrc:   ["'self'"],
+            styleSrc:    ["'self'", "'unsafe-inline'"],  // TailwindCSS injects inline styles
+            imgSrc:      ["'self'", 'data:', 'blob:'],
+            mediaSrc:    ["'self'", 'blob:'],            // Audio streaming
+            connectSrc:  ["'self'"],
+            fontSrc:     ["'self'"],
+            workerSrc:   ["'self'"],                     // Service worker
+          },
+        },
+    crossOriginEmbedderPolicy: false,   // Required for audio cross-origin on local network
+    crossOriginResourcePolicy: false,   // Covers + audio served to same-origin PWA
+  });
+
+  // ── Rate Limiting ─────────────────────────────────────────
+  // Protect against brute-force / DDoS. 100 requests per minute
+  // per IP address. Streaming and static assets are excluded below.
+  await server.register(rateLimit, {
+    max:       100,
+    timeWindow: '1 minute',
+    allowList: ['127.0.0.1', '::1'],   // Localhost is exempt
+    keyGenerator: (request) => request.ip,
+  });
+
   // ── Static files (cover art) ──────────────────────────────
   // GET /covers/<hash>.jpg → serves from COVERS_DIR
   await server.register(fastifyStatic, {
@@ -105,6 +142,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(lyricsRoutes,   { prefix: '/api' });
   await server.register(pushRoutes,     { prefix: '/api' });
   await server.register(smartPlaylistRoutes, { prefix: '/api' });
+  await server.register(coverRoutes,         { prefix: '/api' });
 
   // ── Frontend static assets (Vite build) ───────────────────
   //

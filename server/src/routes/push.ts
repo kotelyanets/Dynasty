@@ -17,6 +17,7 @@
  */
 
 import { FastifyInstance } from 'fastify';
+import { pushSubscribeSchema, pushUnsubscribeSchema } from '../validation';
 
 // In-memory subscription store (production should use DB)
 const subscriptions: Map<string, PushSubscriptionJSON> = new Map();
@@ -43,13 +44,12 @@ export default async function pushRoutes(server: FastifyInstance) {
   });
 
   // ── POST /push/subscribe ──────────────────────────────────
-  server.post<{
-    Body: PushSubscriptionJSON;
-  }>('/push/subscribe', async (request, reply) => {
-    const subscription = request.body;
-    if (!subscription?.endpoint) {
-      return reply.status(400).send({ error: 'Invalid subscription' });
+  server.post('/push/subscribe', async (request, reply) => {
+    const parsed = pushSubscribeSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid subscription' });
     }
+    const subscription = parsed.data;
 
     subscriptions.set(subscription.endpoint, subscription);
     server.log.info(`[Push] New subscription: ${subscription.endpoint.substring(0, 50)}...`);
@@ -58,13 +58,12 @@ export default async function pushRoutes(server: FastifyInstance) {
   });
 
   // ── POST /push/unsubscribe ────────────────────────────────
-  server.post<{
-    Body: { endpoint: string };
-  }>('/push/unsubscribe', async (request, reply) => {
-    const { endpoint } = request.body;
-    if (!endpoint) {
-      return reply.status(400).send({ error: 'Missing endpoint' });
+  server.post('/push/unsubscribe', async (request, reply) => {
+    const parsed = pushUnsubscribeSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Missing endpoint' });
     }
+    const { endpoint } = parsed.data;
 
     subscriptions.delete(endpoint);
     return { ok: true };
