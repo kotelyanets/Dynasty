@@ -123,7 +123,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 pb-1 scrollbar-hide snap-x snap-mandatory" style={{ scrollSnapType: 'x mandatory' }}>
                 {recentAlbums.map((album) => (
-                  <div key={album.id} className="snap-start" style={{ scrollSnapAlign: 'start' }}>
+                  <div key={album.id} className="snap-start">
                     <AlbumCard album={album} onClick={() => onNavigate('album', album.id)} />
                   </div>
                 ))}
@@ -139,7 +139,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className="flex gap-5 overflow-x-auto px-5 pb-1 scrollbar-hide snap-x snap-mandatory" style={{ scrollSnapType: 'x mandatory' }}>
                 {featuredArtists.map((artist) => (
-                  <div key={artist.id} className="snap-start" style={{ scrollSnapAlign: 'start' }}>
+                  <div key={artist.id} className="snap-start">
                     <ArtistBubble artist={artist} onClick={() => onNavigate('artist', artist.id)} />
                   </div>
                 ))}
@@ -161,7 +161,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 pb-1 scrollbar-hide snap-x snap-mandatory" style={{ scrollSnapType: 'x mandatory' }}>
                 {featuredAlbums.map((album) => (
-                  <div key={album.id} className="snap-start" style={{ scrollSnapAlign: 'start' }}>
+                  <div key={album.id} className="snap-start">
                     <AlbumCard album={album} onClick={() => onNavigate('album', album.id)} />
                   </div>
                 ))}
@@ -202,7 +202,6 @@ export function Home({ onNavigate }: HomeProps) {
                     key={genre}
                     onClick={() => onNavigate('library', genre)}
                     className="flex-shrink-0 px-5 py-2.5 rounded-full bg-white/[0.09] border border-white/[0.1] active:bg-white/[0.15] active:scale-95 transition-all duration-150 snap-start"
-                    style={{ scrollSnapAlign: 'start' }}
                   >
                     <p className="text-[14px] font-semibold text-white whitespace-nowrap">{genre}</p>
                   </button>

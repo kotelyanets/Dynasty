@@ -16,13 +16,13 @@ interface LyricsMeshProps {
 }
 
 /** Extract dominant colors from an image via canvas sampling */
-function extractColors(img: HTMLImageElement): string[] {
+function extractColors(img: HTMLImageElement): [number, number, number][] {
   const canvas = document.createElement('canvas');
   const size = 64;
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext('2d');
-  if (!ctx) return ['#fc3c44', '#1a1a2e', '#16213e', '#0f3460'];
+  if (!ctx) return [[252, 60, 68], [26, 26, 46], [22, 33, 62], [15, 52, 96]];
 
   ctx.drawImage(img, 0, 0, size, size);
   const data = ctx.getImageData(0, 0, size, size).data;
@@ -37,13 +37,16 @@ function extractColors(img: HTMLImageElement): string[] {
 
   return quadrants.map(({ x, y }) => {
     const idx = (Math.floor(y) * size + Math.floor(x)) * 4;
-    return `rgb(${data[idx]}, ${data[idx + 1]}, ${data[idx + 2]})`;
+    const r = data[idx] ?? 0;
+    const g = data[idx + 1] ?? 0;
+    const b = data[idx + 2] ?? 0;
+    return [r, g, b] as [number, number, number];
   });
 }
 
 export function LyricsMesh({ coverUrl, isPlaying }: LyricsMeshProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const colorsRef = useRef<string[]>(['#fc3c44', '#1a1a2e', '#16213e', '#0f3460']);
+  const colorsRef = useRef<[number, number, number][]>([[252, 60, 68], [26, 26, 46], [22, 33, 62], [15, 52, 96]]);
   const animRef = useRef<number>(0);
   const timeRef = useRef(0);
 
@@ -89,7 +92,8 @@ export function LyricsMesh({ coverUrl, isPlaying }: LyricsMeshProps) {
     blobs.forEach((blob, i) => {
       const grad = ctx.createRadialGradient(blob.cx, blob.cy, 0, blob.cx, blob.cy, blob.r);
       const alpha = 0.4 + bassNorm * 0.3;
-      grad.addColorStop(0, colors[i % colors.length].replace('rgb', 'rgba').replace(')', `, ${alpha})`));
+      const [r, g, b] = colors[i % colors.length];
+      grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
       grad.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);

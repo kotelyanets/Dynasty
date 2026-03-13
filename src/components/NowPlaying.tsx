@@ -539,8 +539,10 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 onClick={async () => {
                   if (isDownloaded(currentTrack.id)) {
                     await removeDownload(currentTrack);
+                    showToast({ icon: 'remove', title: 'Download Removed' });
                   } else {
                     await downloadTrack(currentTrack);
+                    showToast({ icon: 'download', title: 'Downloaded' });
                   }
                   setShowMoreMenu(false);
                 }}

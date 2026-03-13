@@ -25,6 +25,7 @@ class AudioProcessorSingleton {
   private splitter: ChannelSplitterNode | null = null;
   private merger: ChannelMergerNode | null = null;
   private invertGain: GainNode | null = null;
+  private invertGainR: GainNode | null = null;
   private karaokeGain: GainNode | null = null;
   private dryGain: GainNode | null = null;
 
@@ -65,6 +66,8 @@ class AudioProcessorSingleton {
       this.merger = this.ctx.createChannelMerger(2);
       this.invertGain = this.ctx.createGain();
       this.invertGain.gain.value = -1;
+      this.invertGainR = this.ctx.createGain();
+      this.invertGainR.gain.value = -1;
       this.karaokeGain = this.ctx.createGain();
       this.karaokeGain.gain.value = 0; // disabled by default
       this.dryGain = this.ctx.createGain();
@@ -101,6 +104,7 @@ class AudioProcessorSingleton {
     try { this.splitter?.disconnect(); } catch { /* noop */ }
     try { this.merger?.disconnect(); } catch { /* noop */ }
     try { this.invertGain?.disconnect(); } catch { /* noop */ }
+    try { this.invertGainR?.disconnect(); } catch { /* noop */ }
     try { this.karaokeGain?.disconnect(); } catch { /* noop */ }
     try { this.dryGain?.disconnect(); } catch { /* noop */ }
     try { this.spatialDelay?.disconnect(); } catch { /* noop */ }
@@ -108,7 +112,7 @@ class AudioProcessorSingleton {
     try { this.spatialPanner?.disconnect(); } catch { /* noop */ }
     try { this.spatialDryGain?.disconnect(); } catch { /* noop */ }
 
-    if (this._karaokeEnabled && this.splitter && this.merger && this.invertGain && this.karaokeGain && this.dryGain) {
+    if (this._karaokeEnabled && this.splitter && this.merger && this.invertGain && this.invertGainR && this.karaokeGain && this.dryGain) {
       // Karaoke graph: source → splitter → (L-R vocal cancellation) → merger → master
       this.source.connect(this.splitter);
 
@@ -127,10 +131,9 @@ class AudioProcessorSingleton {
 
       // Right channel output = Right - Left (same karaoke on both sides)
       this.splitter.connect(this.merger, 1, 1); // R → R
-      const invertGainR = this.ctx.createGain();
-      invertGainR.gain.value = -1;
-      this.splitter.connect(invertGainR, 0, 0); // L → invert
-      invertGainR.connect(this.merger, 0, 1); // -L → R (R-L)
+      this.invertGainR.gain.value = -1;
+      this.splitter.connect(this.invertGainR, 0, 0); // L → invert
+      this.invertGainR.connect(this.merger, 0, 1); // -L → R (R-L)
 
       this.merger.connect(this.karaokeGain);
       this.karaokeGain.connect(this.masterGain);
