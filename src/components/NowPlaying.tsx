@@ -9,6 +9,7 @@
  */
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { usePlayer } from '@/context/PlayerContext';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { useOfflineCache } from '@/hooks/useOfflineCache';
@@ -20,10 +21,19 @@ import {
   Shuffle, Repeat, Repeat1, ChevronDown,
   ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
-  Mic, MicOff, Headphones,
+  Mic, Mic2, MicOff, Headphones, GripVertical,
 } from 'lucide-react';
 import { BottomSheet } from '@/components/BottomSheet';
 import { haptic } from '@/utils/haptics';
+import {
+  DndContext, closestCenter,
+  useSensor, useSensors, PointerSensor, TouchSensor,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext, verticalListSortingStrategy, useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Track } from '@/types/music';
 
 interface NowPlayingProps {
@@ -393,6 +403,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 className="w-full h-full object-cover"
               />
             </motion.div>
+          </div>
 
             {/* ── Track info row ── */}
             <div className="flex items-start justify-between gap-3 mb-2">
@@ -412,7 +423,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
               </div>
 
               <button
-                onClick={() => toggleLike(currentTrack.id)}
+                onClick={() => { haptic(); toggleLike(currentTrack.id); }}
                 className="pt-1 active:scale-90 transition-transform flex-shrink-0"
                 aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
               >
@@ -424,19 +435,6 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
                 />
               </button>
             </div>
-
-          <button
-            onClick={() => { haptic(); toggleLike(currentTrack.id); }}
-            className="pt-1 active:scale-90 transition-transform flex-shrink-0"
-            aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
-          >
-            <Heart
-              size={26}
-              strokeWidth={1.75}
-              fill={liked ? '#fc3c44' : 'none'}
-              className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
-            />
-          </button>
         </div>
 
         {/* ── Error banner ── */}
