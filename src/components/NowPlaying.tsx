@@ -98,7 +98,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
 
   const {
     currentTrack, isPlaying, currentTime, duration,
-    shuffle, repeat, autoplayInfinity, showNowPlaying: visible,
+    shuffle, repeat, autoplayInfinity,
     buffered, bufferingState, volume, isMuted,
     errorMessage, playHistory, karaokeEnabled, spatialAudioEnabled,
   } = state;
@@ -192,7 +192,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
     }
   }, [reorderQueue]);
 
-  if (!currentTrack || !visible) return null;
+  if (!currentTrack) return null;
 
   const displayTime = isSeeking ? seekTime : currentTime;
   const playedPct   = duration > 0 ? (displayTime / duration) * 100 : 0;
@@ -322,6 +322,7 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
         className="w-full h-full flex flex-col"
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
+        exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         style={{
           y: dismissY,
