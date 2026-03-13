@@ -1,62 +1,21 @@
-import { useEffect, useState, useCallback } from 'react';
-import { getLikedTrackIds, addLikedTrack, removeLikedTrack } from '@/services/api';
+import { useEffect, useCallback } from 'react';
+import { useLikedStore } from '@/store/likedStore';
 
+/**
+ * Thin wrapper around the global Zustand liked-tracks store.
+ *
+ * Because every component shares the same store, toggling a like
+ * in NowPlaying instantly updates TrackRow, AlbumDetail, etc.
+ */
 export function useLikedTracks() {
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
+  const likedIds = useLikedStore((s) => s.likedIds);
+  const loading = useLikedStore((s) => s.loading);
+  const toggleLike = useLikedStore((s) => s.toggleLike);
+  const hydrate = useLikedStore((s) => s.hydrate);
 
-  useEffect(() => {
-    let mounted = true;
-    getLikedTrackIds()
-      .then((ids) => {
-        if (!mounted) return;
-        setLikedIds(new Set(ids));
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!mounted) return;
-        setLoading(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const toggleLike = useCallback(async (trackId: string) => {
-    const wasLiked = likedIds.has(trackId);
-
-    // Optimistic UI update
-    setLikedIds((prev) => {
-      const next = new Set(prev);
-      if (wasLiked) {
-        next.delete(trackId);
-      } else {
-        next.add(trackId);
-      }
-      return next;
-    });
-
-    try {
-      // Persist to backend
-      if (wasLiked) {
-        await removeLikedTrack(trackId);
-      } else {
-        await addLikedTrack(trackId);
-      }
-    } catch {
-      // Revert on failure
-      setLikedIds((prev) => {
-        const reverted = new Set(prev);
-        if (wasLiked) {
-          reverted.add(trackId);
-        } else {
-          reverted.delete(trackId);
-        }
-        return reverted;
-      });
-    }
-  }, [likedIds]);
+  // Trigger hydration on first mount (idempotent — only fetches once).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { hydrate(); }, []);
 
   const isLiked = useCallback(
     (trackId: string) => likedIds.has(trackId),
