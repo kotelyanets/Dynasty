@@ -75,7 +75,7 @@ export function Home({ onNavigate }: HomeProps) {
     <div className="pb-4">
       {/* ── Header ── */}
       <div className="px-5 pt-14 pb-3">
-        <p className="text-[15px] font-semibold text-[#fc3c44]">{greeting()}</p>
+        <p className="text-[15px] font-semibold text-[#fc3c44] mb-0.5">{greeting()}</p>
         <h1 className="text-[34px] font-bold text-white leading-tight">Listen Now</h1>
       </div>
 
