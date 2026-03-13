@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TrackRow } from '@/components/TrackRow';
 import { useSearch } from '@/hooks/useSearch';
 import { useAlbums } from '@/hooks/useAlbums';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
-import { Search as SearchIcon, X, Loader2, ChevronRight } from 'lucide-react';
+import { useVoiceSearch } from '@/hooks/useVoiceSearch';
+import { Search as SearchIcon, X, Loader2, ChevronRight, Mic, MicOff } from 'lucide-react';
 
 interface SearchProps {
   onNavigate: (view: string, id?: string) => void;
@@ -14,6 +15,11 @@ export function Search({ onNavigate }: SearchProps) {
   const { data: results, loading } = useSearch(query);
   const { data: albums } = useAlbums();
   const { isLiked, toggleLike } = useLikedTracks();
+
+  const onVoiceResult = useCallback((text: string) => {
+    setQuery(text);
+  }, []);
+  const { listening, supported: voiceSupported, start: startVoice, stop: stopVoice } = useVoiceSearch(onVoiceResult);
 
   const hasResults = results.tracks.length > 0 || results.albums.length > 0 || results.artists.length > 0;
 
@@ -66,6 +72,17 @@ export function Search({ onNavigate }: SearchProps) {
               className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 active:text-white/70"
             >
               <X size={17} />
+            </button>
+          )}
+          {!query && voiceSupported && (
+            <button
+              onClick={() => listening ? stopVoice() : startVoice()}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${
+                listening ? 'text-[#fc3c44] animate-pulse' : 'text-white/40 active:text-white/70'
+              }`}
+              aria-label={listening ? 'Stop voice search' : 'Voice search'}
+            >
+              {listening ? <MicOff size={17} /> : <Mic size={17} />}
             </button>
           )}
         </div>

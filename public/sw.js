@@ -108,3 +108,113 @@ self.addEventListener('fetch', (event) => {
   // ── Everything else: network only ───────────────────────
   // API calls, etc. are not cached — they need live data.
 });
+
+// ─────────────────────────────────────────────────────────────
+//  Background Sync — replay queued offline actions
+// ─────────────────────────────────────────────────────────────
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'vault-sync') {
+    event.waitUntil(replayOfflineQueue());
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+//  Push Notifications — show alerts for new releases
+// ─────────────────────────────────────────────────────────────
+
+self.addEventListener('push', (event) => {
+  let data = { title: 'Vault Music', body: 'New music available!' };
+
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch {
+      data.body = event.data.text();
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23FA2D48"/><text x="50" y="68" text-anchor="middle" font-size="50" fill="white">♪</text></svg>',
+      badge: data.badge,
+      tag: data.tag || 'vault-notification',
+      data: data.url ? { url: data.url } : undefined,
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const url = event.notification.data?.url || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      // Focus an existing tab if one exists
+      for (const client of clients) {
+        if (client.url.includes(self.location.origin)) {
+          client.focus();
+          if (url !== '/') client.navigate(url);
+          return;
+        }
+      }
+      // Otherwise open a new window
+      return self.clients.openWindow(url);
+    })
+  );
+});
+
+/**
+ * Replay all queued offline actions from IndexedDB.
+ * Called by the Background Sync API when connectivity returns.
+ */
+async function replayOfflineQueue() {
+  const DB_NAME = 'vault-offline-queue';
+  const STORE_NAME = 'actions';
+
+  try {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, 1);
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    const actions = await new Promise((resolve, reject) => {
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+
+    for (const action of actions) {
+      try {
+        const init = {
+          method: action.method,
+          headers: { 'Content-Type': 'application/json' },
+        };
+        if (action.body) init.body = action.body;
+
+        const response = await fetch(action.url, init);
+        if (response.ok || response.status === 409) {
+          const deleteTx = db.transaction(STORE_NAME, 'readwrite');
+          deleteTx.objectStore(STORE_NAME).delete(action.id);
+        }
+      } catch {
+        // Still offline — will retry on next sync
+        break;
+      }
+    }
+
+    db.close();
+  } catch (err) {
+    console.warn('[SW] Background sync failed:', err);
+  }
+}
