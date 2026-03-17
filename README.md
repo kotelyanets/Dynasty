@@ -76,7 +76,9 @@ Dynasty/
 git clone https://github.com/kotelyanets/Dynasty.git
 cd Dynasty
 npm install
-cd server && npm install && cd ..
+cd server
+npm install
+cd ..
 ```
 
 ### 2) Configure environment
@@ -101,7 +103,7 @@ NODE_ENV=development
 ```bash
 cd server
 npx prisma generate
-npx prisma migrate deploy
+npx prisma migrate dev --name init
 npm run scan
 ```
 
