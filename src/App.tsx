@@ -59,6 +59,8 @@ import { usePlayerStore } from '@/store/playerStore';
 import { Home as HomeIcon, Search as SearchIcon, Library as LibraryIcon } from 'lucide-react';
 import { LayoutGroup, AnimatePresence } from 'framer-motion';
 import { haptic } from '@/utils/haptics';
+import { AuthModal } from '@/components/AuthModal';
+import { useAuthStore } from '@/store/authStore';
 
 interface NavState {
   view: string;
@@ -139,6 +141,7 @@ function AppContent() {
   // ── Dynamic theme colors from album art (Feature 10) ──────
   useDynamicTheme();
 
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [nav, setNav] = useState<NavState>({ view: 'home', history: [] });
 
   // ── Safety: reset to 'home' if a detail view loses its ID ──
@@ -189,6 +192,8 @@ function AppContent() {
 
   return (
     <div className="h-[100dvh] flex flex-col bg-black text-white overflow-hidden">
+      {!isAuthenticated && <AuthModal />}
+      
       {/* ── Scrollable page content ── */}
       <main className="flex-1 overflow-y-auto overscroll-y-contain scrollbar-hide">
         <ErrorBoundary onReset={() => switchTab('home')}>

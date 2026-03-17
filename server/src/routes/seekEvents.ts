@@ -31,7 +31,11 @@ const seekEventRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       const { trackId, timestamp } = parsed.data;
 
       await db.seekEvent.create({
-        data: { trackId, timestamp },
+        data: { 
+          trackId, 
+          timestamp,
+          userId: 'default' // Need to require auth later, for now string compat
+        },
       });
 
       return reply.status(201).send({ ok: true });

@@ -48,8 +48,16 @@ export function TrackRow({
   };
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
       className="relative w-full flex items-center gap-3 px-4 py-2.5 rounded-[10px] group text-left touch-row"
     >
       {/* Track number or animated bars */}
@@ -220,6 +228,6 @@ export function TrackRow({
           )}
         </div>
       </BottomSheet>
-    </button>
+    </div>
   );
 }

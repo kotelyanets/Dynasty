@@ -58,6 +58,8 @@ import {
   getArtistById,
 } from '@/data/mockData';
 
+import { useAuthStore } from '@/store/authStore';
+
 // ─────────────────────────────────────────────────────────────
 //  Configuration
 //  Set VITE_API_URL in your .env file (e.g. http://192.168.1.5:3000)
@@ -89,8 +91,20 @@ class ApiError extends Error {
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${path}`;
+  
+  // Inject JWT if available
+  const token = useAuthStore.getState().token;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...((init?.headers as Record<string, string>) || {}),
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers,
     ...init,
   });
 
@@ -379,6 +393,15 @@ export async function getLikedTrackIds(): Promise<string[]> {
   return apiFetch<string[]>('/api/tracks/liked-ids');
 }
 
+export async function getLikedTracks(): Promise<Track[]> {
+  if (IS_DEMO) {
+    const ids = await getLikedTrackIds();
+    return allTracks.filter(t => ids.includes(t.id));
+  }
+  const data = await apiFetch<ApiTrack[]>('/api/tracks/liked');
+  return data.map(mapTrack);
+}
+
 export async function addLikedTrack(trackId: string): Promise<void> {
   if (IS_DEMO) {
     const ids = await getLikedTrackIds();
@@ -512,9 +535,8 @@ export async function recordSeekEvent(trackId: string, timestamp: number): Promi
 
 export async function getTrackHeatmap(trackId: string, buckets = 50): Promise<number[]> {
   if (IS_DEMO) return new Array(buckets).fill(0);
-  const res = await apiFetch(`/api/seek-events/${trackId}/heatmap?buckets=${buckets}`);
-  const data = await res.json();
-  return data.buckets ?? [];
+  const res = await apiFetch<any>(`/api/seek-events/${trackId}/heatmap?buckets=${buckets}`);
+  return res.buckets ?? [];
 }
 
 // ─────────────────────────────────────────────────────────────

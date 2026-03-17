@@ -9,7 +9,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { VirtualTrackList } from '@/components/VirtualTrackList';
-import { api, getOrCreateLikedPlaylist, getStoredLikedPlaylistId } from '@/services/api';
+import { api, getStoredLikedPlaylistId, getLikedTrackIds } from '@/services/api';
 import type { Playlist } from '@/types/music';
 import { useTracks } from '@/hooks/useTracks';
 import { useAlbums } from '@/hooks/useAlbums';
@@ -36,11 +36,12 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
   const [songSort, setSongSort] = useState<SongSort>('default');
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [likedPlaylistId, setLikedPlaylistId] = useState<string | null>(getStoredLikedPlaylistId());
+  const [likedPlaylistId] = useState<string | null>(getStoredLikedPlaylistId());
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [playlistsError, setPlaylistsError] = useState<string | null>(null);
   const [playlistActionError, setPlaylistActionError] = useState<string | null>(null);
+  const [likedCount, setLikedCount] = useState<number | null>(null);
 
   // ── Fetch real data from the backend ──────────────────────
   const { data: tracks, loading: tracksLoading, error: tracksError } = useTracks();
@@ -54,6 +55,10 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
     api.getPlaylists()
       .then(setPlaylists)
       .catch((e) => setPlaylistsError(e instanceof Error ? e.message : 'Failed to load playlists'));
+    
+    getLikedTrackIds()
+      .then((ids) => setLikedCount(ids.length))
+      .catch((e) => console.error('Failed to fetch liked track IDs', e));
   }, [activeTab]);
 
   // Apply initial tab / genre when provided by the parent.
@@ -333,23 +338,13 @@ export function Library({ onNavigate, initialTab, initialGenre }: LibraryProps) 
                 const likedPl = playlists.find(
                   (p) => p.id === likedPlaylistId || p.name.toLowerCase() === 'liked tracks',
                 );
-                const songCount = likedPl?.trackIds.length ?? 0;
-                const handleOpenLiked = async () => {
-                  if (likedPl) {
-                    onNavigate('playlist', likedPl.id);
-                  } else {
-                    const pl = await getOrCreateLikedPlaylist();
-                    setLikedPlaylistId(pl.id);
-                    setPlaylists((prev) => {
-                      if (prev.find((p) => p.id === pl.id)) return prev;
-                      return [pl, ...prev];
-                    });
-                    onNavigate('playlist', pl.id);
-                  }
+                const songCount = likedCount !== null ? likedCount : (likedPl?.trackIds.length ?? 0);
+                const handleOpenLiked = () => {
+                  onNavigate('playlist', 'liked-tracks');
                 };
                 return (
                   <div
-                    onClick={() => void handleOpenLiked()}
+                    onClick={handleOpenLiked}
                     className="flex items-center gap-3.5 py-3 border-b border-white/[0.06] cursor-pointer active:bg-white/[0.04] transition-colors -mx-1 px-1 rounded-xl mb-1"
                   >
                     <div className="w-[52px] h-[52px] rounded-[12px] bg-gradient-to-br from-[#fc3c44]/60 to-[#7a001a]/80 flex items-center justify-center flex-shrink-0 shadow-md">

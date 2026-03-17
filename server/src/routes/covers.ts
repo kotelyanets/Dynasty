@@ -80,6 +80,8 @@ export default async function coverRoutes(server: FastifyInstance) {
       reply.header('Cache-Control', 'public, max-age=2592000, immutable');
       return reply.send(buffer);
     } catch (err) {
+      console.error(`[Covers API] 🔴 SHARP RESIZE FAILED for ${filename}`);
+      console.error(`[Covers API] Exact reason:`, err);
       server.log.error(err, 'Cover resize failed');
       // Fall back to the original file
       const stream = fs.createReadStream(filePath);

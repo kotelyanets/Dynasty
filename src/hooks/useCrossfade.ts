@@ -87,7 +87,7 @@ export function useCrossfade() {
       },
     );
 
-    // Reset flags when track changes
+    // Reset flags and fix silence bug when track changes fresh
     const unsubTrack = usePlayerStore.subscribe(
       (s) => s.currentTrack?.id,
       () => {
@@ -97,6 +97,13 @@ export function useCrossfade() {
           cancelAnimationFrame(rafId.current);
           rafId.current = null;
         }
+        
+        // If crossfade was aborted or track starts fresh, ensure mainGain doesn't get stuck at 0
+        const main = getMainGain();
+        if (main) main.gain.value = 1;
+        
+        const xf = getCrossfadeGain();
+        if (xf) xf.gain.value = 0;
       },
     );
 

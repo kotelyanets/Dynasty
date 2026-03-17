@@ -23,6 +23,7 @@ import {
   trackIdsSchema,
   reorderSchema,
 } from '../validation';
+import { authenticate } from './auth';
 
 const TRACK_SELECT = {
   id:          true,
@@ -66,8 +67,9 @@ function buildTrack(t: {
 const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
 
   // ── GET /api/playlists ────────────────────────────────────
-  fastify.get('/playlists', async (_req: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/playlists', { preValidation: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
     const playlists = await db.playlist.findMany({
+      where: { userId: request.user.id },
       orderBy: { createdAt: 'desc' },
       include: { _count: { select: { tracks: true } } },
     });
@@ -86,10 +88,13 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   });
 
   // ── POST /api/playlists ───────────────────────────────────
-  fastify.post('/playlists', async (
-    request: FastifyRequest<{ Body: { name: string; description?: string } }>,
-    reply: FastifyReply
-  ) => {
+  fastify.post<{ Body: { name: string; description?: string } }>(
+    '/playlists',
+    { preValidation: [authenticate] },
+    async (
+      request: FastifyRequest<{ Body: { name: string; description?: string } }>,
+      reply: FastifyReply
+    ) => {
     const parsed = createPlaylistSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
@@ -99,6 +104,7 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       data: {
         name:        parsed.data.name.trim(),
         description: parsed.data.description?.trim() ?? null,
+        userId:      request.user.id,
       },
     });
 
@@ -115,9 +121,13 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // ── GET /api/playlists/:id ────────────────────────────────
   fastify.get<{ Params: { id: string } }>(
     '/playlists/:id',
+    { preValidation: [authenticate] },
     async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-      const playlist = await db.playlist.findUnique({
-        where: { id: request.params.id },
+      const playlist = await db.playlist.findFirst({
+        where: { 
+          id: request.params.id,
+          userId: request.user.id 
+        },
         include: {
           tracks: {
             orderBy: { position: 'asc' },
@@ -145,6 +155,7 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // ── PATCH /api/playlists/:id ──────────────────────────────
   fastify.patch<{ Params: { id: string } }>(
     '/playlists/:id',
+    { preValidation: [authenticate] },
     async (
       request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply
@@ -154,24 +165,33 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid input' });
       }
       const body = parsed.data;
-      const updated = await db.playlist.update({
-        where: { id: request.params.id },
+      const updated = await db.playlist.updateMany({
+        where: { 
+          id: request.params.id,
+          userId: request.user.id 
+        },
         data: {
           ...(body.name        !== undefined && { name:        body.name.trim() }),
           ...(body.description !== undefined && { description: body.description }),
         },
       }).catch(() => null);
 
-      if (!updated) return reply.status(404).send({ error: 'Playlist not found' });
-      return reply.send({ id: updated.id, name: updated.name });
+      if (!updated || updated.count === 0) return reply.status(404).send({ error: 'Playlist not found' });
+      return reply.send({ id: request.params.id, name: body.name ?? '' });
     }
   );
 
   // ── DELETE /api/playlists/:id ─────────────────────────────
   fastify.delete<{ Params: { id: string } }>(
     '/playlists/:id',
+    { preValidation: [authenticate] },
     async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-      await db.playlist.delete({ where: { id: request.params.id } }).catch(() => null);
+      await db.playlist.deleteMany({ 
+        where: { 
+          id: request.params.id,
+          userId: request.user.id 
+        } 
+      }).catch(() => null);
       return reply.status(204).send();
     }
   );
@@ -180,6 +200,7 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // Body: { trackIds: string[] }
   fastify.post<{ Params: { id: string } }>(
     '/playlists/:id/tracks',
+    { preValidation: [authenticate] },
     async (
       request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply
@@ -226,6 +247,7 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // ── DELETE /api/playlists/:id/tracks/:trackId ─────────────
   fastify.delete<{ Params: { id: string; trackId: string } }>(
     '/playlists/:id/tracks/:trackId',
+    { preValidation: [authenticate] },
     async (
       request: FastifyRequest<{ Params: { id: string; trackId: string } }>,
       reply: FastifyReply
@@ -255,6 +277,7 @@ const playlistRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // Body: { trackIds: string[] } — the full ordered list
   fastify.put<{ Params: { id: string } }>(
     '/playlists/:id/reorder',
+    { preValidation: [authenticate] },
     async (
       request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply

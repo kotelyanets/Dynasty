@@ -14,6 +14,16 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model User
+ * 
+ */
+export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model TrackLike
+ * 
+ */
+export type TrackLike = $Result.DefaultSelection<Prisma.$TrackLikePayload>
+/**
  * Model Artist
  * 
  */
@@ -66,8 +76,8 @@ export type ListeningRoom = $Result.DefaultSelection<Prisma.$ListeningRoomPayloa
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Artists
- * const artists = await prisma.artist.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  *
  * 
@@ -87,8 +97,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Artists
-   * const artists = await prisma.artist.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    *
    * 
@@ -183,6 +193,26 @@ export class PrismaClient<
   $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb, ExtArgs>
 
       /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.trackLike`: Exposes CRUD operations for the **TrackLike** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrackLikes
+    * const trackLikes = await prisma.trackLike.findMany()
+    * ```
+    */
+  get trackLike(): Prisma.TrackLikeDelegate<ExtArgs>;
+
+  /**
    * `prisma.artist`: Exposes CRUD operations for the **Artist** model.
     * Example usage:
     * ```ts
@@ -712,6 +742,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    User: 'User',
+    TrackLike: 'TrackLike',
     Artist: 'Artist',
     Album: 'Album',
     Track: 'Track',
@@ -736,10 +768,150 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "artist" | "album" | "track" | "playlist" | "playlistTrack" | "playlistCollaborator" | "playHistory" | "seekEvent" | "listeningRoom"
+      modelProps: "user" | "trackLike" | "artist" | "album" | "track" | "playlist" | "playlistTrack" | "playlistCollaborator" | "playHistory" | "seekEvent" | "listeningRoom"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      User: {
+        payload: Prisma.$UserPayload<ExtArgs>
+        fields: Prisma.UserFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          findFirst: {
+            args: Prisma.UserFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          findMany: {
+            args: Prisma.UserFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
+          create: {
+            args: Prisma.UserCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          createMany: {
+            args: Prisma.UserCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
+          delete: {
+            args: Prisma.UserDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          update: {
+            args: Prisma.UserUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+          }
+          aggregate: {
+            args: Prisma.UserAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUser>
+          }
+          groupBy: {
+            args: Prisma.UserGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserCountArgs<ExtArgs>
+            result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      TrackLike: {
+        payload: Prisma.$TrackLikePayload<ExtArgs>
+        fields: Prisma.TrackLikeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrackLikeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrackLikeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          findFirst: {
+            args: Prisma.TrackLikeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrackLikeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          findMany: {
+            args: Prisma.TrackLikeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>[]
+          }
+          create: {
+            args: Prisma.TrackLikeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          createMany: {
+            args: Prisma.TrackLikeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrackLikeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>[]
+          }
+          delete: {
+            args: Prisma.TrackLikeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          update: {
+            args: Prisma.TrackLikeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          deleteMany: {
+            args: Prisma.TrackLikeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrackLikeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TrackLikeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackLikePayload>
+          }
+          aggregate: {
+            args: Prisma.TrackLikeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrackLike>
+          }
+          groupBy: {
+            args: Prisma.TrackLikeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrackLikeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrackLikeCountArgs<ExtArgs>
+            result: $Utils.Optional<TrackLikeCountAggregateOutputType> | number
+          }
+        }
+      }
       Artist: {
         payload: Prisma.$ArtistPayload<ExtArgs>
         fields: Prisma.ArtistFieldRefs
@@ -1527,6 +1699,64 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    likes: number
+    playlists: number
+    playHistory: number
+    seekEvents: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    likes?: boolean | UserCountOutputTypeCountLikesArgs
+    playlists?: boolean | UserCountOutputTypeCountPlaylistsArgs
+    playHistory?: boolean | UserCountOutputTypeCountPlayHistoryArgs
+    seekEvents?: boolean | UserCountOutputTypeCountSeekEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackLikeWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPlaylistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlaylistWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSeekEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeekEventWhereInput
+  }
+
+
+  /**
    * Count Type ArtistCountOutputType
    */
 
@@ -1605,12 +1835,14 @@ export namespace Prisma {
     playlistTracks: number
     playHistory: number
     seekEvents: number
+    likes: number
   }
 
   export type TrackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     playlistTracks?: boolean | TrackCountOutputTypeCountPlaylistTracksArgs
     playHistory?: boolean | TrackCountOutputTypeCountPlayHistoryArgs
     seekEvents?: boolean | TrackCountOutputTypeCountSeekEventsArgs
+    likes?: boolean | TrackCountOutputTypeCountLikesArgs
   }
 
   // Custom InputTypes
@@ -1643,6 +1875,13 @@ export namespace Prisma {
    */
   export type TrackCountOutputTypeCountSeekEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SeekEventWhereInput
+  }
+
+  /**
+   * TrackCountOutputType without action
+   */
+  export type TrackCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackLikeWhereInput
   }
 
 
@@ -1689,6 +1928,1949 @@ export namespace Prisma {
   /**
    * Models
    */
+
+  /**
+   * Model User
+   */
+
+  export type AggregateUser = {
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserMinAggregateOutputType = {
+    id: string | null
+    username: string | null
+    email: string | null
+    passwordHash: string | null
+    createdAt: Date | null
+  }
+
+  export type UserMaxAggregateOutputType = {
+    id: string | null
+    username: string | null
+    email: string | null
+    passwordHash: string | null
+    createdAt: Date | null
+  }
+
+  export type UserCountAggregateOutputType = {
+    id: number
+    username: number
+    email: number
+    passwordHash: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserMinAggregateInputType = {
+    id?: true
+    username?: true
+    email?: true
+    passwordHash?: true
+    createdAt?: true
+  }
+
+  export type UserMaxAggregateInputType = {
+    id?: true
+    username?: true
+    email?: true
+    passwordHash?: true
+    createdAt?: true
+  }
+
+  export type UserCountAggregateInputType = {
+    id?: true
+    username?: true
+    email?: true
+    passwordHash?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which User to aggregate.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Users
+    **/
+    _count?: true | UserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type GetUserAggregateType<T extends UserAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser[P]>
+      : GetScalarType<T[P], AggregateUser[P]>
+  }
+
+
+
+
+  export type UserGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithAggregationInput | UserOrderByWithAggregationInput[]
+    by: UserScalarFieldEnum[] | UserScalarFieldEnum
+    having?: UserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserCountAggregateInputType | true
+    _min?: UserMinAggregateInputType
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type UserGroupByOutputType = {
+    id: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt: Date
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserGroupByOutputType[P]>
+            : GetScalarType<T[P], UserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    createdAt?: boolean
+    likes?: boolean | User$likesArgs<ExtArgs>
+    playlists?: boolean | User$playlistsArgs<ExtArgs>
+    playHistory?: boolean | User$playHistoryArgs<ExtArgs>
+    seekEvents?: boolean | User$seekEventsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectScalar = {
+    id?: boolean
+    username?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    likes?: boolean | User$likesArgs<ExtArgs>
+    playlists?: boolean | User$playlistsArgs<ExtArgs>
+    playHistory?: boolean | User$playHistoryArgs<ExtArgs>
+    seekEvents?: boolean | User$seekEventsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "User"
+    objects: {
+      likes: Prisma.$TrackLikePayload<ExtArgs>[]
+      playlists: Prisma.$PlaylistPayload<ExtArgs>[]
+      playHistory: Prisma.$PlayHistoryPayload<ExtArgs>[]
+      seekEvents: Prisma.$SeekEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      username: string
+      email: string
+      passwordHash: string
+      createdAt: Date
+    }, ExtArgs["result"]["user"]>
+    composites: {}
+  }
+
+  type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
+
+  type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UserCountAggregateInputType | true
+    }
+
+  export interface UserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
+    /**
+     * Find zero or one User that matches the filter.
+     * @param {UserFindUniqueArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserFindUniqueArgs>(args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one User that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserFindFirstArgs>(args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Users that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Users
+     * const users = await prisma.user.findMany()
+     * 
+     * // Get first 10 Users
+     * const users = await prisma.user.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserFindManyArgs>(args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a User.
+     * @param {UserCreateArgs} args - Arguments to create a User.
+     * @example
+     * // Create one User
+     * const User = await prisma.user.create({
+     *   data: {
+     *     // ... data to create a User
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserCreateArgs>(args: SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Users.
+     * @param {UserCreateManyArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserCreateManyArgs>(args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Users and returns the data saved in the database.
+     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Users and only return the `id`
+     * const userWithIdOnly = await prisma.user.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a User.
+     * @param {UserDeleteArgs} args - Arguments to delete one User.
+     * @example
+     * // Delete one User
+     * const User = await prisma.user.delete({
+     *   where: {
+     *     // ... filter to delete one User
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserDeleteArgs>(args: SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one User.
+     * @param {UserUpdateArgs} args - Arguments to update one User.
+     * @example
+     * // Update one User
+     * const user = await prisma.user.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserUpdateArgs>(args: SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Users.
+     * @param {UserDeleteManyArgs} args - Arguments to filter Users to delete.
+     * @example
+     * // Delete a few Users
+     * const { count } = await prisma.user.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserDeleteManyArgs>(args?: SelectSubset<T, UserDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserUpdateManyArgs>(args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one User.
+     * @param {UserUpsertArgs} args - Arguments to update or create a User.
+     * @example
+     * // Update or create a User
+     * const user = await prisma.user.upsert({
+     *   create: {
+     *     // ... data to create a User
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserUpsertArgs>(args: SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserCountArgs} args - Arguments to filter Users to count.
+     * @example
+     * // Count the number of Users
+     * const count = await prisma.user.count({
+     *   where: {
+     *     // ... the filter for the Users we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserCountArgs>(
+      args?: Subset<T, UserCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
+
+    /**
+     * Group by User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserGroupByArgs['orderBy'] }
+        : { orderBy?: UserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the User model
+   */
+  readonly fields: UserFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for User.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    likes<T extends User$likesArgs<ExtArgs> = {}>(args?: Subset<T, User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findMany"> | Null>
+    playlists<T extends User$playlistsArgs<ExtArgs> = {}>(args?: Subset<T, User$playlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistPayload<ExtArgs>, T, "findMany"> | Null>
+    playHistory<T extends User$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findMany"> | Null>
+    seekEvents<T extends User$seekEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$seekEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the User model
+   */ 
+  interface UserFieldRefs {
+    readonly id: FieldRef<"User", 'String'>
+    readonly username: FieldRef<"User", 'String'>
+    readonly email: FieldRef<"User", 'String'>
+    readonly passwordHash: FieldRef<"User", 'String'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * User findUnique
+   */
+  export type UserFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User findFirst
+   */
+  export type UserFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User findMany
+   */
+  export type UserFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which Users to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User create
+   */
+  export type UserCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to create a User.
+     */
+    data: XOR<UserCreateInput, UserUncheckedCreateInput>
+  }
+
+  /**
+   * User createMany
+   */
+  export type UserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+  }
+
+  /**
+   * User createManyAndReturn
+   */
+  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+  }
+
+  /**
+   * User update
+   */
+  export type UserUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to update a User.
+     */
+    data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    /**
+     * Choose, which User to update.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User updateMany
+   */
+  export type UserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Users.
+     */
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     */
+    where?: UserWhereInput
+  }
+
+  /**
+   * User upsert
+   */
+  export type UserUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The filter to search for the User to update in case it exists.
+     */
+    where: UserWhereUniqueInput
+    /**
+     * In case the User found by the `where` argument doesn't exist, create a new User with this data.
+     */
+    create: XOR<UserCreateInput, UserUncheckedCreateInput>
+    /**
+     * In case the User was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+  }
+
+  /**
+   * User delete
+   */
+  export type UserDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter which User to delete.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User deleteMany
+   */
+  export type UserDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Users to delete
+     */
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.likes
+   */
+  export type User$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    where?: TrackLikeWhereInput
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    cursor?: TrackLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackLikeScalarFieldEnum | TrackLikeScalarFieldEnum[]
+  }
+
+  /**
+   * User.playlists
+   */
+  export type User$playlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playlist
+     */
+    select?: PlaylistSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistInclude<ExtArgs> | null
+    where?: PlaylistWhereInput
+    orderBy?: PlaylistOrderByWithRelationInput | PlaylistOrderByWithRelationInput[]
+    cursor?: PlaylistWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlaylistScalarFieldEnum | PlaylistScalarFieldEnum[]
+  }
+
+  /**
+   * User.playHistory
+   */
+  export type User$playHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayHistory
+     */
+    select?: PlayHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayHistoryInclude<ExtArgs> | null
+    where?: PlayHistoryWhereInput
+    orderBy?: PlayHistoryOrderByWithRelationInput | PlayHistoryOrderByWithRelationInput[]
+    cursor?: PlayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayHistoryScalarFieldEnum | PlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.seekEvents
+   */
+  export type User$seekEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeekEvent
+     */
+    select?: SeekEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeekEventInclude<ExtArgs> | null
+    where?: SeekEventWhereInput
+    orderBy?: SeekEventOrderByWithRelationInput | SeekEventOrderByWithRelationInput[]
+    cursor?: SeekEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SeekEventScalarFieldEnum | SeekEventScalarFieldEnum[]
+  }
+
+  /**
+   * User without action
+   */
+  export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TrackLike
+   */
+
+  export type AggregateTrackLike = {
+    _count: TrackLikeCountAggregateOutputType | null
+    _min: TrackLikeMinAggregateOutputType | null
+    _max: TrackLikeMaxAggregateOutputType | null
+  }
+
+  export type TrackLikeMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    trackId: string | null
+    createdAt: Date | null
+  }
+
+  export type TrackLikeMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    trackId: string | null
+    createdAt: Date | null
+  }
+
+  export type TrackLikeCountAggregateOutputType = {
+    id: number
+    userId: number
+    trackId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TrackLikeMinAggregateInputType = {
+    id?: true
+    userId?: true
+    trackId?: true
+    createdAt?: true
+  }
+
+  export type TrackLikeMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    trackId?: true
+    createdAt?: true
+  }
+
+  export type TrackLikeCountAggregateInputType = {
+    id?: true
+    userId?: true
+    trackId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TrackLikeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackLike to aggregate.
+     */
+    where?: TrackLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackLikes to fetch.
+     */
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrackLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrackLikes
+    **/
+    _count?: true | TrackLikeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrackLikeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrackLikeMaxAggregateInputType
+  }
+
+  export type GetTrackLikeAggregateType<T extends TrackLikeAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrackLike]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrackLike[P]>
+      : GetScalarType<T[P], AggregateTrackLike[P]>
+  }
+
+
+
+
+  export type TrackLikeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackLikeWhereInput
+    orderBy?: TrackLikeOrderByWithAggregationInput | TrackLikeOrderByWithAggregationInput[]
+    by: TrackLikeScalarFieldEnum[] | TrackLikeScalarFieldEnum
+    having?: TrackLikeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrackLikeCountAggregateInputType | true
+    _min?: TrackLikeMinAggregateInputType
+    _max?: TrackLikeMaxAggregateInputType
+  }
+
+  export type TrackLikeGroupByOutputType = {
+    id: string
+    userId: string
+    trackId: string
+    createdAt: Date
+    _count: TrackLikeCountAggregateOutputType | null
+    _min: TrackLikeMinAggregateOutputType | null
+    _max: TrackLikeMaxAggregateOutputType | null
+  }
+
+  type GetTrackLikeGroupByPayload<T extends TrackLikeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrackLikeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrackLikeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrackLikeGroupByOutputType[P]>
+            : GetScalarType<T[P], TrackLikeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrackLikeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    trackId?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackLike"]>
+
+  export type TrackLikeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    trackId?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackLike"]>
+
+  export type TrackLikeSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    trackId?: boolean
+    createdAt?: boolean
+  }
+
+  export type TrackLikeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+  export type TrackLikeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    track?: boolean | TrackDefaultArgs<ExtArgs>
+  }
+
+  export type $TrackLikePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrackLike"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      track: Prisma.$TrackPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      trackId: string
+      createdAt: Date
+    }, ExtArgs["result"]["trackLike"]>
+    composites: {}
+  }
+
+  type TrackLikeGetPayload<S extends boolean | null | undefined | TrackLikeDefaultArgs> = $Result.GetResult<Prisma.$TrackLikePayload, S>
+
+  type TrackLikeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TrackLikeFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TrackLikeCountAggregateInputType | true
+    }
+
+  export interface TrackLikeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrackLike'], meta: { name: 'TrackLike' } }
+    /**
+     * Find zero or one TrackLike that matches the filter.
+     * @param {TrackLikeFindUniqueArgs} args - Arguments to find a TrackLike
+     * @example
+     * // Get one TrackLike
+     * const trackLike = await prisma.trackLike.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrackLikeFindUniqueArgs>(args: SelectSubset<T, TrackLikeFindUniqueArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TrackLike that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TrackLikeFindUniqueOrThrowArgs} args - Arguments to find a TrackLike
+     * @example
+     * // Get one TrackLike
+     * const trackLike = await prisma.trackLike.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrackLikeFindUniqueOrThrowArgs>(args: SelectSubset<T, TrackLikeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TrackLike that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeFindFirstArgs} args - Arguments to find a TrackLike
+     * @example
+     * // Get one TrackLike
+     * const trackLike = await prisma.trackLike.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrackLikeFindFirstArgs>(args?: SelectSubset<T, TrackLikeFindFirstArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TrackLike that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeFindFirstOrThrowArgs} args - Arguments to find a TrackLike
+     * @example
+     * // Get one TrackLike
+     * const trackLike = await prisma.trackLike.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrackLikeFindFirstOrThrowArgs>(args?: SelectSubset<T, TrackLikeFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TrackLikes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrackLikes
+     * const trackLikes = await prisma.trackLike.findMany()
+     * 
+     * // Get first 10 TrackLikes
+     * const trackLikes = await prisma.trackLike.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trackLikeWithIdOnly = await prisma.trackLike.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrackLikeFindManyArgs>(args?: SelectSubset<T, TrackLikeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TrackLike.
+     * @param {TrackLikeCreateArgs} args - Arguments to create a TrackLike.
+     * @example
+     * // Create one TrackLike
+     * const TrackLike = await prisma.trackLike.create({
+     *   data: {
+     *     // ... data to create a TrackLike
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrackLikeCreateArgs>(args: SelectSubset<T, TrackLikeCreateArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TrackLikes.
+     * @param {TrackLikeCreateManyArgs} args - Arguments to create many TrackLikes.
+     * @example
+     * // Create many TrackLikes
+     * const trackLike = await prisma.trackLike.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrackLikeCreateManyArgs>(args?: SelectSubset<T, TrackLikeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrackLikes and returns the data saved in the database.
+     * @param {TrackLikeCreateManyAndReturnArgs} args - Arguments to create many TrackLikes.
+     * @example
+     * // Create many TrackLikes
+     * const trackLike = await prisma.trackLike.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrackLikes and only return the `id`
+     * const trackLikeWithIdOnly = await prisma.trackLike.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrackLikeCreateManyAndReturnArgs>(args?: SelectSubset<T, TrackLikeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TrackLike.
+     * @param {TrackLikeDeleteArgs} args - Arguments to delete one TrackLike.
+     * @example
+     * // Delete one TrackLike
+     * const TrackLike = await prisma.trackLike.delete({
+     *   where: {
+     *     // ... filter to delete one TrackLike
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrackLikeDeleteArgs>(args: SelectSubset<T, TrackLikeDeleteArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TrackLike.
+     * @param {TrackLikeUpdateArgs} args - Arguments to update one TrackLike.
+     * @example
+     * // Update one TrackLike
+     * const trackLike = await prisma.trackLike.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrackLikeUpdateArgs>(args: SelectSubset<T, TrackLikeUpdateArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TrackLikes.
+     * @param {TrackLikeDeleteManyArgs} args - Arguments to filter TrackLikes to delete.
+     * @example
+     * // Delete a few TrackLikes
+     * const { count } = await prisma.trackLike.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrackLikeDeleteManyArgs>(args?: SelectSubset<T, TrackLikeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackLikes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrackLikes
+     * const trackLike = await prisma.trackLike.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrackLikeUpdateManyArgs>(args: SelectSubset<T, TrackLikeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TrackLike.
+     * @param {TrackLikeUpsertArgs} args - Arguments to update or create a TrackLike.
+     * @example
+     * // Update or create a TrackLike
+     * const trackLike = await prisma.trackLike.upsert({
+     *   create: {
+     *     // ... data to create a TrackLike
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrackLike we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrackLikeUpsertArgs>(args: SelectSubset<T, TrackLikeUpsertArgs<ExtArgs>>): Prisma__TrackLikeClient<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TrackLikes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeCountArgs} args - Arguments to filter TrackLikes to count.
+     * @example
+     * // Count the number of TrackLikes
+     * const count = await prisma.trackLike.count({
+     *   where: {
+     *     // ... the filter for the TrackLikes we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrackLikeCountArgs>(
+      args?: Subset<T, TrackLikeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrackLikeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrackLike.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrackLikeAggregateArgs>(args: Subset<T, TrackLikeAggregateArgs>): Prisma.PrismaPromise<GetTrackLikeAggregateType<T>>
+
+    /**
+     * Group by TrackLike.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackLikeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrackLikeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrackLikeGroupByArgs['orderBy'] }
+        : { orderBy?: TrackLikeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrackLikeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrackLikeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrackLike model
+   */
+  readonly fields: TrackLikeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrackLike.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrackLikeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    track<T extends TrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackDefaultArgs<ExtArgs>>): Prisma__TrackClient<$Result.GetResult<Prisma.$TrackPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrackLike model
+   */ 
+  interface TrackLikeFieldRefs {
+    readonly id: FieldRef<"TrackLike", 'String'>
+    readonly userId: FieldRef<"TrackLike", 'String'>
+    readonly trackId: FieldRef<"TrackLike", 'String'>
+    readonly createdAt: FieldRef<"TrackLike", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrackLike findUnique
+   */
+  export type TrackLikeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackLike to fetch.
+     */
+    where: TrackLikeWhereUniqueInput
+  }
+
+  /**
+   * TrackLike findUniqueOrThrow
+   */
+  export type TrackLikeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackLike to fetch.
+     */
+    where: TrackLikeWhereUniqueInput
+  }
+
+  /**
+   * TrackLike findFirst
+   */
+  export type TrackLikeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackLike to fetch.
+     */
+    where?: TrackLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackLikes to fetch.
+     */
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackLikes.
+     */
+    cursor?: TrackLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackLikes.
+     */
+    distinct?: TrackLikeScalarFieldEnum | TrackLikeScalarFieldEnum[]
+  }
+
+  /**
+   * TrackLike findFirstOrThrow
+   */
+  export type TrackLikeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackLike to fetch.
+     */
+    where?: TrackLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackLikes to fetch.
+     */
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackLikes.
+     */
+    cursor?: TrackLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackLikes.
+     */
+    distinct?: TrackLikeScalarFieldEnum | TrackLikeScalarFieldEnum[]
+  }
+
+  /**
+   * TrackLike findMany
+   */
+  export type TrackLikeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackLikes to fetch.
+     */
+    where?: TrackLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackLikes to fetch.
+     */
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrackLikes.
+     */
+    cursor?: TrackLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackLikes.
+     */
+    skip?: number
+    distinct?: TrackLikeScalarFieldEnum | TrackLikeScalarFieldEnum[]
+  }
+
+  /**
+   * TrackLike create
+   */
+  export type TrackLikeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrackLike.
+     */
+    data: XOR<TrackLikeCreateInput, TrackLikeUncheckedCreateInput>
+  }
+
+  /**
+   * TrackLike createMany
+   */
+  export type TrackLikeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrackLikes.
+     */
+    data: TrackLikeCreateManyInput | TrackLikeCreateManyInput[]
+  }
+
+  /**
+   * TrackLike createManyAndReturn
+   */
+  export type TrackLikeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TrackLikes.
+     */
+    data: TrackLikeCreateManyInput | TrackLikeCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackLike update
+   */
+  export type TrackLikeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrackLike.
+     */
+    data: XOR<TrackLikeUpdateInput, TrackLikeUncheckedUpdateInput>
+    /**
+     * Choose, which TrackLike to update.
+     */
+    where: TrackLikeWhereUniqueInput
+  }
+
+  /**
+   * TrackLike updateMany
+   */
+  export type TrackLikeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrackLikes.
+     */
+    data: XOR<TrackLikeUpdateManyMutationInput, TrackLikeUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackLikes to update
+     */
+    where?: TrackLikeWhereInput
+  }
+
+  /**
+   * TrackLike upsert
+   */
+  export type TrackLikeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrackLike to update in case it exists.
+     */
+    where: TrackLikeWhereUniqueInput
+    /**
+     * In case the TrackLike found by the `where` argument doesn't exist, create a new TrackLike with this data.
+     */
+    create: XOR<TrackLikeCreateInput, TrackLikeUncheckedCreateInput>
+    /**
+     * In case the TrackLike was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrackLikeUpdateInput, TrackLikeUncheckedUpdateInput>
+  }
+
+  /**
+   * TrackLike delete
+   */
+  export type TrackLikeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    /**
+     * Filter which TrackLike to delete.
+     */
+    where: TrackLikeWhereUniqueInput
+  }
+
+  /**
+   * TrackLike deleteMany
+   */
+  export type TrackLikeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackLikes to delete
+     */
+    where?: TrackLikeWhereInput
+  }
+
+  /**
+   * TrackLike without action
+   */
+  export type TrackLikeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model Artist
@@ -3753,7 +5935,6 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
-    isLiked: boolean | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3776,7 +5957,6 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
-    isLiked: boolean | null
     playCount: number | null
     lastPlayed: Date | null
     createdAt: Date | null
@@ -3799,7 +5979,6 @@ export namespace Prisma {
     fileSize: number
     mimeType: number
     loudnessLufs: number
-    isLiked: number
     playCount: number
     lastPlayed: number
     createdAt: number
@@ -3846,7 +6025,6 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
-    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3869,7 +6047,6 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
-    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -3892,7 +6069,6 @@ export namespace Prisma {
     fileSize?: true
     mimeType?: true
     loudnessLufs?: true
-    isLiked?: true
     playCount?: true
     lastPlayed?: true
     createdAt?: true
@@ -4002,7 +6178,6 @@ export namespace Prisma {
     fileSize: number | null
     mimeType: string | null
     loudnessLufs: number | null
-    isLiked: boolean
     playCount: number
     lastPlayed: Date | null
     createdAt: Date
@@ -4044,7 +6219,6 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
-    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -4054,6 +6228,7 @@ export namespace Prisma {
     playlistTracks?: boolean | Track$playlistTracksArgs<ExtArgs>
     playHistory?: boolean | Track$playHistoryArgs<ExtArgs>
     seekEvents?: boolean | Track$seekEventsArgs<ExtArgs>
+    likes?: boolean | Track$likesArgs<ExtArgs>
     _count?: boolean | TrackCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["track"]>
 
@@ -4073,7 +6248,6 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
-    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -4098,7 +6272,6 @@ export namespace Prisma {
     fileSize?: boolean
     mimeType?: boolean
     loudnessLufs?: boolean
-    isLiked?: boolean
     playCount?: boolean
     lastPlayed?: boolean
     createdAt?: boolean
@@ -4111,6 +6284,7 @@ export namespace Prisma {
     playlistTracks?: boolean | Track$playlistTracksArgs<ExtArgs>
     playHistory?: boolean | Track$playHistoryArgs<ExtArgs>
     seekEvents?: boolean | Track$seekEventsArgs<ExtArgs>
+    likes?: boolean | Track$likesArgs<ExtArgs>
     _count?: boolean | TrackCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TrackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4126,6 +6300,7 @@ export namespace Prisma {
       playlistTracks: Prisma.$PlaylistTrackPayload<ExtArgs>[]
       playHistory: Prisma.$PlayHistoryPayload<ExtArgs>[]
       seekEvents: Prisma.$SeekEventPayload<ExtArgs>[]
+      likes: Prisma.$TrackLikePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4143,7 +6318,6 @@ export namespace Prisma {
       fileSize: number | null
       mimeType: string | null
       loudnessLufs: number | null
-      isLiked: boolean
       playCount: number
       lastPlayed: Date | null
       createdAt: Date
@@ -4517,6 +6691,7 @@ export namespace Prisma {
     playlistTracks<T extends Track$playlistTracksArgs<ExtArgs> = {}>(args?: Subset<T, Track$playlistTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistTrackPayload<ExtArgs>, T, "findMany"> | Null>
     playHistory<T extends Track$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Track$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayHistoryPayload<ExtArgs>, T, "findMany"> | Null>
     seekEvents<T extends Track$seekEventsArgs<ExtArgs> = {}>(args?: Subset<T, Track$seekEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeekEventPayload<ExtArgs>, T, "findMany"> | Null>
+    likes<T extends Track$likesArgs<ExtArgs> = {}>(args?: Subset<T, Track$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackLikePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4561,7 +6736,6 @@ export namespace Prisma {
     readonly fileSize: FieldRef<"Track", 'Int'>
     readonly mimeType: FieldRef<"Track", 'String'>
     readonly loudnessLufs: FieldRef<"Track", 'Float'>
-    readonly isLiked: FieldRef<"Track", 'Boolean'>
     readonly playCount: FieldRef<"Track", 'Int'>
     readonly lastPlayed: FieldRef<"Track", 'DateTime'>
     readonly createdAt: FieldRef<"Track", 'DateTime'>
@@ -4957,6 +7131,26 @@ export namespace Prisma {
   }
 
   /**
+   * Track.likes
+   */
+  export type Track$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackLike
+     */
+    select?: TrackLikeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackLikeInclude<ExtArgs> | null
+    where?: TrackLikeWhereInput
+    orderBy?: TrackLikeOrderByWithRelationInput | TrackLikeOrderByWithRelationInput[]
+    cursor?: TrackLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackLikeScalarFieldEnum | TrackLikeScalarFieldEnum[]
+  }
+
+  /**
    * Track without action
    */
   export type TrackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4986,6 +7180,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     coverPath: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4995,6 +7190,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     coverPath: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5004,6 +7200,7 @@ export namespace Prisma {
     name: number
     description: number
     coverPath: number
+    userId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5015,6 +7212,7 @@ export namespace Prisma {
     name?: true
     description?: true
     coverPath?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5024,6 +7222,7 @@ export namespace Prisma {
     name?: true
     description?: true
     coverPath?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5033,6 +7232,7 @@ export namespace Prisma {
     name?: true
     description?: true
     coverPath?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5115,6 +7315,7 @@ export namespace Prisma {
     name: string
     description: string | null
     coverPath: string | null
+    userId: string
     createdAt: Date
     updatedAt: Date
     _count: PlaylistCountAggregateOutputType | null
@@ -5141,8 +7342,10 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     coverPath?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     tracks?: boolean | Playlist$tracksArgs<ExtArgs>
     collaborators?: boolean | Playlist$collaboratorsArgs<ExtArgs>
     _count?: boolean | PlaylistCountOutputTypeDefaultArgs<ExtArgs>
@@ -5153,8 +7356,10 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     coverPath?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["playlist"]>
 
   export type PlaylistSelectScalar = {
@@ -5162,20 +7367,25 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     coverPath?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
   export type PlaylistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     tracks?: boolean | Playlist$tracksArgs<ExtArgs>
     collaborators?: boolean | Playlist$collaboratorsArgs<ExtArgs>
     _count?: boolean | PlaylistCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type PlaylistIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PlaylistIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $PlaylistPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Playlist"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       tracks: Prisma.$PlaylistTrackPayload<ExtArgs>[]
       collaborators: Prisma.$PlaylistCollaboratorPayload<ExtArgs>[]
     }
@@ -5184,6 +7394,7 @@ export namespace Prisma {
       name: string
       description: string | null
       coverPath: string | null
+      userId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["playlist"]>
@@ -5550,6 +7761,7 @@ export namespace Prisma {
    */
   export interface Prisma__PlaylistClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     tracks<T extends Playlist$tracksArgs<ExtArgs> = {}>(args?: Subset<T, Playlist$tracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistTrackPayload<ExtArgs>, T, "findMany"> | Null>
     collaborators<T extends Playlist$collaboratorsArgs<ExtArgs> = {}>(args?: Subset<T, Playlist$collaboratorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistCollaboratorPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -5585,6 +7797,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Playlist", 'String'>
     readonly description: FieldRef<"Playlist", 'String'>
     readonly coverPath: FieldRef<"Playlist", 'String'>
+    readonly userId: FieldRef<"Playlist", 'String'>
     readonly createdAt: FieldRef<"Playlist", 'DateTime'>
     readonly updatedAt: FieldRef<"Playlist", 'DateTime'>
   }
@@ -5806,6 +8019,10 @@ export namespace Prisma {
      * The data used to create many Playlists.
      */
     data: PlaylistCreateManyInput | PlaylistCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaylistIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8054,6 +10271,7 @@ export namespace Prisma {
     duration?: boolean
     playedAt?: boolean
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["playHistory"]>
 
   export type PlayHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8063,6 +10281,7 @@ export namespace Prisma {
     duration?: boolean
     playedAt?: boolean
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["playHistory"]>
 
   export type PlayHistorySelectScalar = {
@@ -8075,15 +10294,18 @@ export namespace Prisma {
 
   export type PlayHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type PlayHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $PlayHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PlayHistory"
     objects: {
       track: Prisma.$TrackPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8456,6 +10678,7 @@ export namespace Prisma {
   export interface Prisma__PlayHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     track<T extends TrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackDefaultArgs<ExtArgs>>): Prisma__TrackClient<$Result.GetResult<Prisma.$TrackPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9019,6 +11242,7 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["seekEvent"]>
 
   export type SeekEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9028,6 +11252,7 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["seekEvent"]>
 
   export type SeekEventSelectScalar = {
@@ -9040,15 +11265,18 @@ export namespace Prisma {
 
   export type SeekEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type SeekEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     track?: boolean | TrackDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $SeekEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SeekEvent"
     objects: {
       track: Prisma.$TrackPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9421,6 +11649,7 @@ export namespace Prisma {
   export interface Prisma__SeekEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     track<T extends TrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackDefaultArgs<ExtArgs>>): Prisma__TrackClient<$Result.GetResult<Prisma.$TrackPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10742,6 +12971,27 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const UserScalarFieldEnum: {
+    id: 'id',
+    username: 'username',
+    email: 'email',
+    passwordHash: 'passwordHash',
+    createdAt: 'createdAt'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const TrackLikeScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    trackId: 'trackId',
+    createdAt: 'createdAt'
+  };
+
+  export type TrackLikeScalarFieldEnum = (typeof TrackLikeScalarFieldEnum)[keyof typeof TrackLikeScalarFieldEnum]
+
+
   export const ArtistScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -10784,7 +13034,6 @@ export namespace Prisma {
     fileSize: 'fileSize',
     mimeType: 'mimeType',
     loudnessLufs: 'loudnessLufs',
-    isLiked: 'isLiked',
     playCount: 'playCount',
     lastPlayed: 'lastPlayed',
     createdAt: 'createdAt',
@@ -10799,6 +13048,7 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     coverPath: 'coverPath',
+    userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10922,6 +13172,124 @@ export namespace Prisma {
    * Deep Input Types
    */
 
+
+  export type UserWhereInput = {
+    AND?: UserWhereInput | UserWhereInput[]
+    OR?: UserWhereInput[]
+    NOT?: UserWhereInput | UserWhereInput[]
+    id?: StringFilter<"User"> | string
+    username?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    passwordHash?: StringFilter<"User"> | string
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    likes?: TrackLikeListRelationFilter
+    playlists?: PlaylistListRelationFilter
+    playHistory?: PlayHistoryListRelationFilter
+    seekEvents?: SeekEventListRelationFilter
+  }
+
+  export type UserOrderByWithRelationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    createdAt?: SortOrder
+    likes?: TrackLikeOrderByRelationAggregateInput
+    playlists?: PlaylistOrderByRelationAggregateInput
+    playHistory?: PlayHistoryOrderByRelationAggregateInput
+    seekEvents?: SeekEventOrderByRelationAggregateInput
+  }
+
+  export type UserWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    username?: string
+    email?: string
+    AND?: UserWhereInput | UserWhereInput[]
+    OR?: UserWhereInput[]
+    NOT?: UserWhereInput | UserWhereInput[]
+    passwordHash?: StringFilter<"User"> | string
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    likes?: TrackLikeListRelationFilter
+    playlists?: PlaylistListRelationFilter
+    playHistory?: PlayHistoryListRelationFilter
+    seekEvents?: SeekEventListRelationFilter
+  }, "id" | "username" | "email">
+
+  export type UserOrderByWithAggregationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    createdAt?: SortOrder
+    _count?: UserCountOrderByAggregateInput
+    _max?: UserMaxOrderByAggregateInput
+    _min?: UserMinOrderByAggregateInput
+  }
+
+  export type UserScalarWhereWithAggregatesInput = {
+    AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
+    OR?: UserScalarWhereWithAggregatesInput[]
+    NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"User"> | string
+    username?: StringWithAggregatesFilter<"User"> | string
+    email?: StringWithAggregatesFilter<"User"> | string
+    passwordHash?: StringWithAggregatesFilter<"User"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type TrackLikeWhereInput = {
+    AND?: TrackLikeWhereInput | TrackLikeWhereInput[]
+    OR?: TrackLikeWhereInput[]
+    NOT?: TrackLikeWhereInput | TrackLikeWhereInput[]
+    id?: StringFilter<"TrackLike"> | string
+    userId?: StringFilter<"TrackLike"> | string
+    trackId?: StringFilter<"TrackLike"> | string
+    createdAt?: DateTimeFilter<"TrackLike"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }
+
+  export type TrackLikeOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    trackId?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    track?: TrackOrderByWithRelationInput
+  }
+
+  export type TrackLikeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_trackId?: TrackLikeUserIdTrackIdCompoundUniqueInput
+    AND?: TrackLikeWhereInput | TrackLikeWhereInput[]
+    OR?: TrackLikeWhereInput[]
+    NOT?: TrackLikeWhereInput | TrackLikeWhereInput[]
+    userId?: StringFilter<"TrackLike"> | string
+    trackId?: StringFilter<"TrackLike"> | string
+    createdAt?: DateTimeFilter<"TrackLike"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    track?: XOR<TrackRelationFilter, TrackWhereInput>
+  }, "id" | "userId_trackId">
+
+  export type TrackLikeOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    trackId?: SortOrder
+    createdAt?: SortOrder
+    _count?: TrackLikeCountOrderByAggregateInput
+    _max?: TrackLikeMaxOrderByAggregateInput
+    _min?: TrackLikeMinOrderByAggregateInput
+  }
+
+  export type TrackLikeScalarWhereWithAggregatesInput = {
+    AND?: TrackLikeScalarWhereWithAggregatesInput | TrackLikeScalarWhereWithAggregatesInput[]
+    OR?: TrackLikeScalarWhereWithAggregatesInput[]
+    NOT?: TrackLikeScalarWhereWithAggregatesInput | TrackLikeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrackLike"> | string
+    userId?: StringWithAggregatesFilter<"TrackLike"> | string
+    trackId?: StringWithAggregatesFilter<"TrackLike"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TrackLike"> | Date | string
+  }
 
   export type ArtistWhereInput = {
     AND?: ArtistWhereInput | ArtistWhereInput[]
@@ -11081,7 +13449,6 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
-    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -11091,6 +13458,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackListRelationFilter
     playHistory?: PlayHistoryListRelationFilter
     seekEvents?: SeekEventListRelationFilter
+    likes?: TrackLikeListRelationFilter
   }
 
   export type TrackOrderByWithRelationInput = {
@@ -11109,7 +13477,6 @@ export namespace Prisma {
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
     loudnessLufs?: SortOrderInput | SortOrder
-    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11119,6 +13486,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackOrderByRelationAggregateInput
     playHistory?: PlayHistoryOrderByRelationAggregateInput
     seekEvents?: SeekEventOrderByRelationAggregateInput
+    likes?: TrackLikeOrderByRelationAggregateInput
   }
 
   export type TrackWhereUniqueInput = Prisma.AtLeast<{
@@ -11140,7 +13508,6 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
-    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -11150,6 +13517,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackListRelationFilter
     playHistory?: PlayHistoryListRelationFilter
     seekEvents?: SeekEventListRelationFilter
+    likes?: TrackLikeListRelationFilter
   }, "id" | "filePath">
 
   export type TrackOrderByWithAggregationInput = {
@@ -11168,7 +13536,6 @@ export namespace Prisma {
     fileSize?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
     loudnessLufs?: SortOrderInput | SortOrder
-    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11199,7 +13566,6 @@ export namespace Prisma {
     fileSize?: IntNullableWithAggregatesFilter<"Track"> | number | null
     mimeType?: StringNullableWithAggregatesFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableWithAggregatesFilter<"Track"> | number | null
-    isLiked?: BoolWithAggregatesFilter<"Track"> | boolean
     playCount?: IntWithAggregatesFilter<"Track"> | number
     lastPlayed?: DateTimeNullableWithAggregatesFilter<"Track"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Track"> | Date | string
@@ -11214,8 +13580,10 @@ export namespace Prisma {
     name?: StringFilter<"Playlist"> | string
     description?: StringNullableFilter<"Playlist"> | string | null
     coverPath?: StringNullableFilter<"Playlist"> | string | null
+    userId?: StringFilter<"Playlist"> | string
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
     tracks?: PlaylistTrackListRelationFilter
     collaborators?: PlaylistCollaboratorListRelationFilter
   }
@@ -11225,8 +13593,10 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     coverPath?: SortOrderInput | SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
     tracks?: PlaylistTrackOrderByRelationAggregateInput
     collaborators?: PlaylistCollaboratorOrderByRelationAggregateInput
   }
@@ -11239,8 +13609,10 @@ export namespace Prisma {
     NOT?: PlaylistWhereInput | PlaylistWhereInput[]
     description?: StringNullableFilter<"Playlist"> | string | null
     coverPath?: StringNullableFilter<"Playlist"> | string | null
+    userId?: StringFilter<"Playlist"> | string
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
     tracks?: PlaylistTrackListRelationFilter
     collaborators?: PlaylistCollaboratorListRelationFilter
   }, "id" | "name">
@@ -11250,6 +13622,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     coverPath?: SortOrderInput | SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PlaylistCountOrderByAggregateInput
@@ -11265,6 +13638,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Playlist"> | string
     description?: StringNullableWithAggregatesFilter<"Playlist"> | string | null
     coverPath?: StringNullableWithAggregatesFilter<"Playlist"> | string | null
+    userId?: StringWithAggregatesFilter<"Playlist"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Playlist"> | Date | string
   }
@@ -11396,6 +13770,7 @@ export namespace Prisma {
     duration?: FloatFilter<"PlayHistory"> | number
     playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
     track?: XOR<TrackRelationFilter, TrackWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type PlayHistoryOrderByWithRelationInput = {
@@ -11405,6 +13780,7 @@ export namespace Prisma {
     duration?: SortOrder
     playedAt?: SortOrder
     track?: TrackOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type PlayHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -11417,6 +13793,7 @@ export namespace Prisma {
     duration?: FloatFilter<"PlayHistory"> | number
     playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
     track?: XOR<TrackRelationFilter, TrackWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id">
 
   export type PlayHistoryOrderByWithAggregationInput = {
@@ -11453,6 +13830,7 @@ export namespace Prisma {
     userId?: StringFilter<"SeekEvent"> | string
     createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
     track?: XOR<TrackRelationFilter, TrackWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type SeekEventOrderByWithRelationInput = {
@@ -11462,6 +13840,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     track?: TrackOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type SeekEventWhereUniqueInput = Prisma.AtLeast<{
@@ -11474,6 +13853,7 @@ export namespace Prisma {
     userId?: StringFilter<"SeekEvent"> | string
     createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
     track?: XOR<TrackRelationFilter, TrackWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id">
 
   export type SeekEventOrderByWithAggregationInput = {
@@ -11567,6 +13947,125 @@ export namespace Prisma {
     currentTime?: FloatWithAggregatesFilter<"ListeningRoom"> | number
     createdAt?: DateTimeWithAggregatesFilter<"ListeningRoom"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ListeningRoom"> | Date | string
+  }
+
+  export type UserCreateInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeCreateNestedManyWithoutUserInput
+    playlists?: PlaylistCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutUserInput
+    playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUncheckedUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateManyInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+  }
+
+  export type UserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutLikesInput
+    track: TrackCreateNestedOneWithoutLikesInput
+  }
+
+  export type TrackLikeUncheckedCreateInput = {
+    id?: string
+    userId: string
+    trackId: string
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLikesNestedInput
+    track?: TrackUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type TrackLikeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeCreateManyInput = {
+    id?: string
+    userId: string
+    trackId: string
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ArtistCreateInput = {
@@ -11734,7 +14233,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -11744,6 +14242,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateInput = {
@@ -11762,7 +14261,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -11770,6 +14268,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUpdateInput = {
@@ -11786,7 +14285,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11796,6 +14294,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateInput = {
@@ -11814,7 +14313,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11822,6 +14320,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackCreateManyInput = {
@@ -11840,7 +14339,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -11861,7 +14359,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11884,7 +14381,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11898,6 +14394,7 @@ export namespace Prisma {
     coverPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutPlaylistsInput
     tracks?: PlaylistTrackCreateNestedManyWithoutPlaylistInput
     collaborators?: PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput
   }
@@ -11907,6 +14404,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     coverPath?: string | null
+    userId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tracks?: PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput
@@ -11920,6 +14418,7 @@ export namespace Prisma {
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlaylistsNestedInput
     tracks?: PlaylistTrackUpdateManyWithoutPlaylistNestedInput
     collaborators?: PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput
   }
@@ -11929,6 +14428,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tracks?: PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput
@@ -11940,6 +14440,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     coverPath?: string | null
+    userId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11958,6 +14459,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12073,10 +14575,10 @@ export namespace Prisma {
 
   export type PlayHistoryCreateInput = {
     id?: string
-    userId?: string
     duration: number
     playedAt?: Date | string
     track: TrackCreateNestedOneWithoutPlayHistoryInput
+    user?: UserCreateNestedOneWithoutPlayHistoryInput
   }
 
   export type PlayHistoryUncheckedCreateInput = {
@@ -12089,10 +14591,10 @@ export namespace Prisma {
 
   export type PlayHistoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     duration?: FloatFieldUpdateOperationsInput | number
     playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     track?: TrackUpdateOneRequiredWithoutPlayHistoryNestedInput
+    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
   }
 
   export type PlayHistoryUncheckedUpdateInput = {
@@ -12113,7 +14615,6 @@ export namespace Prisma {
 
   export type PlayHistoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     duration?: FloatFieldUpdateOperationsInput | number
     playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12129,25 +14630,25 @@ export namespace Prisma {
   export type SeekEventCreateInput = {
     id?: string
     timestamp: number
-    userId?: string
     createdAt?: Date | string
     track: TrackCreateNestedOneWithoutSeekEventsInput
+    user: UserCreateNestedOneWithoutSeekEventsInput
   }
 
   export type SeekEventUncheckedCreateInput = {
     id?: string
     trackId: string
     timestamp: number
-    userId?: string
+    userId: string
     createdAt?: Date | string
   }
 
   export type SeekEventUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     timestamp?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     track?: TrackUpdateOneRequiredWithoutSeekEventsNestedInput
+    user?: UserUpdateOneRequiredWithoutSeekEventsNestedInput
   }
 
   export type SeekEventUncheckedUpdateInput = {
@@ -12162,14 +14663,13 @@ export namespace Prisma {
     id?: string
     trackId: string
     timestamp: number
-    userId?: string
+    userId: string
     createdAt?: Date | string
   }
 
   export type SeekEventUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     timestamp?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12272,6 +14772,148 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type TrackLikeListRelationFilter = {
+    every?: TrackLikeWhereInput
+    some?: TrackLikeWhereInput
+    none?: TrackLikeWhereInput
+  }
+
+  export type PlaylistListRelationFilter = {
+    every?: PlaylistWhereInput
+    some?: PlaylistWhereInput
+    none?: PlaylistWhereInput
+  }
+
+  export type PlayHistoryListRelationFilter = {
+    every?: PlayHistoryWhereInput
+    some?: PlayHistoryWhereInput
+    none?: PlayHistoryWhereInput
+  }
+
+  export type SeekEventListRelationFilter = {
+    every?: SeekEventWhereInput
+    some?: SeekEventWhereInput
+    none?: SeekEventWhereInput
+  }
+
+  export type TrackLikeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlaylistOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlayHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SeekEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserCountOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserMinOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[]
+    notIn?: string[]
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type TrackRelationFilter = {
+    is?: TrackWhereInput
+    isNot?: TrackWhereInput
+  }
+
+  export type TrackLikeUserIdTrackIdCompoundUniqueInput = {
+    userId: string
+    trackId: string
+  }
+
+  export type TrackLikeCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    trackId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TrackLikeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    trackId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TrackLikeMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    trackId?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -12284,17 +14926,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type AlbumListRelationFilter = {
@@ -12346,23 +14977,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -12378,20 +14992,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -12488,11 +15088,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -12526,27 +15121,7 @@ export namespace Prisma {
     none?: PlaylistTrackWhereInput
   }
 
-  export type PlayHistoryListRelationFilter = {
-    every?: PlayHistoryWhereInput
-    some?: PlayHistoryWhereInput
-    none?: PlayHistoryWhereInput
-  }
-
-  export type SeekEventListRelationFilter = {
-    every?: SeekEventWhereInput
-    some?: SeekEventWhereInput
-    none?: SeekEventWhereInput
-  }
-
   export type PlaylistTrackOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PlayHistoryOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type SeekEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12566,7 +15141,6 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
-    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -12600,7 +15174,6 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
-    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -12623,7 +15196,6 @@ export namespace Prisma {
     fileSize?: SortOrder
     mimeType?: SortOrder
     loudnessLufs?: SortOrder
-    isLiked?: SortOrder
     playCount?: SortOrder
     lastPlayed?: SortOrder
     createdAt?: SortOrder
@@ -12655,14 +15227,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -12710,6 +15274,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     coverPath?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12719,6 +15284,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     coverPath?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12728,6 +15294,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     coverPath?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12735,11 +15302,6 @@ export namespace Prisma {
   export type PlaylistRelationFilter = {
     is?: PlaylistWhereInput
     isNot?: PlaylistWhereInput
-  }
-
-  export type TrackRelationFilter = {
-    is?: TrackWhereInput
-    isNot?: TrackWhereInput
   }
 
   export type PlaylistTrackPlaylistIdTrackIdCompoundUniqueInput = {
@@ -12899,6 +15461,11 @@ export namespace Prisma {
     timestamp?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type ListeningRoomCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -12940,6 +15507,218 @@ export namespace Prisma {
     currentTime?: SortOrder
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type TrackLikeCreateNestedManyWithoutUserInput = {
+    create?: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput> | TrackLikeCreateWithoutUserInput[] | TrackLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutUserInput | TrackLikeCreateOrConnectWithoutUserInput[]
+    createMany?: TrackLikeCreateManyUserInputEnvelope
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+  }
+
+  export type PlaylistCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput> | PlaylistCreateWithoutUserInput[] | PlaylistUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaylistCreateOrConnectWithoutUserInput | PlaylistCreateOrConnectWithoutUserInput[]
+    createMany?: PlaylistCreateManyUserInputEnvelope
+    connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+  }
+
+  export type PlayHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput> | PlayHistoryCreateWithoutUserInput[] | PlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutUserInput | PlayHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: PlayHistoryCreateManyUserInputEnvelope
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+  }
+
+  export type SeekEventCreateNestedManyWithoutUserInput = {
+    create?: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput> | SeekEventCreateWithoutUserInput[] | SeekEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutUserInput | SeekEventCreateOrConnectWithoutUserInput[]
+    createMany?: SeekEventCreateManyUserInputEnvelope
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+  }
+
+  export type TrackLikeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput> | TrackLikeCreateWithoutUserInput[] | TrackLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutUserInput | TrackLikeCreateOrConnectWithoutUserInput[]
+    createMany?: TrackLikeCreateManyUserInputEnvelope
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+  }
+
+  export type PlaylistUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput> | PlaylistCreateWithoutUserInput[] | PlaylistUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaylistCreateOrConnectWithoutUserInput | PlaylistCreateOrConnectWithoutUserInput[]
+    createMany?: PlaylistCreateManyUserInputEnvelope
+    connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+  }
+
+  export type PlayHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput> | PlayHistoryCreateWithoutUserInput[] | PlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutUserInput | PlayHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: PlayHistoryCreateManyUserInputEnvelope
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+  }
+
+  export type SeekEventUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput> | SeekEventCreateWithoutUserInput[] | SeekEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutUserInput | SeekEventCreateOrConnectWithoutUserInput[]
+    createMany?: SeekEventCreateManyUserInputEnvelope
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type TrackLikeUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput> | TrackLikeCreateWithoutUserInput[] | TrackLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutUserInput | TrackLikeCreateOrConnectWithoutUserInput[]
+    upsert?: TrackLikeUpsertWithWhereUniqueWithoutUserInput | TrackLikeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TrackLikeCreateManyUserInputEnvelope
+    set?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    disconnect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    delete?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    update?: TrackLikeUpdateWithWhereUniqueWithoutUserInput | TrackLikeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TrackLikeUpdateManyWithWhereWithoutUserInput | TrackLikeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+  }
+
+  export type PlaylistUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput> | PlaylistCreateWithoutUserInput[] | PlaylistUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaylistCreateOrConnectWithoutUserInput | PlaylistCreateOrConnectWithoutUserInput[]
+    upsert?: PlaylistUpsertWithWhereUniqueWithoutUserInput | PlaylistUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlaylistCreateManyUserInputEnvelope
+    set?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    disconnect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    delete?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    update?: PlaylistUpdateWithWhereUniqueWithoutUserInput | PlaylistUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlaylistUpdateManyWithWhereWithoutUserInput | PlaylistUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
+  }
+
+  export type PlayHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput> | PlayHistoryCreateWithoutUserInput[] | PlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutUserInput | PlayHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: PlayHistoryUpsertWithWhereUniqueWithoutUserInput | PlayHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayHistoryCreateManyUserInputEnvelope
+    set?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    disconnect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    delete?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    update?: PlayHistoryUpdateWithWhereUniqueWithoutUserInput | PlayHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayHistoryUpdateManyWithWhereWithoutUserInput | PlayHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+  }
+
+  export type SeekEventUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput> | SeekEventCreateWithoutUserInput[] | SeekEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutUserInput | SeekEventCreateOrConnectWithoutUserInput[]
+    upsert?: SeekEventUpsertWithWhereUniqueWithoutUserInput | SeekEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SeekEventCreateManyUserInputEnvelope
+    set?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    disconnect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    delete?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    update?: SeekEventUpdateWithWhereUniqueWithoutUserInput | SeekEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SeekEventUpdateManyWithWhereWithoutUserInput | SeekEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+  }
+
+  export type TrackLikeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput> | TrackLikeCreateWithoutUserInput[] | TrackLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutUserInput | TrackLikeCreateOrConnectWithoutUserInput[]
+    upsert?: TrackLikeUpsertWithWhereUniqueWithoutUserInput | TrackLikeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TrackLikeCreateManyUserInputEnvelope
+    set?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    disconnect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    delete?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    update?: TrackLikeUpdateWithWhereUniqueWithoutUserInput | TrackLikeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TrackLikeUpdateManyWithWhereWithoutUserInput | TrackLikeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+  }
+
+  export type PlaylistUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput> | PlaylistCreateWithoutUserInput[] | PlaylistUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaylistCreateOrConnectWithoutUserInput | PlaylistCreateOrConnectWithoutUserInput[]
+    upsert?: PlaylistUpsertWithWhereUniqueWithoutUserInput | PlaylistUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlaylistCreateManyUserInputEnvelope
+    set?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    disconnect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    delete?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+    update?: PlaylistUpdateWithWhereUniqueWithoutUserInput | PlaylistUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlaylistUpdateManyWithWhereWithoutUserInput | PlaylistUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
+  }
+
+  export type PlayHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput> | PlayHistoryCreateWithoutUserInput[] | PlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayHistoryCreateOrConnectWithoutUserInput | PlayHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: PlayHistoryUpsertWithWhereUniqueWithoutUserInput | PlayHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayHistoryCreateManyUserInputEnvelope
+    set?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    disconnect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    delete?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    connect?: PlayHistoryWhereUniqueInput | PlayHistoryWhereUniqueInput[]
+    update?: PlayHistoryUpdateWithWhereUniqueWithoutUserInput | PlayHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayHistoryUpdateManyWithWhereWithoutUserInput | PlayHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+  }
+
+  export type SeekEventUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput> | SeekEventCreateWithoutUserInput[] | SeekEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SeekEventCreateOrConnectWithoutUserInput | SeekEventCreateOrConnectWithoutUserInput[]
+    upsert?: SeekEventUpsertWithWhereUniqueWithoutUserInput | SeekEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SeekEventCreateManyUserInputEnvelope
+    set?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    disconnect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    delete?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
+    update?: SeekEventUpdateWithWhereUniqueWithoutUserInput | SeekEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SeekEventUpdateManyWithWhereWithoutUserInput | SeekEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutLikesInput = {
+    create?: XOR<UserCreateWithoutLikesInput, UserUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLikesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TrackCreateNestedOneWithoutLikesInput = {
+    create?: XOR<TrackCreateWithoutLikesInput, TrackUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutLikesInput
+    connect?: TrackWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutLikesNestedInput = {
+    create?: XOR<UserCreateWithoutLikesInput, UserUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLikesInput
+    upsert?: UserUpsertWithoutLikesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLikesInput, UserUpdateWithoutLikesInput>, UserUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type TrackUpdateOneRequiredWithoutLikesNestedInput = {
+    create?: XOR<TrackCreateWithoutLikesInput, TrackUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: TrackCreateOrConnectWithoutLikesInput
+    upsert?: TrackUpsertWithoutLikesInput
+    connect?: TrackWhereUniqueInput
+    update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutLikesInput, TrackUpdateWithoutLikesInput>, TrackUncheckedUpdateWithoutLikesInput>
+  }
+
   export type AlbumCreateNestedManyWithoutArtistInput = {
     create?: XOR<AlbumCreateWithoutArtistInput, AlbumUncheckedCreateWithoutArtistInput> | AlbumCreateWithoutArtistInput[] | AlbumUncheckedCreateWithoutArtistInput[]
     connectOrCreate?: AlbumCreateOrConnectWithoutArtistInput | AlbumCreateOrConnectWithoutArtistInput[]
@@ -12968,16 +15747,8 @@ export namespace Prisma {
     connect?: TrackWhereUniqueInput | TrackWhereUniqueInput[]
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type AlbumUpdateManyWithoutArtistNestedInput = {
@@ -13133,6 +15904,13 @@ export namespace Prisma {
     connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
   }
 
+  export type TrackLikeCreateNestedManyWithoutTrackInput = {
+    create?: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput> | TrackLikeCreateWithoutTrackInput[] | TrackLikeUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutTrackInput | TrackLikeCreateOrConnectWithoutTrackInput[]
+    createMany?: TrackLikeCreateManyTrackInputEnvelope
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+  }
+
   export type PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput = {
     create?: XOR<PlaylistTrackCreateWithoutTrackInput, PlaylistTrackUncheckedCreateWithoutTrackInput> | PlaylistTrackCreateWithoutTrackInput[] | PlaylistTrackUncheckedCreateWithoutTrackInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutTrackInput | PlaylistTrackCreateOrConnectWithoutTrackInput[]
@@ -13154,16 +15932,19 @@ export namespace Prisma {
     connect?: SeekEventWhereUniqueInput | SeekEventWhereUniqueInput[]
   }
 
+  export type TrackLikeUncheckedCreateNestedManyWithoutTrackInput = {
+    create?: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput> | TrackLikeCreateWithoutTrackInput[] | TrackLikeUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutTrackInput | TrackLikeCreateOrConnectWithoutTrackInput[]
+    createMany?: TrackLikeCreateManyTrackInputEnvelope
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+  }
+
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -13238,6 +16019,20 @@ export namespace Prisma {
     deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
   }
 
+  export type TrackLikeUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput> | TrackLikeCreateWithoutTrackInput[] | TrackLikeUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutTrackInput | TrackLikeCreateOrConnectWithoutTrackInput[]
+    upsert?: TrackLikeUpsertWithWhereUniqueWithoutTrackInput | TrackLikeUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: TrackLikeCreateManyTrackInputEnvelope
+    set?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    disconnect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    delete?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    update?: TrackLikeUpdateWithWhereUniqueWithoutTrackInput | TrackLikeUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: TrackLikeUpdateManyWithWhereWithoutTrackInput | TrackLikeUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+  }
+
   export type PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput = {
     create?: XOR<PlaylistTrackCreateWithoutTrackInput, PlaylistTrackUncheckedCreateWithoutTrackInput> | PlaylistTrackCreateWithoutTrackInput[] | PlaylistTrackUncheckedCreateWithoutTrackInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutTrackInput | PlaylistTrackCreateOrConnectWithoutTrackInput[]
@@ -13280,6 +16075,26 @@ export namespace Prisma {
     deleteMany?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
   }
 
+  export type TrackLikeUncheckedUpdateManyWithoutTrackNestedInput = {
+    create?: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput> | TrackLikeCreateWithoutTrackInput[] | TrackLikeUncheckedCreateWithoutTrackInput[]
+    connectOrCreate?: TrackLikeCreateOrConnectWithoutTrackInput | TrackLikeCreateOrConnectWithoutTrackInput[]
+    upsert?: TrackLikeUpsertWithWhereUniqueWithoutTrackInput | TrackLikeUpsertWithWhereUniqueWithoutTrackInput[]
+    createMany?: TrackLikeCreateManyTrackInputEnvelope
+    set?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    disconnect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    delete?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    connect?: TrackLikeWhereUniqueInput | TrackLikeWhereUniqueInput[]
+    update?: TrackLikeUpdateWithWhereUniqueWithoutTrackInput | TrackLikeUpdateWithWhereUniqueWithoutTrackInput[]
+    updateMany?: TrackLikeUpdateManyWithWhereWithoutTrackInput | TrackLikeUpdateManyWithWhereWithoutTrackInput[]
+    deleteMany?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPlaylistsInput = {
+    create?: XOR<UserCreateWithoutPlaylistsInput, UserUncheckedCreateWithoutPlaylistsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlaylistsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type PlaylistTrackCreateNestedManyWithoutPlaylistInput = {
     create?: XOR<PlaylistTrackCreateWithoutPlaylistInput, PlaylistTrackUncheckedCreateWithoutPlaylistInput> | PlaylistTrackCreateWithoutPlaylistInput[] | PlaylistTrackUncheckedCreateWithoutPlaylistInput[]
     connectOrCreate?: PlaylistTrackCreateOrConnectWithoutPlaylistInput | PlaylistTrackCreateOrConnectWithoutPlaylistInput[]
@@ -13306,6 +16121,14 @@ export namespace Prisma {
     connectOrCreate?: PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput | PlaylistCollaboratorCreateOrConnectWithoutPlaylistInput[]
     createMany?: PlaylistCollaboratorCreateManyPlaylistInputEnvelope
     connect?: PlaylistCollaboratorWhereUniqueInput | PlaylistCollaboratorWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutPlaylistsNestedInput = {
+    create?: XOR<UserCreateWithoutPlaylistsInput, UserUncheckedCreateWithoutPlaylistsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlaylistsInput
+    upsert?: UserUpsertWithoutPlaylistsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlaylistsInput, UserUpdateWithoutPlaylistsInput>, UserUncheckedUpdateWithoutPlaylistsInput>
   }
 
   export type PlaylistTrackUpdateManyWithoutPlaylistNestedInput = {
@@ -13412,6 +16235,12 @@ export namespace Prisma {
     connect?: TrackWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutPlayHistoryInput = {
+    create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -13428,10 +16257,24 @@ export namespace Prisma {
     update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutPlayHistoryInput, TrackUpdateWithoutPlayHistoryInput>, TrackUncheckedUpdateWithoutPlayHistoryInput>
   }
 
+  export type UserUpdateOneRequiredWithoutPlayHistoryNestedInput = {
+    create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
+    upsert?: UserUpsertWithoutPlayHistoryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlayHistoryInput, UserUpdateWithoutPlayHistoryInput>, UserUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
   export type TrackCreateNestedOneWithoutSeekEventsInput = {
     create?: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
     connectOrCreate?: TrackCreateOrConnectWithoutSeekEventsInput
     connect?: TrackWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSeekEventsInput = {
+    create?: XOR<UserCreateWithoutSeekEventsInput, UserUncheckedCreateWithoutSeekEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSeekEventsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type TrackUpdateOneRequiredWithoutSeekEventsNestedInput = {
@@ -13440,6 +16283,18 @@ export namespace Prisma {
     upsert?: TrackUpsertWithoutSeekEventsInput
     connect?: TrackWhereUniqueInput
     update?: XOR<XOR<TrackUpdateToOneWithWhereWithoutSeekEventsInput, TrackUpdateWithoutSeekEventsInput>, TrackUncheckedUpdateWithoutSeekEventsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSeekEventsNestedInput = {
+    create?: XOR<UserCreateWithoutSeekEventsInput, UserUncheckedCreateWithoutSeekEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSeekEventsInput
+    upsert?: UserUpsertWithoutSeekEventsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSeekEventsInput, UserUpdateWithoutSeekEventsInput>, UserUncheckedUpdateWithoutSeekEventsInput>
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -13454,20 +16309,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -13509,6 +16350,34 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -13535,20 +16404,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13578,11 +16433,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -13608,14 +16458,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -13675,6 +16517,402 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type TrackLikeCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+    track: TrackCreateNestedOneWithoutLikesInput
+  }
+
+  export type TrackLikeUncheckedCreateWithoutUserInput = {
+    id?: string
+    trackId: string
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeCreateOrConnectWithoutUserInput = {
+    where: TrackLikeWhereUniqueInput
+    create: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput>
+  }
+
+  export type TrackLikeCreateManyUserInputEnvelope = {
+    data: TrackLikeCreateManyUserInput | TrackLikeCreateManyUserInput[]
+  }
+
+  export type PlaylistCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    coverPath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tracks?: PlaylistTrackCreateNestedManyWithoutPlaylistInput
+    collaborators?: PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput
+  }
+
+  export type PlaylistUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    coverPath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tracks?: PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput
+    collaborators?: PlaylistCollaboratorUncheckedCreateNestedManyWithoutPlaylistInput
+  }
+
+  export type PlaylistCreateOrConnectWithoutUserInput = {
+    where: PlaylistWhereUniqueInput
+    create: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlaylistCreateManyUserInputEnvelope = {
+    data: PlaylistCreateManyUserInput | PlaylistCreateManyUserInput[]
+  }
+
+  export type PlayHistoryCreateWithoutUserInput = {
+    id?: string
+    duration: number
+    playedAt?: Date | string
+    track: TrackCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type PlayHistoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    trackId: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type PlayHistoryCreateOrConnectWithoutUserInput = {
+    where: PlayHistoryWhereUniqueInput
+    create: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayHistoryCreateManyUserInputEnvelope = {
+    data: PlayHistoryCreateManyUserInput | PlayHistoryCreateManyUserInput[]
+  }
+
+  export type SeekEventCreateWithoutUserInput = {
+    id?: string
+    timestamp: number
+    createdAt?: Date | string
+    track: TrackCreateNestedOneWithoutSeekEventsInput
+  }
+
+  export type SeekEventUncheckedCreateWithoutUserInput = {
+    id?: string
+    trackId: string
+    timestamp: number
+    createdAt?: Date | string
+  }
+
+  export type SeekEventCreateOrConnectWithoutUserInput = {
+    where: SeekEventWhereUniqueInput
+    create: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type SeekEventCreateManyUserInputEnvelope = {
+    data: SeekEventCreateManyUserInput | SeekEventCreateManyUserInput[]
+  }
+
+  export type TrackLikeUpsertWithWhereUniqueWithoutUserInput = {
+    where: TrackLikeWhereUniqueInput
+    update: XOR<TrackLikeUpdateWithoutUserInput, TrackLikeUncheckedUpdateWithoutUserInput>
+    create: XOR<TrackLikeCreateWithoutUserInput, TrackLikeUncheckedCreateWithoutUserInput>
+  }
+
+  export type TrackLikeUpdateWithWhereUniqueWithoutUserInput = {
+    where: TrackLikeWhereUniqueInput
+    data: XOR<TrackLikeUpdateWithoutUserInput, TrackLikeUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TrackLikeUpdateManyWithWhereWithoutUserInput = {
+    where: TrackLikeScalarWhereInput
+    data: XOR<TrackLikeUpdateManyMutationInput, TrackLikeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TrackLikeScalarWhereInput = {
+    AND?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+    OR?: TrackLikeScalarWhereInput[]
+    NOT?: TrackLikeScalarWhereInput | TrackLikeScalarWhereInput[]
+    id?: StringFilter<"TrackLike"> | string
+    userId?: StringFilter<"TrackLike"> | string
+    trackId?: StringFilter<"TrackLike"> | string
+    createdAt?: DateTimeFilter<"TrackLike"> | Date | string
+  }
+
+  export type PlaylistUpsertWithWhereUniqueWithoutUserInput = {
+    where: PlaylistWhereUniqueInput
+    update: XOR<PlaylistUpdateWithoutUserInput, PlaylistUncheckedUpdateWithoutUserInput>
+    create: XOR<PlaylistCreateWithoutUserInput, PlaylistUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlaylistUpdateWithWhereUniqueWithoutUserInput = {
+    where: PlaylistWhereUniqueInput
+    data: XOR<PlaylistUpdateWithoutUserInput, PlaylistUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PlaylistUpdateManyWithWhereWithoutUserInput = {
+    where: PlaylistScalarWhereInput
+    data: XOR<PlaylistUpdateManyMutationInput, PlaylistUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PlaylistScalarWhereInput = {
+    AND?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
+    OR?: PlaylistScalarWhereInput[]
+    NOT?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
+    id?: StringFilter<"Playlist"> | string
+    name?: StringFilter<"Playlist"> | string
+    description?: StringNullableFilter<"Playlist"> | string | null
+    coverPath?: StringNullableFilter<"Playlist"> | string | null
+    userId?: StringFilter<"Playlist"> | string
+    createdAt?: DateTimeFilter<"Playlist"> | Date | string
+    updatedAt?: DateTimeFilter<"Playlist"> | Date | string
+  }
+
+  export type PlayHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: PlayHistoryWhereUniqueInput
+    update: XOR<PlayHistoryUpdateWithoutUserInput, PlayHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<PlayHistoryCreateWithoutUserInput, PlayHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: PlayHistoryWhereUniqueInput
+    data: XOR<PlayHistoryUpdateWithoutUserInput, PlayHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PlayHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: PlayHistoryScalarWhereInput
+    data: XOR<PlayHistoryUpdateManyMutationInput, PlayHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PlayHistoryScalarWhereInput = {
+    AND?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+    OR?: PlayHistoryScalarWhereInput[]
+    NOT?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
+    id?: StringFilter<"PlayHistory"> | string
+    trackId?: StringFilter<"PlayHistory"> | string
+    userId?: StringFilter<"PlayHistory"> | string
+    duration?: FloatFilter<"PlayHistory"> | number
+    playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
+  }
+
+  export type SeekEventUpsertWithWhereUniqueWithoutUserInput = {
+    where: SeekEventWhereUniqueInput
+    update: XOR<SeekEventUpdateWithoutUserInput, SeekEventUncheckedUpdateWithoutUserInput>
+    create: XOR<SeekEventCreateWithoutUserInput, SeekEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type SeekEventUpdateWithWhereUniqueWithoutUserInput = {
+    where: SeekEventWhereUniqueInput
+    data: XOR<SeekEventUpdateWithoutUserInput, SeekEventUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SeekEventUpdateManyWithWhereWithoutUserInput = {
+    where: SeekEventScalarWhereInput
+    data: XOR<SeekEventUpdateManyMutationInput, SeekEventUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SeekEventScalarWhereInput = {
+    AND?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+    OR?: SeekEventScalarWhereInput[]
+    NOT?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
+    id?: StringFilter<"SeekEvent"> | string
+    trackId?: StringFilter<"SeekEvent"> | string
+    timestamp?: FloatFilter<"SeekEvent"> | number
+    userId?: StringFilter<"SeekEvent"> | string
+    createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
+  }
+
+  export type UserCreateWithoutLikesInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    playlists?: PlaylistCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLikesInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLikesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLikesInput, UserUncheckedCreateWithoutLikesInput>
+  }
+
+  export type TrackCreateWithoutLikesInput = {
+    id?: string
+    title: string
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    artist: ArtistCreateNestedOneWithoutTracksInput
+    album?: AlbumCreateNestedOneWithoutTracksInput
+    playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackUncheckedCreateWithoutLikesInput = {
+    id?: string
+    title: string
+    artistId: string
+    albumId?: string | null
+    filePath: string
+    duration?: number | null
+    trackNumber?: number | null
+    diskNumber?: number | null
+    genre?: string | null
+    bitrate?: number | null
+    sampleRate?: number | null
+    codec?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
+    loudnessLufs?: number | null
+    playCount?: number
+    lastPlayed?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+  }
+
+  export type TrackCreateOrConnectWithoutLikesInput = {
+    where: TrackWhereUniqueInput
+    create: XOR<TrackCreateWithoutLikesInput, TrackUncheckedCreateWithoutLikesInput>
+  }
+
+  export type UserUpsertWithoutLikesInput = {
+    update: XOR<UserUpdateWithoutLikesInput, UserUncheckedUpdateWithoutLikesInput>
+    create: XOR<UserCreateWithoutLikesInput, UserUncheckedCreateWithoutLikesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLikesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLikesInput, UserUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type UserUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TrackUpsertWithoutLikesInput = {
+    update: XOR<TrackUpdateWithoutLikesInput, TrackUncheckedUpdateWithoutLikesInput>
+    create: XOR<TrackCreateWithoutLikesInput, TrackUncheckedCreateWithoutLikesInput>
+    where?: TrackWhereInput
+  }
+
+  export type TrackUpdateToOneWithWhereWithoutLikesInput = {
+    where?: TrackWhereInput
+    data: XOR<TrackUpdateWithoutLikesInput, TrackUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type TrackUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    artist?: ArtistUpdateOneRequiredWithoutTracksNestedInput
+    album?: AlbumUpdateOneWithoutTracksNestedInput
+    playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+  }
+
+  export type TrackUncheckedUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    artistId?: StringFieldUpdateOperationsInput | string
+    albumId?: NullableStringFieldUpdateOperationsInput | string | null
+    filePath?: StringFieldUpdateOperationsInput | string
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    trackNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    diskNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
+    bitrate?: NullableIntFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    codec?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
+    playCount?: IntFieldUpdateOperationsInput | number
+    lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+  }
+
   export type AlbumCreateWithoutArtistInput = {
     id?: string
     title: string
@@ -13722,7 +16960,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -13731,6 +16968,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutArtistInput = {
@@ -13748,7 +16986,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -13756,6 +16993,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutArtistInput = {
@@ -13833,7 +17071,6 @@ export namespace Prisma {
     fileSize?: IntNullableFilter<"Track"> | number | null
     mimeType?: StringNullableFilter<"Track"> | string | null
     loudnessLufs?: FloatNullableFilter<"Track"> | number | null
-    isLiked?: BoolFilter<"Track"> | boolean
     playCount?: IntFilter<"Track"> | number
     lastPlayed?: DateTimeNullableFilter<"Track"> | Date | string | null
     createdAt?: DateTimeFilter<"Track"> | Date | string
@@ -13877,7 +17114,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -13886,6 +17122,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutAlbumInput = {
@@ -13903,7 +17140,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -13911,6 +17147,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutAlbumInput = {
@@ -14044,9 +17281,9 @@ export namespace Prisma {
 
   export type PlayHistoryCreateWithoutTrackInput = {
     id?: string
-    userId?: string
     duration: number
     playedAt?: Date | string
+    user?: UserCreateNestedOneWithoutPlayHistoryInput
   }
 
   export type PlayHistoryUncheckedCreateWithoutTrackInput = {
@@ -14068,14 +17305,14 @@ export namespace Prisma {
   export type SeekEventCreateWithoutTrackInput = {
     id?: string
     timestamp: number
-    userId?: string
     createdAt?: Date | string
+    user: UserCreateNestedOneWithoutSeekEventsInput
   }
 
   export type SeekEventUncheckedCreateWithoutTrackInput = {
     id?: string
     timestamp: number
-    userId?: string
+    userId: string
     createdAt?: Date | string
   }
 
@@ -14086,6 +17323,27 @@ export namespace Prisma {
 
   export type SeekEventCreateManyTrackInputEnvelope = {
     data: SeekEventCreateManyTrackInput | SeekEventCreateManyTrackInput[]
+  }
+
+  export type TrackLikeCreateWithoutTrackInput = {
+    id?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutLikesInput
+  }
+
+  export type TrackLikeUncheckedCreateWithoutTrackInput = {
+    id?: string
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeCreateOrConnectWithoutTrackInput = {
+    where: TrackLikeWhereUniqueInput
+    create: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput>
+  }
+
+  export type TrackLikeCreateManyTrackInputEnvelope = {
+    data: TrackLikeCreateManyTrackInput | TrackLikeCreateManyTrackInput[]
   }
 
   export type ArtistUpsertWithoutTracksInput = {
@@ -14195,17 +17453,6 @@ export namespace Prisma {
     data: XOR<PlayHistoryUpdateManyMutationInput, PlayHistoryUncheckedUpdateManyWithoutTrackInput>
   }
 
-  export type PlayHistoryScalarWhereInput = {
-    AND?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
-    OR?: PlayHistoryScalarWhereInput[]
-    NOT?: PlayHistoryScalarWhereInput | PlayHistoryScalarWhereInput[]
-    id?: StringFilter<"PlayHistory"> | string
-    trackId?: StringFilter<"PlayHistory"> | string
-    userId?: StringFilter<"PlayHistory"> | string
-    duration?: FloatFilter<"PlayHistory"> | number
-    playedAt?: DateTimeFilter<"PlayHistory"> | Date | string
-  }
-
   export type SeekEventUpsertWithWhereUniqueWithoutTrackInput = {
     where: SeekEventWhereUniqueInput
     update: XOR<SeekEventUpdateWithoutTrackInput, SeekEventUncheckedUpdateWithoutTrackInput>
@@ -14222,15 +17469,47 @@ export namespace Prisma {
     data: XOR<SeekEventUpdateManyMutationInput, SeekEventUncheckedUpdateManyWithoutTrackInput>
   }
 
-  export type SeekEventScalarWhereInput = {
-    AND?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
-    OR?: SeekEventScalarWhereInput[]
-    NOT?: SeekEventScalarWhereInput | SeekEventScalarWhereInput[]
-    id?: StringFilter<"SeekEvent"> | string
-    trackId?: StringFilter<"SeekEvent"> | string
-    timestamp?: FloatFilter<"SeekEvent"> | number
-    userId?: StringFilter<"SeekEvent"> | string
-    createdAt?: DateTimeFilter<"SeekEvent"> | Date | string
+  export type TrackLikeUpsertWithWhereUniqueWithoutTrackInput = {
+    where: TrackLikeWhereUniqueInput
+    update: XOR<TrackLikeUpdateWithoutTrackInput, TrackLikeUncheckedUpdateWithoutTrackInput>
+    create: XOR<TrackLikeCreateWithoutTrackInput, TrackLikeUncheckedCreateWithoutTrackInput>
+  }
+
+  export type TrackLikeUpdateWithWhereUniqueWithoutTrackInput = {
+    where: TrackLikeWhereUniqueInput
+    data: XOR<TrackLikeUpdateWithoutTrackInput, TrackLikeUncheckedUpdateWithoutTrackInput>
+  }
+
+  export type TrackLikeUpdateManyWithWhereWithoutTrackInput = {
+    where: TrackLikeScalarWhereInput
+    data: XOR<TrackLikeUpdateManyMutationInput, TrackLikeUncheckedUpdateManyWithoutTrackInput>
+  }
+
+  export type UserCreateWithoutPlaylistsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPlaylistsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPlaylistsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPlaylistsInput, UserUncheckedCreateWithoutPlaylistsInput>
   }
 
   export type PlaylistTrackCreateWithoutPlaylistInput = {
@@ -14277,6 +17556,39 @@ export namespace Prisma {
 
   export type PlaylistCollaboratorCreateManyPlaylistInputEnvelope = {
     data: PlaylistCollaboratorCreateManyPlaylistInput | PlaylistCollaboratorCreateManyPlaylistInput[]
+  }
+
+  export type UserUpsertWithoutPlaylistsInput = {
+    update: XOR<UserUpdateWithoutPlaylistsInput, UserUncheckedUpdateWithoutPlaylistsInput>
+    create: XOR<UserCreateWithoutPlaylistsInput, UserUncheckedCreateWithoutPlaylistsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPlaylistsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPlaylistsInput, UserUncheckedUpdateWithoutPlaylistsInput>
+  }
+
+  export type UserUpdateWithoutPlaylistsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPlaylistsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUncheckedUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PlaylistTrackUpsertWithWhereUniqueWithoutPlaylistInput = {
@@ -14329,6 +17641,7 @@ export namespace Prisma {
     coverPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutPlaylistsInput
     collaborators?: PlaylistCollaboratorCreateNestedManyWithoutPlaylistInput
   }
 
@@ -14337,6 +17650,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     coverPath?: string | null
+    userId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     collaborators?: PlaylistCollaboratorUncheckedCreateNestedManyWithoutPlaylistInput
@@ -14361,7 +17675,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -14370,6 +17683,7 @@ export namespace Prisma {
     album?: AlbumCreateNestedOneWithoutTracksInput
     playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutPlaylistTracksInput = {
@@ -14388,13 +17702,13 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutPlaylistTracksInput = {
@@ -14420,6 +17734,7 @@ export namespace Prisma {
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlaylistsNestedInput
     collaborators?: PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput
   }
 
@@ -14428,6 +17743,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     collaborators?: PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistNestedInput
@@ -14458,7 +17774,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14467,6 +17782,7 @@ export namespace Prisma {
     album?: AlbumUpdateOneWithoutTracksNestedInput
     playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutPlaylistTracksInput = {
@@ -14485,13 +17801,13 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type PlaylistCreateWithoutCollaboratorsInput = {
@@ -14501,6 +17817,7 @@ export namespace Prisma {
     coverPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutPlaylistsInput
     tracks?: PlaylistTrackCreateNestedManyWithoutPlaylistInput
   }
 
@@ -14509,6 +17826,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     coverPath?: string | null
+    userId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tracks?: PlaylistTrackUncheckedCreateNestedManyWithoutPlaylistInput
@@ -14537,6 +17855,7 @@ export namespace Prisma {
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlaylistsNestedInput
     tracks?: PlaylistTrackUpdateManyWithoutPlaylistNestedInput
   }
 
@@ -14545,6 +17864,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tracks?: PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput
@@ -14564,7 +17884,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -14573,6 +17892,7 @@ export namespace Prisma {
     album?: AlbumCreateNestedOneWithoutTracksInput
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutPlayHistoryInput = {
@@ -14591,18 +17911,45 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
     seekEvents?: SeekEventUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutPlayHistoryInput = {
     where: TrackWhereUniqueInput
     create: XOR<TrackCreateWithoutPlayHistoryInput, TrackUncheckedCreateWithoutPlayHistoryInput>
+  }
+
+  export type UserCreateWithoutPlayHistoryInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeCreateNestedManyWithoutUserInput
+    playlists?: PlaylistCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPlayHistoryInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutUserInput
+    playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    seekEvents?: SeekEventUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPlayHistoryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
   }
 
   export type TrackUpsertWithoutPlayHistoryInput = {
@@ -14630,7 +17977,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14639,6 +17985,7 @@ export namespace Prisma {
     album?: AlbumUpdateOneWithoutTracksNestedInput
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutPlayHistoryInput = {
@@ -14657,13 +18004,46 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
+  }
+
+  export type UserUpsertWithoutPlayHistoryInput = {
+    update: XOR<UserUpdateWithoutPlayHistoryInput, UserUncheckedUpdateWithoutPlayHistoryInput>
+    create: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPlayHistoryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPlayHistoryInput, UserUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type UserUpdateWithoutPlayHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPlayHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUncheckedUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    seekEvents?: SeekEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TrackCreateWithoutSeekEventsInput = {
@@ -14680,7 +18060,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -14689,6 +18068,7 @@ export namespace Prisma {
     album?: AlbumCreateNestedOneWithoutTracksInput
     playlistTracks?: PlaylistTrackCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeCreateNestedManyWithoutTrackInput
   }
 
   export type TrackUncheckedCreateWithoutSeekEventsInput = {
@@ -14707,18 +18087,45 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     playlistTracks?: PlaylistTrackUncheckedCreateNestedManyWithoutTrackInput
     playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutTrackInput
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutTrackInput
   }
 
   export type TrackCreateOrConnectWithoutSeekEventsInput = {
     where: TrackWhereUniqueInput
     create: XOR<TrackCreateWithoutSeekEventsInput, TrackUncheckedCreateWithoutSeekEventsInput>
+  }
+
+  export type UserCreateWithoutSeekEventsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeCreateNestedManyWithoutUserInput
+    playlists?: PlaylistCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSeekEventsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash: string
+    createdAt?: Date | string
+    likes?: TrackLikeUncheckedCreateNestedManyWithoutUserInput
+    playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    playHistory?: PlayHistoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSeekEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSeekEventsInput, UserUncheckedCreateWithoutSeekEventsInput>
   }
 
   export type TrackUpsertWithoutSeekEventsInput = {
@@ -14746,7 +18153,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14755,6 +18161,7 @@ export namespace Prisma {
     album?: AlbumUpdateOneWithoutTracksNestedInput
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutSeekEventsInput = {
@@ -14773,13 +18180,166 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
+  }
+
+  export type UserUpsertWithoutSeekEventsInput = {
+    update: XOR<UserUpdateWithoutSeekEventsInput, UserUncheckedUpdateWithoutSeekEventsInput>
+    create: XOR<UserCreateWithoutSeekEventsInput, UserUncheckedCreateWithoutSeekEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSeekEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSeekEventsInput, UserUncheckedUpdateWithoutSeekEventsInput>
+  }
+
+  export type UserUpdateWithoutSeekEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSeekEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: TrackLikeUncheckedUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    playHistory?: PlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TrackLikeCreateManyUserInput = {
+    id?: string
+    trackId: string
+    createdAt?: Date | string
+  }
+
+  export type PlaylistCreateManyUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    coverPath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PlayHistoryCreateManyUserInput = {
+    id?: string
+    trackId: string
+    duration: number
+    playedAt?: Date | string
+  }
+
+  export type SeekEventCreateManyUserInput = {
+    id?: string
+    trackId: string
+    timestamp: number
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    track?: TrackUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type TrackLikeUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaylistUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tracks?: PlaylistTrackUpdateManyWithoutPlaylistNestedInput
+    collaborators?: PlaylistCollaboratorUpdateManyWithoutPlaylistNestedInput
+  }
+
+  export type PlaylistUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tracks?: PlaylistTrackUncheckedUpdateManyWithoutPlaylistNestedInput
+    collaborators?: PlaylistCollaboratorUncheckedUpdateManyWithoutPlaylistNestedInput
+  }
+
+  export type PlaylistUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    coverPath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    track?: TrackUpdateOneRequiredWithoutPlayHistoryNestedInput
+  }
+
+  export type PlayHistoryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    duration?: FloatFieldUpdateOperationsInput | number
+    playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    track?: TrackUpdateOneRequiredWithoutSeekEventsNestedInput
+  }
+
+  export type SeekEventUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeekEventUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    trackId?: StringFieldUpdateOperationsInput | string
+    timestamp?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumCreateManyArtistInput = {
@@ -14808,7 +18368,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -14864,7 +18423,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14873,6 +18431,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutArtistInput = {
@@ -14890,7 +18449,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14898,6 +18456,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateManyWithoutArtistInput = {
@@ -14915,7 +18474,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14937,7 +18495,6 @@ export namespace Prisma {
     fileSize?: number | null
     mimeType?: string | null
     loudnessLufs?: number | null
-    isLiked?: boolean
     playCount?: number
     lastPlayed?: Date | string | null
     createdAt?: Date | string
@@ -14958,7 +18515,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14967,6 +18523,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateWithoutAlbumInput = {
@@ -14984,7 +18541,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14992,6 +18548,7 @@ export namespace Prisma {
     playlistTracks?: PlaylistTrackUncheckedUpdateManyWithoutTrackNestedInput
     playHistory?: PlayHistoryUncheckedUpdateManyWithoutTrackNestedInput
     seekEvents?: SeekEventUncheckedUpdateManyWithoutTrackNestedInput
+    likes?: TrackLikeUncheckedUpdateManyWithoutTrackNestedInput
   }
 
   export type TrackUncheckedUpdateManyWithoutAlbumInput = {
@@ -15009,7 +18566,6 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     loudnessLufs?: NullableFloatFieldUpdateOperationsInput | number | null
-    isLiked?: BoolFieldUpdateOperationsInput | boolean
     playCount?: IntFieldUpdateOperationsInput | number
     lastPlayed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15033,7 +18589,13 @@ export namespace Prisma {
   export type SeekEventCreateManyTrackInput = {
     id?: string
     timestamp: number
-    userId?: string
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type TrackLikeCreateManyTrackInput = {
+    id?: string
+    userId: string
     createdAt?: Date | string
   }
 
@@ -15060,9 +18622,9 @@ export namespace Prisma {
 
   export type PlayHistoryUpdateWithoutTrackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     duration?: FloatFieldUpdateOperationsInput | number
     playedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
   }
 
   export type PlayHistoryUncheckedUpdateWithoutTrackInput = {
@@ -15082,8 +18644,8 @@ export namespace Prisma {
   export type SeekEventUpdateWithoutTrackInput = {
     id?: StringFieldUpdateOperationsInput | string
     timestamp?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSeekEventsNestedInput
   }
 
   export type SeekEventUncheckedUpdateWithoutTrackInput = {
@@ -15096,6 +18658,24 @@ export namespace Prisma {
   export type SeekEventUncheckedUpdateManyWithoutTrackInput = {
     id?: StringFieldUpdateOperationsInput | string
     timestamp?: FloatFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type TrackLikeUncheckedUpdateWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackLikeUncheckedUpdateManyWithoutTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15162,6 +18742,10 @@ export namespace Prisma {
    * Aliases for legacy arg types
    */
     /**
+     * @deprecated Use UserCountOutputTypeDefaultArgs instead
+     */
+    export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ArtistCountOutputTypeDefaultArgs instead
      */
     export type ArtistCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ArtistCountOutputTypeDefaultArgs<ExtArgs>
@@ -15177,6 +18761,14 @@ export namespace Prisma {
      * @deprecated Use PlaylistCountOutputTypeDefaultArgs instead
      */
     export type PlaylistCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PlaylistCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UserDefaultArgs instead
+     */
+    export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TrackLikeDefaultArgs instead
+     */
+    export type TrackLikeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TrackLikeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ArtistDefaultArgs instead
      */
