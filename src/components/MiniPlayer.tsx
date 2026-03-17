@@ -122,7 +122,7 @@ function MiniPlayerInner() {
           {/* Playback progress line at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20">
             <div
-              className="absolute top-0 left-0 h-full bg-white transition-[width] duration-200 ease-linear"
+              className="absolute top-0 left-0 h-full bg-white transition-[width] duration-300 ease-linear"
               style={{ width: `${playedPct}%` }}
             />
           </div>
