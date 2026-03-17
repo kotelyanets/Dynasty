@@ -16,34 +16,6 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
   const { playTrack } = usePlayer();
   const { isLiked, toggleLike } = useLikedTracks();
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="w-10 h-10 animate-spin text-[#fc3c44]" />
-      </div>
-    );
-  }
-
-  if (error || !artist) {
-    return (
-      <div className="pt-20 px-5 text-center">
-        <p className="text-red-400 font-semibold mb-2">
-          {error ? 'Failed to load artist' : 'Artist not found'}
-        </p>
-        {error && <p className="text-white/40 text-[13px]">{error.message}</p>}
-        <button
-          onClick={onBack}
-          className="mt-4 px-6 py-2 bg-white/10 rounded-full text-sm text-white active:scale-95 transition-transform"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
-
-  const allArtistTracks = artist.albums.flatMap((a) => a.tracks);
-  const topTracks = allArtistTracks.slice(0, 5);
-
   // ── Parallax state ─────────────────────────────────────
   const scrollRef = useRef<HTMLDivElement>(null);
   const [heroScale, setHeroScale] = useState(1);
@@ -76,6 +48,34 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-10 h-10 animate-spin text-[#fc3c44]" />
+      </div>
+    );
+  }
+
+  if (error || !artist) {
+    return (
+      <div className="pt-20 px-5 text-center">
+        <p className="text-red-400 font-semibold mb-2">
+          {error ? 'Failed to load artist' : 'Artist not found'}
+        </p>
+        {error && <p className="text-white/40 text-[13px]">{error.message}</p>}
+        <button
+          onClick={onBack}
+          className="mt-4 px-6 py-2 bg-white/10 rounded-full text-sm text-white active:scale-95 transition-transform"
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  const allArtistTracks = artist.albums.flatMap((a) => a.tracks);
+  const topTracks = allArtistTracks.slice(0, 5);
 
   const handlePlayAll = () => {
     if (allArtistTracks.length > 0) playTrack(allArtistTracks[0], allArtistTracks, 0);
