@@ -232,7 +232,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/runner/work/Dynasty/Dynasty/server/src/generated/prisma",
+      "value": "C:\\Users\\andko\\OneDrive\\Ambiente de Trabalho\\DYNASTY_NEW\\server\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -241,16 +241,17 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/runner/work/Dynasty/Dynasty/server/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\andko\\OneDrive\\Ambiente de Trabalho\\DYNASTY_NEW\\server\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "5.22.0",
@@ -259,8 +260,6 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
-  "postinstall": true,
-  "ciName": "GitHub Actions",
   "inlineDatasources": {
     "db": {
       "url": {
