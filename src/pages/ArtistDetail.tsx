@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect, useState } from 'react';
+import { useRef, useCallback, useEffect, useState, useMemo } from 'react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useArtistDetail } from '@/hooks/useArtistDetail';
 import { TrackRow } from '@/components/TrackRow';
@@ -49,6 +49,9 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  const allArtistTracks = useMemo(() => artist?.albums.flatMap((a) => a.tracks) ?? [], [artist]);
+  const topTracks = useMemo(() => allArtistTracks.slice(0, 5), [allArtistTracks]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -73,9 +76,6 @@ export function ArtistDetail({ artistId, onBack, onNavigate }: ArtistDetailProps
       </div>
     );
   }
-
-  const allArtistTracks = artist.albums.flatMap((a) => a.tracks);
-  const topTracks = allArtistTracks.slice(0, 5);
 
   const handlePlayAll = () => {
     if (allArtistTracks.length > 0) playTrack(allArtistTracks[0], allArtistTracks, 0);
