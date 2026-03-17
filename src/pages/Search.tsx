@@ -10,7 +10,9 @@ interface SearchProps {
   onNavigate: (view: string, id?: string) => void;
 }
 
-export function Search({ onNavigate }: SearchProps) {
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+
+function SearchInner({ onNavigate }: SearchProps) {
   const [query, setQuery] = useState('');
   const { data: results, loading, error } = useFuzzySearch(query);
   const { data: albums } = useAlbums();
@@ -206,4 +208,8 @@ export function Search({ onNavigate }: SearchProps) {
       )}
     </div>
   );
+}
+
+export function Search(props: SearchProps) {
+  return <ErrorBoundary><SearchInner {...props} /></ErrorBoundary>;
 }

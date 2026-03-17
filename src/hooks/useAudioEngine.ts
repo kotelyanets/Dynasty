@@ -101,23 +101,39 @@ export function useAudioEngine() {
     };
 
     // ── error ───────────────────────────────────────────────
-    const onError = () => {
+    const onError = (e: Event) => {
       const err = audioEl.error;
-      const messages: Record<number, string> = {
-        1: 'Playback aborted',
-        2: 'Network error while fetching audio',
-        3: 'Audio decoding failed',
-        4: 'Audio format not supported',
+      const codes: Record<number, string> = {
+        1: 'MEDIA_ERR_ABORTED',
+        2: 'MEDIA_ERR_NETWORK',
+        3: 'MEDIA_ERR_DECODE',
+        4: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
       };
-      const msg = err ? (messages[err.code] ?? `Media error ${err.code}`) : 'Unknown audio error';
-      console.error('[AudioEngine]', msg, err);
+      const codeStr = err ? (codes[err.code] ?? `UNKNOWN_CODE_${err.code}`) : 'NO_ERROR_OBJECT';
+      const msg = `🔴 STRICT AUDIO_ERROR: ${codeStr} | msg: ${err?.message || 'N/A'}`;
+      console.error('[AudioEngine]', msg, e);
+      // Attempt to toast via a global hack, or just rely on state _setError
+      if (typeof window !== 'undefined') {
+        const toastEl = document.createElement('div');
+        toastEl.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:red;color:white;padding:10px 20px;border-radius:8px;z-index:999999;font-weight:bold;font-size:14px;';
+        toastEl.textContent = msg;
+        document.body.appendChild(toastEl);
+        setTimeout(() => toastEl.remove(), 8000);
+      }
+      
       store()._setError(msg);
       store()._setBufferingState('error');
     };
 
     // ── stalled ─────────────────────────────────────────────
-    const onStalled = () => {
+    const onStalled = (e: Event) => {
+      console.warn('[AudioEngine] 🟡 STALLED event fired!', e);
       if (store().isPlaying) store()._setBufferingState('buffering');
+    };
+
+    // ── suspend ─────────────────────────────────────────────
+    const onSuspend = (e: Event) => {
+      console.warn('[AudioEngine] SUSPEND event fired!', e);
     };
 
     // ── volumechange ────────────────────────────────────────
@@ -155,6 +171,7 @@ export function useAudioEngine() {
     audioEl.addEventListener('ended', onEnded);
     audioEl.addEventListener('error', onError);
     audioEl.addEventListener('stalled', onStalled);
+    audioEl.addEventListener('suspend', onSuspend);
     audioEl.addEventListener('volumechange', onVolumeChange);
 
     // ── Subscribe to isPlaying changes from the store ───────
@@ -201,6 +218,7 @@ export function useAudioEngine() {
       audioEl.removeEventListener('ended', onEnded);
       audioEl.removeEventListener('error', onError);
       audioEl.removeEventListener('stalled', onStalled);
+      audioEl.removeEventListener('suspend', onSuspend);
       audioEl.removeEventListener('volumechange', onVolumeChange);
       document.removeEventListener('click', resumeOnInteraction);
       document.removeEventListener('touchstart', resumeOnInteraction);

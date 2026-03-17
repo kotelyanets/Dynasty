@@ -22,6 +22,7 @@ import path from 'path';
 import fs from 'fs';
 import config from './config';
 import db from './db';
+import fastifyJwt from '@fastify/jwt';
 
 // Route modules
 import streamRoutes   from './routes/stream';
@@ -37,6 +38,7 @@ import collaborateRoutes   from './routes/collaborate';
 import playHistoryRoutes   from './routes/playHistory';
 import seekEventRoutes     from './routes/seekEvents';
 import ogTagRoutes         from './routes/ogTags';
+import authRoutes          from './routes/auth';
 
 // Services
 import { startWatcher, stopWatcher } from './services/watcher';
@@ -69,11 +71,10 @@ export async function buildServer(): Promise<FastifyInstance> {
   });
 
   // ── CORS ──────────────────────────────────────────────────
-  // `origin: true` mirrors the request origin — correct for a
-  // local-network PWA served from the same server as the API.
-  // The iPhone PWA's origin will be e.g. http://192.168.1.x:3001
+  // Allow all origins to prevent Web Audio API from muting streams
+  // due to missing Access-Control-Allow-Origin headers.
   await server.register(cors, {
-    origin:         true,
+    origin:         '*',
     methods:        ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     allowedHeaders: [
       'Content-Type', 'Authorization',
@@ -139,7 +140,13 @@ export async function buildServer(): Promise<FastifyInstance> {
   // Streaming has no /api prefix — URL is /api/stream/:id from root
   await server.register(streamRoutes);
 
+  // ── JWT Authentication ────────────────────────────────────
+  await server.register(fastifyJwt, {
+    secret: process.env.JWT_SECRET || 'super-secret-vault-music-key',
+  });
+
   // All other routes are under /api
+  await server.register(authRoutes,     { prefix: '/api/auth' });
   await server.register(artistRoutes,   { prefix: '/api' });
   await server.register(albumRoutes,    { prefix: '/api' });
   await server.register(trackRoutes,    { prefix: '/api' });

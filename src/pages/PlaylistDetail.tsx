@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTracks } from '@/hooks/useTracks';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
-import { api, addTrackToPlaylist, removeTrackFromPlaylist, getStoredLikedPlaylistId } from '@/services/api';
+import { api, addTrackToPlaylist, removeTrackFromPlaylist, getStoredLikedPlaylistId, getLikedTracks } from '@/services/api';
 import type { Playlist, Track } from '@/types/music';
 import { usePlayer } from '@/context/PlayerContext';
 import { ChevronLeft, Loader2, Play, Plus, Trash2, Heart } from 'lucide-react';
@@ -15,6 +15,7 @@ interface PlaylistDetailProps {
 
 export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [fetchedLikedTracks, setFetchedLikedTracks] = useState<Track[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,40 +27,74 @@ export function PlaylistDetail({ playlistId, onBack }: PlaylistDetailProps) {
 
   const likedPlaylistId = getStoredLikedPlaylistId();
   const isLikedPlaylist =
-    playlistId === likedPlaylistId || playlist?.name.toLowerCase() === 'liked tracks';
+    playlistId === likedPlaylistId || playlist?.name.toLowerCase() === 'liked tracks' || playlistId === 'liked-tracks';
 
   useEffect(() => {
     let mounted = true;
     setLoading(true);
     setError(null);
 
-    api
-      .getPlaylist(playlistId)
-      .then((found) => {
-        if (!mounted) return;
-        if (!found) setError('Playlist not found');
-        setPlaylist(found);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setError(err instanceof Error ? err.message : String(err));
-        setLoading(false);
-      });
+    if (playlistId === likedPlaylistId || playlistId === 'liked-tracks') {
+      getLikedTracks()
+        .then((tracks) => {
+          if (!mounted) return;
+          setFetchedLikedTracks(tracks);
+          setPlaylist({
+            id: playlistId,
+            name: 'Liked Tracks',
+            description: 'Songs you have liked',
+            coverUrl: '',
+            trackIds: tracks.map((t) => t.id),
+            createdAt: new Date().toISOString(),
+          });
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (!mounted) return;
+          setError(err instanceof Error ? err.message : String(err));
+          setLoading(false);
+        });
+    } else {
+      api
+        .getPlaylist(playlistId)
+        .then((found) => {
+          if (!mounted) return;
+          if (!found) {
+            setError('Playlist not found');
+            setLoading(false);
+          } else if (found.name.toLowerCase() === 'liked tracks') {
+            getLikedTracks().then((tracks) => {
+              if (!mounted) return;
+              setFetchedLikedTracks(tracks);
+              setPlaylist({ ...found, trackIds: tracks.map((t) => t.id) });
+              setLoading(false);
+            });
+          } else {
+            setPlaylist(found);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (!mounted) return;
+          setError(err instanceof Error ? err.message : String(err));
+          setLoading(false);
+        });
+    }
 
     return () => {
       mounted = false;
     };
-  }, [playlistId]);
+  }, [playlistId, likedPlaylistId]);
 
   const playlistTracks: Track[] = useMemo(() => {
+    if (fetchedLikedTracks) return fetchedLikedTracks;
     if (!playlist) return [];
     const byId = new Map<string, Track>();
     for (const t of allTracks) byId.set(t.id, t);
     return playlist.trackIds
       .map((id) => byId.get(id))
       .filter((t): t is Track => !!t);
-  }, [allTracks, playlist]);
+  }, [allTracks, playlist, fetchedLikedTracks]);
 
   const availableToAdd = useMemo(() => {
     if (!playlist) return [];

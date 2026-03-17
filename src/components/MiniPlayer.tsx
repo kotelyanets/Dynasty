@@ -8,7 +8,9 @@ import { haptic } from '@/utils/haptics';
 
 const SWIPE_THRESHOLD = 50;
 
-export function MiniPlayer() {
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+
+function MiniPlayerInner() {
   const { state, togglePlay, next, prev, showNowPlaying } = usePlayer();
   const { currentTrack, isPlaying, currentTime, duration, buffered, bufferingState } = state;
 
@@ -162,4 +164,8 @@ export function MiniPlayer() {
       </div>
     </div>
   );
+}
+
+export function MiniPlayer() {
+  return <ErrorBoundary><MiniPlayerInner /></ErrorBoundary>;
 }

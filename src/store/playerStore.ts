@@ -37,6 +37,7 @@ import { audioProcessor } from '@/audio/AudioProcessor';
 // ─────────────────────────────────────────────────────────────
 
 export const audioEl = new Audio();
+audioEl.crossOrigin = 'anonymous';
 audioEl.preload = 'auto';
 // Allow iOS to play audio in the background (Safari requires this
 // attribute to be set before the first play() call).
@@ -186,6 +187,11 @@ export const usePlayerStore = create<PlayerStore>()(
       if (track.audioUrl) {
         // Initialise Web Audio pipeline on the first real play (user gesture).
         initAudioPipeline(audioEl);
+        
+        // Ensure volume is explicitly synced properly when pipeline created
+        audioEl.volume = get().volume;
+        setMasterVolume(get().volume, audioEl);
+
         ensureContextResumed();
 
         if (!options?.skipAudioLoad) {
@@ -244,8 +250,12 @@ export const usePlayerStore = create<PlayerStore>()(
 
       if (currentTrack.audioUrl) {
         ensureContextResumed();
-        // Real audio: the promise returned by play() must be handled to
-        // avoid the "play() interrupted by a new load request" DOMException
+        
+        // Sync volume explicitly here too just in case
+        audioEl.volume = get().volume;
+        setMasterVolume(get().volume, audioEl);
+
+        // Real audio: the promise returned by play() must be handled to avoid the "play() interrupted by a new load request" DOMException
         const p = audioEl.play();
         if (p !== undefined) {
           p.catch((err: Error) => {
@@ -272,6 +282,7 @@ export const usePlayerStore = create<PlayerStore>()(
     },
 
     togglePlay: () => {
+      ensureContextResumed();
       get().isPlaying ? get().pause() : get().play();
     },
 

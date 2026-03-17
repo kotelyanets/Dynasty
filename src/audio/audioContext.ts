@@ -26,9 +26,19 @@
 // ─────────────────────────────────────────────────────────────
 
 export const crossfadeEl = new Audio();
+crossfadeEl.crossOrigin = 'anonymous';
 crossfadeEl.preload = 'auto';
 crossfadeEl.setAttribute('playsinline', 'true');
 crossfadeEl.setAttribute('webkit-playsinline', 'true');
+
+crossfadeEl.addEventListener('error', (e) => {
+  const err = crossfadeEl.error;
+  const codes: Record<number, string> = { 1: 'MEDIA_ERR_ABORTED', 2: 'MEDIA_ERR_NETWORK', 3: 'MEDIA_ERR_DECODE', 4: 'MEDIA_ERR_SRC_NOT_SUPPORTED' };
+  const codeStr = err ? (codes[err.code] ?? `UNKNOWN_CODE_${err.code}`) : 'NO_ERROR_OBJECT';
+  console.error('[AudioContext] 🔴 CROSSFADE_EL AUDIO_ERROR:', codeStr, err, e);
+});
+crossfadeEl.addEventListener('stalled', (e) => console.warn('[AudioContext] 🟡 CROSSFADE_EL STALLED event fired!', e));
+crossfadeEl.addEventListener('suspend', (e) => console.warn('[AudioContext] CROSSFADE_EL SUSPEND event fired!', e));
 
 // ─────────────────────────────────────────────────────────────
 //  Web Audio nodes (initialised lazily)
@@ -66,6 +76,15 @@ export function initAudioPipeline(
     return;
   }
 
+  // Check if current audio is FLAC - Web Audio API has issues with FLAC in many browsers
+  const currentSrc = mainAudioEl.src || '';
+  const isFlac = currentSrc.includes('.flac') || mainAudioEl.currentSrc?.includes('.flac');
+  
+  if (isFlac) {
+    console.log('[AudioContext] FLAC detected, skipping Web Audio API pipeline for compatibility');
+    return; // Skip Web Audio API initialization for FLAC files
+  }
+
   const Ctor =
     window.AudioContext ??
     (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -82,7 +101,7 @@ export function initAudioPipeline(
   xfGain = audioCtx.createGain();
   masterGain = audioCtx.createGain();
 
-  // Initial gain values
+  // Initial gain values (explicitly setting to 1)
   mainGain.gain.value = 1;
   xfGain.gain.value = 0;
   masterGain.gain.value = 1;
@@ -113,7 +132,7 @@ export function isAudioPipelineReady(): boolean {
 
 /** Resume the AudioContext (call before play). */
 export function ensureContextResumed(): void {
-  if (audioCtx?.state === 'suspended') {
+  if (audioCtx && audioCtx.state === 'suspended') {
     audioCtx.resume();
   }
 }
@@ -145,6 +164,7 @@ export function setMasterVolume(
   if (masterGain) {
     masterGain.gain.value = value;
   } else {
+    // For FLAC files or when Web Audio API is not available, use native volume
     mainAudioEl.volume = value;
   }
 }
@@ -161,6 +181,7 @@ export function setMasterMuted(
   if (masterGain) {
     masterGain.gain.value = muted ? 0 : volume;
   } else {
+    // For FLAC files or when Web Audio API is not available, use native mute
     mainAudioEl.muted = muted;
     if (!muted) mainAudioEl.volume = volume;
   }

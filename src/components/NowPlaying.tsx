@@ -84,7 +84,9 @@ function getQualityBadges(track: { codec?: string; sampleRate?: number; bitrate?
 //  Component
 // ─────────────────────────────────────────────────────────────
 
-export function NowPlaying({ onNavigate }: NowPlayingProps) {
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+
+function NowPlayingInner({ onNavigate }: NowPlayingProps) {
   const {
     state, togglePlay, next, prev, seek,
     toggleShuffle, toggleRepeat, showNowPlaying,
@@ -755,6 +757,10 @@ export function NowPlaying({ onNavigate }: NowPlayingProps) {
       </motion.div>
     </div>
   );
+}
+
+export function NowPlaying(props: NowPlayingProps) {
+  return <ErrorBoundary><NowPlayingInner {...props} /></ErrorBoundary>;
 }
 
 // ─────────────────────────────────────────────────────────────

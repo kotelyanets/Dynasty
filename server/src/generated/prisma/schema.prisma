@@ -23,6 +23,38 @@ datasource db {
 }
 
 // ─────────────────────────────────────────────────────────────
+//  User
+// ─────────────────────────────────────────────────────────────
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  likes       TrackLike[]
+  playlists   Playlist[]
+  playHistory PlayHistory[]
+  seekEvents  SeekEvent[]
+}
+
+// ─────────────────────────────────────────────────────────────
+//  TrackLike
+// ─────────────────────────────────────────────────────────────
+model TrackLike {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackId   String
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, trackId])
+  @@index([userId])
+  @@index([trackId])
+}
+
+// ─────────────────────────────────────────────────────────────
 //  Artist
 //  One artist → many albums, many tracks.
 //  `name` is the unique business key (scanner upserts on it).
@@ -110,9 +142,6 @@ model Track {
   // Typical range: -23 to -5. Null if FFmpeg was not available.
   loudnessLufs Float?
 
-  // Whether the user has "hearted" this track.
-  isLiked Boolean @default(false)
-
   // Playback analytics (optional — used for "Recently Played" smart lists)
   playCount  Int       @default(0)
   lastPlayed DateTime?
@@ -120,6 +149,7 @@ model Track {
   playlistTracks PlaylistTrack[]
   playHistory    PlayHistory[]
   seekEvents     SeekEvent[]
+  likes          TrackLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -129,7 +159,6 @@ model Track {
   @@index([albumId])
   @@index([title])
   @@index([lastPlayed])
-  @@index([isLiked])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -141,6 +170,8 @@ model Playlist {
   name        String  @unique
   description String?
   coverPath   String?
+  userId      String  @default("default")
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   tracks        PlaylistTrack[]
   collaborators PlaylistCollaborator[]
@@ -198,6 +229,7 @@ model PlayHistory {
   trackId  String
   track    Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   userId   String   @default("default")
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   duration Float // How many seconds the user actually listened
   playedAt DateTime @default(now())
 
@@ -216,7 +248,8 @@ model SeekEvent {
   trackId   String
   track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   timestamp Float // The timecode (in seconds) the user seeked to
-  userId    String   @default("default")
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@index([trackId])

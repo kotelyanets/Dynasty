@@ -16,6 +16,7 @@ import type {
 } from 'fastify';
 import db from '../db';
 import { likeBodySchema } from '../validation';
+import { authenticate } from './auth';
 
 // ─────────────────────────────────────────────────────────────
 //  Track response builder
@@ -25,7 +26,7 @@ function buildTrack(t: {
   id: string; title: string; duration: number | null; trackNumber: number | null;
   diskNumber: number | null; genre: string | null; playCount: number;
   bitrate: number | null; sampleRate: number | null; codec: string | null;
-  isLiked: boolean;
+  likes?: { userId: string }[];
   artist: { id: string; name: string };
   album: { id: string; title: string; year: number | null; coverPath: string | null } | null;
 }) {
@@ -44,7 +45,7 @@ function buildTrack(t: {
     coverUrl:    t.album?.coverPath ?? '/covers/default.jpg',
     audioUrl:    `/api/stream/${t.id}`,
     playCount:   t.playCount,
-    isLiked:     t.isLiked,
+    isLiked:     t.likes ? t.likes.length > 0 : false,
     bitrate:     t.bitrate         ?? undefined,
     sampleRate:  t.sampleRate      ?? undefined,
     codec:       t.codec           ?? undefined,
@@ -54,7 +55,18 @@ function buildTrack(t: {
 const TRACK_INCLUDE = {
   artist: true,
   album: { select: { id: true, title: true, year: true, coverPath: true } },
-} as const;
+};
+
+function getTrackInclude(userId?: string) {
+  if (!userId) return TRACK_INCLUDE;
+  return {
+    ...TRACK_INCLUDE,
+    likes: {
+      where: { userId },
+      select: { userId: true },
+    },
+  };
+}
 
 // ─────────────────────────────────────────────────────────────
 //  Routes
@@ -101,24 +113,44 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     };
     const orderBy = orderByMap[query.sort ?? 'title'] ?? orderByMap['title']!;
 
-    const [total, tracks] = await Promise.all([
-      db.track.count({ where }),
-      db.track.findMany({
-        where,
-        skip,
-        take:    pageSize,
-        orderBy,
-        include: TRACK_INCLUDE,
-      }),
-    ]);
+    console.log(`[API /tracks] Querying page ${page}, pageSize ${pageSize}, sort ${query.sort}`);
+    console.log(`[API /tracks] WHERE clause:`, JSON.stringify(where, null, 2));
+    console.log(`[API /tracks] ORDER BY:`, JSON.stringify(orderBy, null, 2));
 
-    return reply.send({
-      items:    tracks.map(buildTrack),
-      total,
-      page,
-      pageSize,
-      pages:    Math.ceil(total / pageSize),
-    });
+    try {
+
+      // Try to get user from JWT to hydrate specific likes in memory if available
+      let userId: string | undefined;
+      try {
+        await request.jwtVerify();
+        userId = request.user.id;
+      } catch (err) {
+        // Unauthenticated users will just have isLiked: false
+      }
+
+      const [total, tracks] = await Promise.all([
+        db.track.count({ where }),
+        db.track.findMany({
+          where,
+          skip,
+          take:    pageSize,
+          orderBy,
+          include: getTrackInclude(userId),
+        }),
+      ]);
+
+      console.log(`[API /tracks] Success: returning ${tracks.length} tracks (total ${total})`);
+      return reply.send({
+        items:    tracks.map(buildTrack),
+        total,
+        page,
+        pageSize,
+        pages:    Math.ceil(total / pageSize),
+      });
+    } catch (err) {
+      console.error('[API /tracks] Prisma Query Error:', err);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
   });
 
   // ── GET /api/search ───────────────────────────────────────
@@ -159,31 +191,49 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     ]);
     const artistOr = titleVariants.map((cond) => ({ name: cond }));
 
-    const [rawTracks, rawAlbums, rawArtists] = await Promise.all([
-      db.track.findMany({
-        where:   { OR: trackOr },
-        take:    limit,
-        include: TRACK_INCLUDE,
-        orderBy: { playCount: 'desc' },
-      }),
+    console.log(`[API /search] Exact query: "${q}"`);
+    console.log(`[API /search] Search variants:`, variants);
+    console.log(`[API /search] Track OR clause:`, JSON.stringify(trackOr, null, 2));
+    
+    let rawTracks: any[], rawAlbums: any[], rawArtists: any[];
+    try {
+      let userId: string | undefined;
+      try {
+        await request.jwtVerify();
+        userId = request.user.id;
+      } catch (err) { }
 
-      db.album.findMany({
-        where:   { OR: albumOr },
-        take:    limit, // fetch more since we deduplicate
-        include: {
-          artist: true,
-          _count: { select: { tracks: true } },
-        },
-        orderBy: { title: 'asc' },
-      }),
+      [rawTracks, rawAlbums, rawArtists] = await Promise.all([
+        db.track.findMany({
+          where:   { OR: trackOr },
+          take:    limit,
+          include: getTrackInclude(userId),
+          orderBy: { playCount: 'desc' },
+        }),
 
-      db.artist.findMany({
-        where:   { OR: artistOr },
-        take:    limit, // fetch more since we deduplicate
-        include: { _count: { select: { albums: true, tracks: true } } },
-        orderBy: { name: 'asc' },
-      }),
-    ]) as [any[], any[], any[]];
+        db.album.findMany({
+          where:   { OR: albumOr },
+          take:    limit, // fetch more since we deduplicate
+          include: {
+            artist: true,
+            _count: { select: { tracks: true } },
+          },
+          orderBy: { title: 'asc' },
+        }),
+
+        db.artist.findMany({
+          where:   { OR: artistOr },
+          take:    limit, // fetch more since we deduplicate
+          include: { _count: { select: { albums: true, tracks: true } } },
+          orderBy: { name: 'asc' },
+        }),
+      ]) as [any[], any[], any[]];
+      
+      console.log(`[API /search] Prisma success. Found ${rawTracks.length} tracks, ${rawAlbums.length} albums, ${rawArtists.length} artists`);
+    } catch (err) {
+      console.error('[API /search] Prisma Query Error:', err);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
 
     // Deduplicate search results by name to avoid identically named collaborations
     const seenAlbums = new Set<string>();
@@ -234,21 +284,51 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // Returns an array of track IDs that have isLiked === true.
   // Used by the frontend to hydrate the liked-tracks set on load.
   // Registered before /tracks/:id so the static path is unambiguous.
-  fastify.get('/tracks/liked-ids', async (_request: FastifyRequest, reply: FastifyReply) => {
-    const tracks = await db.track.findMany({
-      where: { isLiked: true },
-      select: { id: true },
+  fastify.get('/tracks/liked-ids', { preValidation: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const tracks = await db.trackLike.findMany({
+      where: { userId: request.user.id },
+      select: { trackId: true },
     });
-    return reply.send(tracks.map((t) => t.id));
+    return reply.send(tracks.map((t) => t.trackId));
+  });
+
+  // ── GET /api/tracks/liked ─────────────────────────────────
+  // Returns the full track objects that have isLiked === true.
+  fastify.get('/tracks/liked', { preValidation: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const likes = await db.trackLike.findMany({
+        where: { userId: request.user.id },
+        include: {
+          track: {
+            include: {
+              artist: true,
+              album: { select: { id: true, title: true, year: true, coverPath: true } },
+              likes: { where: { userId: request.user.id }, select: { userId: true } }
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      });
+      return reply.send(likes.map(l => buildTrack(l.track)));
+    } catch (err) {
+      console.error('[API /tracks/liked] Error:', err);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
   });
 
   // ── GET /api/tracks/:id ───────────────────────────────────
   fastify.get<{ Params: { id: string } }>(
     '/tracks/:id',
     async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+      let userId: string | undefined;
+      try {
+        await request.jwtVerify();
+        userId = request.user.id;
+      } catch (err) {}
+
       const track = await db.track.findUnique({
         where:   { id: request.params.id },
-        include: TRACK_INCLUDE,
+        include: getTrackInclude(userId),
       });
       if (!track) return reply.status(404).send({ error: 'Track not found' });
       return reply.send(buildTrack(track));
@@ -277,6 +357,7 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   // Toggle the isLiked flag on a track. Receives { isLiked: boolean }.
   fastify.patch<{ Params: { id: string }; Body: { isLiked: boolean } }>(
     '/tracks/:id/like',
+    { preValidation: [authenticate] },
     async (
       request: FastifyRequest<{ Params: { id: string }; Body: { isLiked: boolean } }>,
       reply: FastifyReply
@@ -285,16 +366,30 @@ const trackRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       if (!parsed.success) {
         return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'isLiked must be a boolean' });
       }
+      
       const { isLiked } = parsed.data;
+      const trackId = request.params.id;
+      const userId = request.user.id;
 
-      const updated = await db.track.update({
-        where: { id: request.params.id },
-        data: { isLiked },
-        include: TRACK_INCLUDE,
-      }).catch(() => null);
+      if (isLiked) {
+        await db.trackLike.upsert({
+          where: { userId_trackId: { userId, trackId } },
+          update: {},
+          create: { userId, trackId },
+        });
+      } else {
+        await db.trackLike.deleteMany({
+          where: { userId, trackId },
+        });
+      }
 
-      if (!updated) return reply.status(404).send({ error: 'Track not found' });
-      return reply.send(buildTrack(updated));
+      const track = await db.track.findUnique({
+        where: { id: trackId },
+        include: getTrackInclude(userId)
+      });
+
+      if (!track) return reply.status(404).send({ error: 'Track not found' });
+      return reply.send(buildTrack(track));
     }
   );
 

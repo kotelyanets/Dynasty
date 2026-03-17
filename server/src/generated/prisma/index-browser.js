@@ -119,6 +119,21 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  username: 'username',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TrackLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  trackId: 'trackId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ArtistScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -155,7 +170,6 @@ exports.Prisma.TrackScalarFieldEnum = {
   fileSize: 'fileSize',
   mimeType: 'mimeType',
   loudnessLufs: 'loudnessLufs',
-  isLiked: 'isLiked',
   playCount: 'playCount',
   lastPlayed: 'lastPlayed',
   createdAt: 'createdAt',
@@ -167,6 +181,7 @@ exports.Prisma.PlaylistScalarFieldEnum = {
   name: 'name',
   description: 'description',
   coverPath: 'coverPath',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -226,6 +241,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
+  User: 'User',
+  TrackLike: 'TrackLike',
   Artist: 'Artist',
   Album: 'Album',
   Track: 'Track',
