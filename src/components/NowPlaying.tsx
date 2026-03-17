@@ -31,7 +31,7 @@ import { LyricsView } from '@/components/LyricsView';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Repeat1, ChevronDown,
-  ListMusic, Ellipsis, Volume1, VolumeX, Volume2,
+  ListMusic, Ellipsis, Volume1, VolumeX, Volume2, Airplay,
   Loader2, AlertCircle, Heart, Download, CheckCircle2,
   Mic, Mic2, MicOff, Headphones, Quote, GripVertical,
 } from 'lucide-react';
@@ -321,7 +321,7 @@ function NowPlayingInner({ onNavigate }: NowPlayingProps) {
       style={{ touchAction: 'pan-x' }}
     >
       <motion.div
-        className="w-full h-full flex flex-col"
+        className="w-full h-full flex flex-col items-center justify-between relative overflow-hidden"
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
@@ -332,94 +332,43 @@ function NowPlayingInner({ onNavigate }: NowPlayingProps) {
           scale: dismissScale,
         }}
       >
-      {/* ── Animated mesh gradient background ── */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Animated color blobs */}
-        <div className="absolute inset-0" style={{ background: '#000' }}>
-          <div
-            className="absolute w-[140%] h-[140%] -left-[20%] -top-[20%] opacity-80"
-            style={{
-              background: `
-                radial-gradient(ellipse at 20% 20%, ${gradientColors[0]} 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, ${gradientColors[1]} 0%, transparent 50%),
-                radial-gradient(ellipse at 60% 80%, ${gradientColors[2]} 0%, transparent 50%),
-                radial-gradient(ellipse at 20% 70%, ${gradientColors[3]} 0%, transparent 50%)
-              `,
-              animation: 'meshFloat 12s ease-in-out infinite alternate',
-              filter: 'blur(40px) saturate(1.5)',
-            }}
+        {/* ── Dynamic blur background ── */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={currentTrack.coverUrl}
+            alt=""
+            aria-hidden="true"
+            className="object-cover w-full h-full scale-150 blur-[100px] opacity-50"
           />
-          <div
-            className="absolute w-[130%] h-[130%] -left-[15%] -top-[15%] opacity-60"
-            style={{
-              background: `
-                radial-gradient(ellipse at 70% 30%, ${gradientColors[2]} 0%, transparent 45%),
-                radial-gradient(ellipse at 30% 70%, ${gradientColors[0]} 0%, transparent 45%),
-                radial-gradient(ellipse at 50% 50%, ${gradientColors[3]} 0%, transparent 40%)
-              `,
-              animation: 'meshFloat 16s ease-in-out infinite alternate-reverse',
-              filter: 'blur(50px) saturate(1.3)',
-            }}
-          />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
-        {/* Dark overlay for legibility */}
-        <div className="absolute inset-0 bg-black/45" />
-        <div className="absolute bottom-0 left-0 right-0 h-72 bg-gradient-to-t from-black/70 to-transparent" />
-      </div>
-
-      {/* ── Pull indicator (always visible as grab handle) ── */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50">
-        <div className="w-10 h-1 rounded-full bg-white/40" />
-      </div>
-
-      {/* ── Scrollable content ── */}
-      <div
-        className="relative flex flex-col h-full px-6 pt-12 max-w-lg mx-auto w-full"
-        style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 24px)' }}
-      >
-        {/* ── Dismiss handle / Header ── */}
-        <div className="flex items-center justify-between mb-5">
-          <button
-            onClick={() => { haptic(); showNowPlaying(false); }}
-            className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform -ml-2"
-            aria-label="Dismiss player"
-          >
-            <ChevronDown size={30} strokeWidth={2.5} />
-          </button>
-
-          <div className="text-center flex flex-col items-center">
-            <p className="text-[11px] font-semibold text-white/50 uppercase tracking-widest">
-              Playing From
-            </p>
+        {/* ── Main layout ── */}
+        <div
+          className="relative w-full max-w-4xl h-full px-6 md:px-10 pt-10 pb-8 flex flex-col items-center justify-between"
+          style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 32px)' }}
+        >
+          <div className="w-full flex items-center justify-between">
             <button
-              onClick={() => {
-                showNowPlaying(false);
-                if (currentTrack.albumId) onNavigate('album', currentTrack.albumId);
-              }}
-              className="text-[13px] font-semibold text-white truncate max-w-[180px] active:opacity-60 transition-opacity"
+              onClick={() => { haptic(); showNowPlaying(false); }}
+              className="w-10 h-10 flex items-center justify-center text-white/90 active:opacity-40 active:scale-90 transition-transform"
+              aria-label="Dismiss player"
             >
-              {currentTrack.album}
+              <ChevronDown size={28} strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={() => setShowMoreMenu((v) => !v)}
+              className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform"
+              aria-label="More options"
+            >
+              <Ellipsis size={22} />
             </button>
           </div>
 
-          <button
-            onClick={() => setShowMoreMenu((v) => !v)}
-            className="w-10 h-10 flex items-center justify-center text-white/80 active:opacity-40 active:scale-90 transition-transform -mr-2"
-            aria-label="More options"
-          >
-            <Ellipsis size={24} />
-          </button>
-        </div>
-
-        {/* ── Album art — shared element via layoutId ── */}
-        <div className="flex-1 flex items-center justify-center mb-7">
-          <div className="relative w-full max-w-[320px] aspect-square">
+          <div className="w-full flex-1 flex flex-col items-center justify-center gap-8 md:gap-10">
             <motion.div
               layoutId="player-album-art"
-              className={`w-full h-full rounded-[18px] overflow-hidden transition-transform duration-500 ease-out ${
-                isPlaying && !isStalled
-                  ? 'scale-100 shadow-[0_24px_80px_rgba(0,0,0,0.7)]'
-                  : 'scale-[0.875] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
+              className={`w-[45vh] h-[45vh] max-w-[400px] max-h-[400px] min-w-[220px] min-h-[220px] rounded-2xl overflow-hidden shadow-2xl transition-transform duration-500 ease-out ${
+                isPlaying && !isStalled ? 'scale-100' : 'scale-[0.97]'
               }`}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
             >
@@ -429,12 +378,10 @@ function NowPlayingInner({ onNavigate }: NowPlayingProps) {
                 className="w-full h-full object-cover"
               />
             </motion.div>
-          </div>
 
-            {/* ── Track info row ── */}
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-[24px] font-bold text-white truncate leading-tight">
+            <div className="w-full max-w-2xl flex flex-col items-center">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-white mb-1 truncate max-w-[80vw] md:max-w-[560px]">
                   {currentTrack.title}
                 </h2>
                 <button
@@ -442,214 +389,157 @@ function NowPlayingInner({ onNavigate }: NowPlayingProps) {
                     showNowPlaying(false);
                     if (currentTrack.artistId) onNavigate('artist', currentTrack.artistId);
                   }}
-                  className="text-[17px] font-medium text-[#fc3c44] truncate active:opacity-60 transition-opacity text-left max-w-full"
+                  className="text-lg text-white/60 truncate max-w-[80vw] md:max-w-[560px] active:opacity-60 transition-opacity"
                 >
                   {currentTrack.artist}
                 </button>
               </div>
 
-              <button
-                onClick={() => { haptic(); toggleLike(currentTrack.id); }}
-                className="pt-1 active:scale-90 transition-transform flex-shrink-0"
-                aria-label={liked ? 'Remove from Liked Tracks' : 'Add to Liked Tracks'}
+              {errorMessage && (
+                <div className="w-full flex items-center gap-2 mb-4 px-3 py-2 bg-red-500/20 border border-red-500/40 rounded-xl">
+                  <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                  <p className="text-xs text-red-300 truncate">{errorMessage}</p>
+                </div>
+              )}
+
+              <div
+                className="w-full mb-5"
+                style={{
+                  transform: `translateY(${scrubStretchY}px) scaleY(${scrubberScaleY})`,
+                  transition: isSeeking ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+                }}
               >
-                <Heart
-                  size={26}
-                  strokeWidth={1.75}
-                  fill={liked ? '#fc3c44' : 'none'}
-                  className={liked ? 'text-[#fc3c44]' : 'text-white/40'}
-                />
-              </button>
+                <div
+                  ref={progressRef}
+                  className="relative h-7 flex items-center cursor-pointer touch-none select-none"
+                  onMouseDown={handleScrubStart}
+                  onMouseMove={handleScrubMove}
+                  onMouseUp={handleScrubEnd}
+                  onMouseLeave={handleScrubEnd}
+                  onTouchStart={handleScrubStart}
+                  onTouchMove={handleScrubMove}
+                  onTouchEnd={handleScrubEnd}
+                  role="slider"
+                  aria-label="Seek"
+                  aria-valuemin={0}
+                  aria-valuemax={duration}
+                  aria-valuenow={displayTime}
+                >
+                  <div className="absolute w-full h-[2px] bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="absolute h-full bg-white/30 rounded-full transition-[width] duration-500"
+                      style={{ width: `${bufferedPct}%` }}
+                    />
+                    <div
+                      className="absolute h-full bg-white rounded-full"
+                      style={{ width: `${playedPct}%` }}
+                    />
+                  </div>
+                  <div
+                    className={`absolute bg-white rounded-full shadow-md transition-[width,height] duration-150 ${
+                      isSeeking ? 'w-3.5 h-3.5' : 'w-2.5 h-2.5'
+                    }`}
+                    style={{ left: `calc(${playedPct}% - ${isSeeking ? 7 : 5}px)` }}
+                  />
+                </div>
+
+                <div className="flex justify-between">
+                  <span aria-label="Elapsed time" className="text-[11px] text-white/60 font-medium tabular-nums">
+                    {formatTime(displayTime)}
+                  </span>
+                  <span aria-label="Remaining time" className="text-[11px] text-white/60 font-medium tabular-nums">
+                    -{formatTime(Math.max(0, duration - displayTime))}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-10 mb-8">
+                <button
+                  onClick={prev}
+                  className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
+                  aria-label="Previous"
+                >
+                  <SkipBack size={34} fill="white" strokeWidth={0} />
+                </button>
+
+                <button
+                  onClick={togglePlay}
+                  className="p-2 flex items-center justify-center active:scale-90 active:opacity-70 transition-all"
+                  aria-label={isPlaying ? 'Pause' : 'Play'}
+                >
+                  {isStalled ? (
+                    <Loader2 size={40} className="text-white animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause size={50} fill="white" strokeWidth={0} />
+                  ) : (
+                    <Play size={50} fill="white" strokeWidth={0} className="ml-1" />
+                  )}
+                </button>
+
+                <button
+                  onClick={next}
+                  className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
+                  aria-label="Next"
+                >
+                  <SkipForward size={34} fill="white" strokeWidth={0} />
+                </button>
+              </div>
+
+              <div className="w-full flex items-center gap-4 mb-4">
+                <button
+                  onClick={() => setShowLyrics((v) => !v)}
+                  className={`p-2 transition-all active:opacity-40 active:scale-90 ${
+                    showLyrics ? 'text-white' : 'text-white/60'
+                  }`}
+                  aria-label={showLyrics ? 'Hide lyrics' : 'Show lyrics'}
+                >
+                  <Quote size={20} />
+                </button>
+
+                <div
+                  ref={volumeRef}
+                  className="flex-1 relative h-7 flex items-center cursor-pointer touch-none select-none"
+                  onMouseDown={handleVolumeStart}
+                  onMouseMove={handleVolumeMove}
+                  onMouseUp={handleVolumeEnd}
+                  onMouseLeave={handleVolumeEnd}
+                  onTouchStart={handleVolumeStart}
+                  onTouchMove={handleVolumeMove}
+                  onTouchEnd={handleVolumeEnd}
+                  role="slider"
+                  aria-label="Volume"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(currentVolume * 100)}
+                >
+                  <div className="absolute w-full h-[2px] bg-white/25 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white/85 rounded-full"
+                      style={{ width: `${currentVolume * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleToggleSpatial}
+                  className={`p-2 transition-all active:opacity-40 active:scale-90 ${
+                    spatialAudioEnabled ? 'text-white' : 'text-white/60'
+                  }`}
+                  aria-label="Devices"
+                >
+                  <Airplay size={20} />
+                </button>
+
+                <button
+                  onClick={() => setShowQueue(true)}
+                  className="p-2 text-white/60 active:opacity-40 active:scale-90 transition-transform"
+                  aria-label="View queue"
+                >
+                  <ListMusic size={20} />
+                </button>
+              </div>
             </div>
           </div>
-
-        {/* ── Error banner ── */}
-        {errorMessage && (
-          <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-red-500/20 border border-red-500/40 rounded-xl">
-            <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
-            <p className="text-xs text-red-300 truncate">{errorMessage}</p>
-          </div>
-        )}
-
-        {/* ── Scrubber (rubber-band) ── */}
-        <div className="mb-5" style={{
-          transform: `translateY(${scrubStretchY}px) scaleY(${scrubberScaleY})`,
-          transition: isSeeking ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
-        }}>
-          <div
-            ref={progressRef}
-            className="relative h-10 flex items-center cursor-pointer touch-none select-none"
-            onMouseDown={handleScrubStart}
-            onMouseMove={handleScrubMove}
-            onMouseUp={handleScrubEnd}
-            onMouseLeave={handleScrubEnd}
-            onTouchStart={handleScrubStart}
-            onTouchMove={handleScrubMove}
-            onTouchEnd={handleScrubEnd}
-            role="slider"
-            aria-label="Seek"
-            aria-valuemin={0}
-            aria-valuemax={duration}
-            aria-valuenow={displayTime}
-          >
-            {/* Track */}
-            <div className="absolute w-full h-[4px] bg-white/20 rounded-full overflow-hidden">
-              <div
-                className="absolute h-full bg-white/30 rounded-full transition-[width] duration-500"
-                style={{ width: `${bufferedPct}%` }}
-              />
-              <div
-                className="absolute h-full bg-white rounded-full"
-                style={{ width: `${playedPct}%` }}
-              />
-            </div>
-            {/* Thumb */}
-            <div
-              className={`absolute bg-white rounded-full shadow-md transition-[width,height,margin] duration-150 ${
-                isSeeking ? 'w-5 h-5 -mt-[1px]' : 'w-[14px] h-[14px]'
-              }`}
-              style={{ left: `calc(${playedPct}% - ${isSeeking ? 10 : 7}px)` }}
-            />
-          </div>
-
-          <div className="flex justify-between -mt-1">
-            <span className="text-[11px] text-white/50 font-medium tabular-nums">
-              {formatTime(displayTime)}
-            </span>
-            <span className="text-[11px] text-white/50 font-medium tabular-nums">
-              -{formatTime(Math.max(0, duration - displayTime))}
-            </span>
-          </div>
-        </div>
-
-        {/* ── Transport controls ── */}
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={prev}
-            className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
-            aria-label="Previous"
-          >
-            <SkipBack size={36} fill="white" strokeWidth={0} />
-          </button>
-
-          <button
-            onClick={togglePlay}
-            className={`w-[68px] h-[68px] flex items-center justify-center active:scale-90 active:opacity-70 transition-all ${
-              isStalled ? 'opacity-60' : 'opacity-100'
-            }`}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isStalled ? (
-              <Loader2 size={44} className="text-white animate-spin" />
-            ) : isPlaying ? (
-              <Pause size={46} fill="white" strokeWidth={0} />
-            ) : (
-              <Play size={46} fill="white" strokeWidth={0} className="ml-1" />
-            )}
-          </button>
-
-          <button
-            onClick={next}
-            className="p-2 text-white active:scale-90 active:opacity-60 transition-all"
-            aria-label="Next"
-          >
-            <SkipForward size={36} fill="white" strokeWidth={0} />
-          </button>
-        </div>
-
-        {/* ── Shuffle / Repeat / Effects row ── */}
-        <div className="flex items-center justify-between px-2 mb-6">
-          <button
-            onClick={toggleShuffle}
-            className={`p-2 transition-all active:scale-90 ${
-              shuffle ? 'text-[#fc3c44]' : 'text-white/40'
-            }`}
-            aria-label={shuffle ? 'Shuffle on' : 'Shuffle off'}
-          >
-            <Shuffle size={20} />
-          </button>
-
-          <button
-            onClick={() => { haptic(); toggleRepeat(); }}
-            className={`p-2 transition-all active:scale-90 ${
-              repeat !== 'off' ? 'text-[#fc3c44]' : 'text-white/40'
-            }`}
-            aria-label={`Repeat: ${repeat}`}
-          >
-            {repeat === 'one' ? <Repeat1 size={20} /> : <Repeat size={20} />}
-          </button>
-        </div>
-
-        {/* ── Volume ── */}
-        <div className="flex items-center gap-3 mb-6">
-          <button
-            onClick={toggleMute}
-            className="text-white/40 active:opacity-50 flex-shrink-0"
-            aria-label={isMuted ? 'Unmute' : 'Mute'}
-          >
-            {isMuted || volume === 0 ? (
-              <VolumeX size={16} />
-            ) : (
-              <Volume1 size={16} />
-            )}
-          </button>
-
-          <div
-            ref={volumeRef}
-            className="flex-1 relative h-8 flex items-center cursor-pointer touch-none select-none"
-            onMouseDown={handleVolumeStart}
-            onMouseMove={handleVolumeMove}
-            onMouseUp={handleVolumeEnd}
-            onMouseLeave={handleVolumeEnd}
-            onTouchStart={handleVolumeStart}
-            onTouchMove={handleVolumeMove}
-            onTouchEnd={handleVolumeEnd}
-            role="slider"
-            aria-label="Volume"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(currentVolume * 100)}
-          >
-            <div className="absolute w-full h-[4px] bg-white/20 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white/70 rounded-full"
-                style={{ width: `${currentVolume * 100}%` }}
-              />
-            </div>
-            <div
-              className="absolute w-3 h-3 bg-white rounded-full shadow"
-              style={{ left: `calc(${currentVolume * 100}% - 6px)` }}
-            />
-          </div>
-
-          <button
-            onClick={() => setVolume(1)}
-            className="text-white/40 active:opacity-50 flex-shrink-0"
-            aria-label="Max volume"
-          >
-            <Volume2 size={16} />
-          </button>
-        </div>
-
-        {/* ── Bottom action row ── */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setShowLyrics((v) => !v)}
-            className={`flex-shrink-0 p-2 active:opacity-40 active:scale-90 transition-all ${
-              showLyrics ? 'text-[#fc3c44]' : 'text-white/40'
-            }`}
-            aria-label={showLyrics ? 'Hide lyrics' : 'Show lyrics'}
-          >
-            <Quote size={22} />
-          </button>
-
-          <button
-            onClick={() => setShowQueue(true)}
-            className="flex-shrink-0 p-2 text-white/40 active:opacity-40 active:scale-90 transition-transform"
-            aria-label="View queue"
-          >
-            <ListMusic size={22} />
-          </button>
         </div>
 
         {/* ── More options bottom sheet ── */}
@@ -753,7 +643,6 @@ function NowPlayingInner({ onNavigate }: NowPlayingProps) {
             onClose={() => setShowLyrics(false)}
           />
         )}
-      </div>
       </motion.div>
     </div>
   );
